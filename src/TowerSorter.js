@@ -37,12 +37,12 @@ class TowerSorter extends Component {
         this.state = {
             towerArray: [],
             moveHistory: [],
-            initialTowerState: this.cloneTowerArray(this.towerArray),
+            initialTowerState: TowerSorter.cloneTowerArray(this.towerArray),
         }
 
     }
 
-    cloneTowerArray(towerArray) {
+    static cloneTowerArray(towerArray) {
         let clonedTowerArray = [];
         for (let i = 0; i < towerArray.length; i++) {
             clonedTowerArray.push(Tower.createFrom(towerArray[i]));
@@ -137,7 +137,7 @@ class TowerSorter extends Component {
                     moveCount: this.moveCount,
                     move: "Moved disc " + disc + " from tower: " + sourceTower.getTowerNumber() + " to tower: "
                         + targetTower.getTowerNumber(),
-                    towerStates: this.cloneTowerArray(this.towerArray),
+                    towerStates: TowerSorter.cloneTowerArray(this.towerArray),
                 };
                 this.moveHistory.push(moveDetail);
 
@@ -275,7 +275,7 @@ class TowerSorter extends Component {
                                             <tbody>
 
                                             {
-                                                item.towerStates.map((towerState, i) => {
+                                                item.towerStates.map((towerState) => {
                                                         return (<tr key={towerState.getTowerNumber()}>
                                                             <td>{towerState.getTowerNumber()}</td>
                                                             <td>{towerState.getDiscOrder()}</td>
