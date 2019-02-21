@@ -93,6 +93,14 @@ class ThreeScene extends Component {
         return 0.25 / this.props.discCount;
     }
 
+    calcTransTime() {
+        let transTime = 19200/(this.props.discCount*this.props.discCount);
+        if (transTime < 80) {
+            transTime = 80;
+        }
+        return transTime;
+    }
+
     createDiscs() {
 
         let discArray = [];
@@ -161,14 +169,10 @@ class ThreeScene extends Component {
 
         let discObj = discArray[move.disc - 1];
 
-        let transitionTime = 1500;
-
-        if (this.props.moveHistory.length > 32) {
-            transitionTime = 100;
-        }
+        let transitionTime = this.calcTransTime();
 
         let tweenOver = new TWEEN.Tween(currentDisc)
-            .to({x: [startX, toX], y: [totalThickness, toY]}, transitionTime)
+            .to({x: [startX, toX*.9, toX], y: [totalThickness*.8,  totalThickness, toY]}, transitionTime)
             .easing(TWEEN.Easing.Quartic.Out)
             .onUpdate(function () {
                 discObj.position.x = currentDisc.x;

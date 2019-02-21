@@ -22,7 +22,7 @@ class TowerSorter extends Component {
 
         let discArray = [];
 
-        let discCount = 12;
+        let discCount = 6;
 
         for (let j = discCount; j > 0; j--) {
             discArray.push(j);
@@ -139,9 +139,6 @@ class TowerSorter extends Component {
                 moved = true;
 
                 //Logging and tracking logic.
-                console.log("Move count: " + this.moveCount + " - Moved disc " + disc + " from tower: "
-                    + sourceTower.getTowerNumber() + " to tower: " + targetTower.getTowerNumber()
-                );
 
                 let move = new Move(this.moveCount, disc, unchangedSourceTower, unchangedTargetTower,
                     targetTower.getTowerNumber(),
