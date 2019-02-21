@@ -3,9 +3,11 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@tweenjs/tween.js": "^17.3.0",
     "react": "^16.8.2",
     "react-dom": "^16.8.2",
-    "react-scripts": "2.1.5"
+    "react-scripts": "2.1.5",
+    "three": "^0.101.1"
   },
   "scripts": {
     "start": "react-scripts start",

@@ -1,5 +1,8 @@
 import React, {Component} from 'react';
 import Tower from "./Tower";
+import MoveList from "./MoveList";
+import ThreeScene from "./ThreeScene";
+import Move from "./Move";
 
 
 class TowerSorter extends Component {
@@ -14,15 +17,14 @@ class TowerSorter extends Component {
 
     maxMoves = 0;
 
-
     constructor(props) {
         super(props);
 
         let discArray = [];
 
-        let numberOfDiscs = 7;
+        let discCount = 12;
 
-        for (let j = numberOfDiscs; j > 0; j--) {
+        for (let j = discCount; j > 0; j--) {
             discArray.push(j);
         }
 
@@ -35,10 +37,14 @@ class TowerSorter extends Component {
         this.towerArray.push(new Tower(false, solution, 3));
 
         this.state = {
+            discCount: discCount,
             towerArray: [],
             moveHistory: [],
+            solved: false,
             initialTowerState: TowerSorter.cloneTowerArray(this.towerArray),
-        }
+        };
+
+        this.toggleMoveListPanel = this.toggleMoveListPanel.bind(this);
 
     }
 
@@ -118,6 +124,10 @@ class TowerSorter extends Component {
 
             let targetTower = towerArray[k];
 
+            let unchangedSourceTower = Tower.createFrom(sourceTower);
+
+            let unchangedTargetTower = Tower.createFrom(targetTower);
+
             let success = targetTower.addDisc(disc);
 
             if (success) {
@@ -129,18 +139,15 @@ class TowerSorter extends Component {
                 moved = true;
 
                 //Logging and tracking logic.
-                console.log("True move count: " + this.moveCount + " - Moved disc " + disc + " from tower: "
+                console.log("Move count: " + this.moveCount + " - Moved disc " + disc + " from tower: "
                     + sourceTower.getTowerNumber() + " to tower: " + targetTower.getTowerNumber()
                 );
-                this.outputTowerStates();
-                let moveDetail = {
-                    moveCount: this.moveCount,
-                    move: "Moved disc " + disc + " from tower: " + sourceTower.getTowerNumber() + " to tower: "
-                        + targetTower.getTowerNumber(),
-                    towerStates: TowerSorter.cloneTowerArray(this.towerArray),
-                };
-                this.moveHistory.push(moveDetail);
 
+                let move = new Move(this.moveCount, disc, unchangedSourceTower, unchangedTargetTower,
+                    targetTower.getTowerNumber(),
+                    TowerSorter.cloneTowerArray(this.towerArray));
+
+                this.moveHistory.push(move);
 
                 break;
             }
@@ -200,21 +207,27 @@ class TowerSorter extends Component {
             moveCount: this.moveCount,
         });
 
-        this.outputMoveHistory();
+        // this.outputMoveHistory();
     }
 
+    toggleMoveListPanel() {
+        this.setState({
+            displayMoveList: !this.state.displayMoveList
+        })
+    }
 
     render() {
 
         let puzzleBanner = '';
         if (this.state.solved) {
-            puzzleBanner = <div>Puzzle Solved in {this.state.moveCount} moves.</div>;
+            puzzleBanner = <div className="puzzleBanner">Puzzle Solved in {this.state.moveCount} moves.</div>;
         }
 
         return (
             <div>
-
-                <div>Initial State</div>
+                {this.state.solved &&
+                <ThreeScene moveHistory={this.state.moveHistory} discCount={this.state.discCount}/>}
+                <div>Initial Tower State</div>
                 <table className="centeredTable">
                     <tbody>
                     <tr>
@@ -242,6 +255,7 @@ class TowerSorter extends Component {
                         </th>
                         <th>Disc Order</th>
                     </tr>
+
                     {this.state.towerArray.map((item) => {
                         return (
                             <tr key={item.getTowerNumber()}>
@@ -254,47 +268,11 @@ class TowerSorter extends Component {
                     </tbody>
                 </table>
 
-
                 {puzzleBanner}
 
-                <table className="centeredLgTable">
-                    <tbody>
-                    <tr>
-                        <th>Move Count
-                        </th>
-                        <th>Move Detail</th>
-                        <th>Tower State</th>
-                    </tr>
-                    {this.state.moveHistory.map((item) => {
-                            return (
-                                <tr key={item.moveCount}>
-                                    <td> {item.moveCount} </td>
-                                    <td> {item.move} </td>
-                                    <td>
-                                        <table>
-                                            <tbody>
+                <button onClick={this.toggleMoveListPanel}> Display Move List</button>
 
-                                            {
-                                                item.towerStates.map((towerState) => {
-                                                        return (<tr key={towerState.getTowerNumber()}>
-                                                            <td>{towerState.getTowerNumber()}</td>
-                                                            <td>{towerState.getDiscOrder()}</td>
-                                                        </tr>);
-                                                    }
-                                                )
-                                            }
-
-                                            </tbody>
-                                        </table>
-                                    </td>
-                                </tr>
-                            );
-
-                        }
-                    )}
-
-                    </tbody>
-                </table>
+                {this.state.displayMoveList && <MoveList moveHistory={this.state.moveHistory}/>}
             </div>
         );
     }

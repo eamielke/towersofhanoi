@@ -39,7 +39,7 @@ class Tower {
             this.previousDiscs = Tower.copyArray(this.discs);
             this.discs.push(disc);
             return true;
-        } else if (this.discs[this.discs.length - 1] <= disc ) {
+        } else if (this.discs[this.discs.length - 1] <= disc) {
             return false;
         } else {
 

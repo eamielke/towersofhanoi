@@ -17,6 +17,11 @@
   width: 1000px;
 }
 
+.puzzleBanner {
+    font-size: 15px;
+    margin-bottom:20px;
+}
+
 td {
   border: 1px solid;
 }
