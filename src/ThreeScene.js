@@ -11,6 +11,10 @@ class ThreeScene extends Component {
 
     componentDidMount() {
 
+        if (this.props.discCount ===0) {
+            return;
+        }
+
         const width = this.mount.clientWidth;
         const height = this.mount.clientHeight;
 

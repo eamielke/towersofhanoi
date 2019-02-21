@@ -17,35 +17,51 @@ class TowerSorter extends Component {
 
     maxMoves = 0;
 
+
     constructor(props) {
         super(props);
+        this.state = {
+            discCount: 0,
+            towerArray: [],
+            moveHistory: [],
+            solved: false,
+            initialTowerState: []
+        };
+        this.toggleMoveListPanel = this.toggleMoveListPanel.bind(this);
+        this.handleDiscSelect = this.handleDiscSelect.bind(this);
 
+    }
+
+    setupTowers(discCount) {
         let discArray = [];
-
-        let discCount = 6;
 
         for (let j = discCount; j > 0; j--) {
             discArray.push(j);
         }
 
-        this.maxMoves = Math.pow(2, (discArray[0]));
+        this.maxMoves = Math.pow(2, (discArray.length));
+
+        this.previousDisk = -1;
+        this.moveCount = 0;
 
         let solution = discArray.join('');
+
+        this.towerArray.splice(0, this.towerArray.length);
+        this.towerArray = [];
+        this.moveHistory.splice(0, this.towerArray.length);
+        this.moveHistory = [];
 
         this.towerArray.push(new Tower(true, solution, 1, discArray));
         this.towerArray.push(new Tower(false, solution, 2));
         this.towerArray.push(new Tower(false, solution, 3));
 
-        this.state = {
+        this.setState( {
             discCount: discCount,
             towerArray: [],
-            moveHistory: [],
+            moveHistory: this.moveHistory,
             solved: false,
             initialTowerState: TowerSorter.cloneTowerArray(this.towerArray),
-        };
-
-        this.toggleMoveListPanel = this.toggleMoveListPanel.bind(this);
-
+        });
     }
 
     static cloneTowerArray(towerArray) {
@@ -161,9 +177,12 @@ class TowerSorter extends Component {
     }
 
 
-    componentDidMount() {
-
-        this.solvePuzzle();
+    handleDiscSelect(event) {
+        if (event.target.value > 0) {
+            console.log("changing disc count to: " + event.target.value);
+            this.setupTowers(event.target.value);
+            this.solvePuzzle();
+        }
     }
 
     solvePuzzle() {
@@ -176,6 +195,8 @@ class TowerSorter extends Component {
 
         let solved = false;
         let iterationCount = 1;
+
+        console.log('Prior to loop start - Solved: ' + solved + " iterationCount: " + iterationCount + " max moves: " + this.maxMoves);
 
         while (!solved && iterationCount <= this.maxMoves) {
 
@@ -223,7 +244,15 @@ class TowerSorter extends Component {
         return (
             <div>
                 {this.state.solved &&
-                <ThreeScene moveHistory={this.state.moveHistory} discCount={this.state.discCount}/>}
+                <ThreeScene key={this.state.discCount} moveHistory={this.state.moveHistory} discCount={this.state.discCount}/>}
+                <div className="discSelector">Select the number of discs to initiate the solution: <select ref="discSelector" onChange={this.handleDiscSelect}>
+                    <option value="0"></option>
+                    <option value="3">3 discs</option>
+                    <option value="4">4 discs</option>
+                    <option value="5">5 discs</option>
+                    <option value="6">6 discs</option>
+                    <option value="7">7 discs</option>
+                </select></div>
                 <div>Initial Tower State</div>
                 <table className="centeredTable">
                     <tbody>
@@ -244,7 +273,7 @@ class TowerSorter extends Component {
                     </tbody>
                 </table>
 
-                <div>Solved Tower State</div>
+                {this.state.solved && <div>Solved Tower State</div> &&
                 <table className="centeredTable">
                     <tbody>
                     <tr>
@@ -263,11 +292,11 @@ class TowerSorter extends Component {
                     })}
 
                     </tbody>
-                </table>
+                </table>}
 
                 {puzzleBanner}
 
-                <button onClick={this.toggleMoveListPanel}> Display Move List</button>
+                {this.state.solved && <button onClick={this.toggleMoveListPanel}> Display Move List</button>}
 
                 {this.state.displayMoveList && <MoveList moveHistory={this.state.moveHistory}/>}
             </div>
