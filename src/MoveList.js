@@ -1,4 +1,5 @@
 import React, {Component} from 'react';
+import {Table} from 'semantic-ui-react';
 
 class MoveList extends Component {
 
@@ -6,44 +7,55 @@ class MoveList extends Component {
     render() {
 
         return (
-            <table className="centeredLgTable">
-                <tbody>
-                <tr>
-                    <th>Move Count
-                    </th>
-                    <th>Move Detail</th>
-                    <th>Tower State</th>
-                </tr>
-                {this.props.moveHistory.map((item) => {
-                        return (
-                            <tr key={item.moveCount}>
-                                <td> {item.moveCount} </td>
-                                <td> {item.moveDesc} </td>
-                                <td>
-                                    <table>
-                                        <tbody>
+            <Table celled unstackable>
 
-                                        {
-                                            item.endingTowerStates.map((towerState) => {
-                                                    return (<tr key={towerState.getTowerNumber()}>
-                                                        <td>{towerState.getTowerNumber()}</td>
-                                                        <td>{towerState.getDiscOrder()}</td>
-                                                    </tr>);
+                <Table.Header>
+                    <Table.Row>
+                        <Table.HeaderCell>Move #
+                        </Table.HeaderCell>
+                        <Table.HeaderCell>Move Detail</Table.HeaderCell>
+                        <Table.HeaderCell>Tower State</Table.HeaderCell>
+                    </Table.Row>
+                </Table.Header>
+
+                <Table.Body>
+                    {this.props.moveHistory.map((item) => {
+                            return (
+                                <Table.Row key={item.moveCount}>
+                                    <Table.Cell> {item.moveCount} </Table.Cell>
+                                    <Table.Cell> {item.moveDesc} </Table.Cell>
+                                    <Table.Cell>
+
+                                        <Table unstackable>
+                                            <Table.Header>
+                                                <Table.Row>
+                                                    <Table.HeaderCell>Tower #</Table.HeaderCell>
+                                                    <Table.HeaderCell>Disc Order</Table.HeaderCell>
+                                                </Table.Row>
+                                            </Table.Header>
+                                            <Table.Body>
+
+                                                {
+                                                    item.endingTowerStates.map((towerState) => {
+                                                            return (<Table.Row key={towerState.getTowerNumber()}>
+                                                                <Table.Cell>{towerState.getTowerNumber()}</Table.Cell>
+                                                                <Table.Cell>{towerState.getDiscOrder()}</Table.Cell>
+                                                            </Table.Row>);
+                                                        }
+                                                    )
                                                 }
-                                            )
-                                        }
 
-                                        </tbody>
-                                    </table>
-                                </td>
-                            </tr>
-                        );
+                                            </Table.Body>
+                                        </Table>
+                                    </Table.Cell>
+                                </Table.Row>
+                            );
 
-                    }
-                )}
+                        }
+                    )}
 
-                </tbody>
-            </table>);
+                </Table.Body>
+            </Table>);
     }
 
 }

@@ -3,6 +3,14 @@ import Tower from "./Tower";
 import MoveList from "./MoveList";
 import ThreeScene from "./ThreeScene";
 import Move from "./Move";
+import {Label, Form} from 'semantic-ui-react';
+import {Divider} from 'semantic-ui-react';
+import {Select} from 'semantic-ui-react';
+import {Header} from 'semantic-ui-react'
+import {Segment} from 'semantic-ui-react';
+import {Container} from 'semantic-ui-react';
+import {Table} from 'semantic-ui-react';
+import {Responsive, Message, Button} from "semantic-ui-react";
 
 
 class TowerSorter extends Component {
@@ -55,7 +63,7 @@ class TowerSorter extends Component {
         this.towerArray.push(new Tower(false, solution, 2));
         this.towerArray.push(new Tower(false, solution, 3));
 
-        this.setState( {
+        this.setState({
             discCount: discCount,
             towerArray: [],
             moveHistory: this.moveHistory,
@@ -177,10 +185,10 @@ class TowerSorter extends Component {
     }
 
 
-    handleDiscSelect(event) {
-        if (event.target.value > 0) {
-            console.log("changing disc count to: " + event.target.value);
-            this.setupTowers(event.target.value);
+    handleDiscSelect(event, data) {
+        if (data.value > 0) {
+            console.log("changing disc count to: " + data.value);
+            this.setupTowers(data.value);
             this.solvePuzzle();
         }
     }
@@ -238,68 +246,112 @@ class TowerSorter extends Component {
 
         let puzzleBanner = '';
         if (this.state.solved) {
-            puzzleBanner = <div className="puzzleBanner">Puzzle Solved in {this.state.moveCount} moves.</div>;
+
+            puzzleBanner = <Container><Message positive>
+                <Message.Header>Success</Message.Header>
+                <p>
+                    Puzzle Solved in {this.state.moveCount} moves.
+                </p>
+                <Button primary onClick={this.toggleMoveListPanel}> Display Move List</Button>
+            </Message></Container>;
         }
 
+        let discOptions = [
+            {key: '0', value: '0'},
+            {key: '3', value: '3', text: '3 discs'},
+            {key: '4', value: '4', text: '4 discs'},
+            {key: '5', value: '5', text: '5 discs'},
+            {key: '6', value: '6', text: '6 discs'},
+            {key: '7', value: '7', text: '7 discs'},
+            {key: '8', value: '8', text: '8 discs'},
+            {key: '9', value: '9', text: '9 discs'},
+            {key: '10', value: '10', text: '10 discs'},
+            {key: '11', value: '11', text: '11 discs'},
+            {key: '12', value: '12', text: '12 discs'}
+        ];
+
         return (
-            <div>
-                {this.state.solved &&
-                <ThreeScene key={this.state.discCount} moveHistory={this.state.moveHistory} discCount={this.state.discCount}/>}
-                <div className="discSelector">Select the number of discs to initiate the solution: <select ref="discSelector" onChange={this.handleDiscSelect}>
-                    <option value="0"></option>
-                    <option value="3">3 discs</option>
-                    <option value="4">4 discs</option>
-                    <option value="5">5 discs</option>
-                    <option value="6">6 discs</option>
-                    <option value="7">7 discs</option>
-                </select></div>
-                <div>Initial Tower State</div>
-                <table className="centeredTable">
-                    <tbody>
-                    <tr>
-                        <th>Tower #
-                        </th>
-                        <th>Disc Order</th>
-                    </tr>
-                    {this.state.initialTowerState.map((item) => {
-                        return (
-                            <tr key={item.getTowerNumber()}>
-                                <td>{item.getTowerNumber()}</td>
-                                <td>{item.getDiscOrder()}</td>
-                            </tr>
-                        );
-                    })}
 
-                    </tbody>
-                </table>
 
-                {this.state.solved && <div>Solved Tower State</div> &&
-                <table className="centeredTable">
-                    <tbody>
-                    <tr>
-                        <th>Tower #
-                        </th>
-                        <th>Disc Order</th>
-                    </tr>
+            <Container>
+                <Responsive>
 
-                    {this.state.towerArray.map((item) => {
-                        return (
-                            <tr key={item.getTowerNumber()}>
-                                <td>{item.getTowerNumber()}</td>
-                                <td>{item.getDiscOrder()}</td>
-                            </tr>
-                        );
-                    })}
+                    <Header as='h1'>Towers of Hanoi Demo</Header>
 
-                    </tbody>
-                </table>}
+                    {this.state.solved &&
+                    <ThreeScene key={this.state.discCount} moveHistory={this.state.moveHistory}
+                                discCount={this.state.discCount}/>}
 
-                {puzzleBanner}
+                    <Form>
+                        <Form.Field inline>
+                            <Label pointing="right">Select the number of discs to initiate the solution:
 
-                {this.state.solved && <button onClick={this.toggleMoveListPanel}> Display Move List</button>}
+                            </Label>
+                            <Select id="discSelector" options={discOptions}
+                                    onChange={this.handleDiscSelect}>
 
-                {this.state.displayMoveList && <MoveList moveHistory={this.state.moveHistory}/>}
-            </div>
+                            </Select>
+                        </Form.Field>
+                    </Form>
+
+                    <Divider/>
+
+                    {puzzleBanner}
+
+                    {this.state.displayMoveList && <MoveList moveHistory={this.state.moveHistory}/>}
+
+                    <Segment>
+                        <Header as="h4">Initial Tower State</Header>
+
+                        <Table celled unstackable>
+                            <Table.Header>
+                                <Table.Row>
+                                    <Table.HeaderCell>Tower #
+                                    </Table.HeaderCell>
+                                    <Table.HeaderCell>Disc Order</Table.HeaderCell>
+                                </Table.Row>
+                            </Table.Header>
+                            <Table.Body>
+                                {this.state.initialTowerState.map((item) => {
+                                    return (
+                                        <Table.Row key={item.getTowerNumber()}>
+                                            <Table.Cell>{item.getTowerNumber()}</Table.Cell>
+                                            <Table.Cell>{item.getDiscOrder()}</Table.Cell>
+                                        </Table.Row>
+                                    );
+                                })}
+
+                            </Table.Body>
+                        </Table>
+                    </Segment>
+
+                    <Segment>
+                        <Header as="h4">Solved Tower State</Header>
+
+
+                        <Table celled unstackable>
+                            <Table.Header>
+                                <Table.Row>
+                                    <Table.HeaderCell>Tower #
+                                    </Table.HeaderCell>
+                                    <Table.HeaderCell>Disc Order</Table.HeaderCell>
+                                </Table.Row>
+                            </Table.Header>
+                            <Table.Body>
+                                {this.state.towerArray.map((item) => {
+                                    return (
+                                        <Table.Row key={item.getTowerNumber()}>
+                                            <Table.Cell>{item.getTowerNumber()}</Table.Cell>
+                                            <Table.Cell>{item.getDiscOrder()}</Table.Cell>
+                                        </Table.Row>
+                                    );
+                                })}
+                            </Table.Body>
+                        </Table></Segment>
+
+
+                </Responsive>
+            </Container>
         );
     }
 

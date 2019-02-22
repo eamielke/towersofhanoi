@@ -7,7 +7,10 @@
     "react": "^16.8.2",
     "react-dom": "^16.8.2",
     "react-scripts": "2.1.5",
-    "three": "^0.101.1"
+    "semantic-ui-css": "^2.4.1",
+    "semantic-ui-react": "^0.85.0",
+    "three": "^0.101.1",
+    "three-orbitcontrols": "^2.101.1"
   },
   "scripts": {
     "start": "react-scripts start",

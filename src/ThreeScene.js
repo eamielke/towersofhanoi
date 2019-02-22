@@ -1,6 +1,9 @@
 import React, {Component} from 'react';
 import * as THREE from 'three';
 import TWEEN from '@tweenjs/tween.js';
+import OrbitControls from 'three-orbitcontrols';
+import {Container} from 'semantic-ui-react';
+
 
 class ThreeScene extends Component {
 
@@ -19,7 +22,8 @@ class ThreeScene extends Component {
         const height = this.mount.clientHeight;
 
         //ADD SCENE
-        this.camera = new THREE.PerspectiveCamera(20, width / height, 0.2, 20);
+        this.camera = new THREE.PerspectiveCamera(this.calcFOV(), width / height, 0.2, 20);
+
 
         this.scene = new THREE.Scene();
 
@@ -67,8 +71,6 @@ class ThreeScene extends Component {
             prevTween = tween;
         }
 
-        this.camera.position.x = discArray[0].position.x + (2.5*this.getMaxDiscDiameter()+0.1);
-        this.camera.position.z = 3;
 
         //ADD RENDERER
         this.renderer = new THREE.WebGLRenderer({antialias: true});
@@ -76,18 +78,37 @@ class ThreeScene extends Component {
         this.renderer.setSize(width, height);
         this.mount.appendChild(this.renderer.domElement);
 
+        // this.controls = new OrbitControls( this.camera );
+        //
+        // this.controls.minPolarAngle = Math.PI/2;
+        // this.controls.maxPolarAngle = Math.PI/2;
+        // this.controls.minDistance = 1;
+        // this.controls.maxDistance = 10;
+        //
+        // this.controls.minAzimuthAngle = 0; // radians
+        // this.controls.maxAzimuthAngle = 0; // radians
+
+        this.camera.position.x = discArray[0].position.x + (2.5*this.getMaxDiscDiameter()+0.1);
+        this.camera.position.z = 3;
+
 
         this.start();
         tweenArray[0].start();
 
     }
 
+    calcFOV() {
+
+        return (3*Math.log(this.props.discCount) + 19);
+    }
+
     getMaxDiscDiameter() {
-        return this.getScaleFactor() * (this.props.discCount - 1)
+        return this.getScaleFactor() * (this.props.discCount - 1);
     }
 
     getScaleFactor() {
-        return 0.05;
+
+        return 0.15 /this.props.discCount;
     }
 
     calcThickness() {
@@ -217,7 +238,7 @@ class ThreeScene extends Component {
         // position.setFromMatrixPosition(this.disc3.matrixWorld);
 
         // console.log("Cylinder position: " + position.x);
-
+        // this.controls.update();
 
         this.frameId = window.requestAnimationFrame(this.animate);
 
@@ -226,12 +247,14 @@ class ThreeScene extends Component {
 
     render() {
         return (
+            <Container>
             <div className="hanoi3d"
 
                 ref={(mount) => {
                     this.mount = mount
                 }}
             />
+            </Container>
 
         )
     }
