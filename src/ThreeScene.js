@@ -20,7 +20,6 @@ class ThreeScene extends Component {
 
         //ADD SCENE
         this.camera = new THREE.PerspectiveCamera(20, width / height, 0.2, 20);
-        this.camera.position.z = 3;
 
         this.scene = new THREE.Scene();
 
@@ -50,13 +49,9 @@ class ThreeScene extends Component {
 
             y = y - thickness;
 
-            console.log("Y position " + y + " for disc " + l);
-            // discArray[l].position.set(-2*this.getMaxDiscDiameter(), y, 0);
             discArray[l].position.set(0, y, 0);
-            discArray[l].geometry.translate(-2*this.getMaxDiscDiameter(), 0, 0);
 
         }
-
 
         //Setup tween
 
@@ -72,6 +67,8 @@ class ThreeScene extends Component {
             prevTween = tween;
         }
 
+        this.camera.position.x = discArray[0].position.x + (2.5*this.getMaxDiscDiameter()+0.1);
+        this.camera.position.z = 3;
 
         //ADD RENDERER
         this.renderer = new THREE.WebGLRenderer({antialias: true});
@@ -141,7 +138,7 @@ class ThreeScene extends Component {
         let totalThickness = this.calcThickness() * discArray.length;
 
         if (sourceTower) {
-            currentX = (sourceTower.getTowerNumber() - 1) * 2.5 * this.getMaxDiscDiameter();
+            currentX = (sourceTower.getTowerNumber() - 1) * (2.5 * this.getMaxDiscDiameter()+ 0.1);
             startX = currentX;
         }
 
@@ -164,23 +161,30 @@ class ThreeScene extends Component {
 
         // Calculate target X
 
+        let rotDir = 1;
+        if (targetTower.getTowerNumber() > sourceTower.getTowerNumber()) {
+            rotDir =-1;
+        }
+
         //Tower 1 is at position -0.5
         //Tower 2 is at -0.5 + 0.2 (max disc width)
         //Tower 3 is at -0.5 + 2*0.2 (max disc width)
-        let toX = ((targetTower.getTowerNumber() - 1)  * 2.5 * this.getMaxDiscDiameter());
+        let toX = ((targetTower.getTowerNumber() - 1)  * (2.5 * this.getMaxDiscDiameter() + 0.1));
 
-        let currentDisc = {x: currentX, y: currentY};
+        let currentDisc = {x: currentX, y: currentY, r: 0};
 
         let discObj = discArray[move.disc - 1];
 
         let transitionTime = this.calcTransTime();
 
+
         let tweenOver = new TWEEN.Tween(currentDisc)
-            .to({x: [startX, toX*.9, toX], y: [totalThickness*.8,  totalThickness, toY]}, transitionTime)
+            .to({x: [startX, toX*.9, toX], y: [0.8*totalThickness,  totalThickness, toY], r: [rotDir*Math.PI*10]}, transitionTime)
             .easing(TWEEN.Easing.Quartic.Out)
             .onUpdate(function () {
                 discObj.position.x = currentDisc.x;
                 discObj.position.y = currentDisc.y;
+                discObj.rotation.z = currentDisc.r;
             });
 
         if (previousTween) {
