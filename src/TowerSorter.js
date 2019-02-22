@@ -187,7 +187,7 @@ class TowerSorter extends Component {
 
     handleDiscSelect(event, data) {
         if (data.value > 0) {
-            console.log("changing disc count to: " + data.value);
+
             this.setupTowers(data.value);
             this.solvePuzzle();
         }
@@ -247,13 +247,30 @@ class TowerSorter extends Component {
         let puzzleBanner = '';
         if (this.state.solved) {
 
-            puzzleBanner = <Container><Message positive>
-                <Message.Header>Success</Message.Header>
-                <p>
-                    Puzzle Solved in {this.state.moveCount} moves.
-                </p>
-                <Button primary onClick={this.toggleMoveListPanel}> Display Move List</Button>
-            </Message></Container>;
+            puzzleBanner = <Container>
+                <Responsive {...Responsive.onlyComputer} >
+                    <Message positive size={'small'}>
+                        <Message.Header>Success</Message.Header>
+                        <p>Puzzle Solved in {this.state.moveCount} moves.</p>
+                        <Button primary onClick={this.toggleMoveListPanel}> Display Move List</Button>
+                    </Message>
+                </Responsive>
+                <Responsive {...Responsive.onlyTablet} >
+                    <Message positive size={'huge'}>
+                        <Message.Header>Success</Message.Header>
+                        <p>Puzzle Solved in {this.state.moveCount} moves.</p>
+                        <Button primary onClick={this.toggleMoveListPanel}> Display Move List</Button>
+                    </Message>
+                </Responsive>
+                <Responsive {...Responsive.onlyMobile} >
+                    <Message positive size={'large'}>
+                        <Message.Header>Success</Message.Header>
+                        <p>Puzzle Solved in {this.state.moveCount} moves.</p>
+                        <Button primary onClick={this.toggleMoveListPanel}> Display Move List</Button>
+                    </Message>
+                </Responsive>
+
+            </Container>;
         }
 
         let discOptions = [
@@ -274,32 +291,43 @@ class TowerSorter extends Component {
 
 
             <Container>
-                <Responsive>
 
-                    <Header as='h1'>Towers of Hanoi Demo</Header>
 
-                    {this.state.solved &&
-                    <ThreeScene key={this.state.discCount} moveHistory={this.state.moveHistory}
-                                discCount={this.state.discCount}/>}
+                <Header as='h1'>Towers of Hanoi Demo</Header>
 
-                    <Form>
-                        <Form.Field inline>
-                            <Label pointing="right">Select the number of discs to initiate the solution:
+                {this.state.solved &&
+                <ThreeScene key={this.state.discCount} moveHistory={this.state.moveHistory}
+                            discCount={this.state.discCount}/>}
 
+                <Form>
+                    <Form.Field inline>
+                        <Responsive {...Responsive.onlyComputer} as={Label} size='small' position='right'>
+                            Select the number of discs to initiate the solution:
+                        </Responsive>
+                        <Responsive {...Responsive.onlyTablet} >
+                            <Label size='large' pointing="below">
+                                Select the number of discs to initiate the solution:
                             </Label>
-                            <Select id="discSelector" options={discOptions}
-                                    onChange={this.handleDiscSelect}>
+                        </Responsive>
+                        <Responsive {...Responsive.onlyMobile}>
+                            <Label size='huge' pointing="below">
+                                Select the number of discs to initiate the solution:
+                            </Label>
+                        </Responsive>
+                        <Select id="discSelector" options={discOptions}
+                                onChange={this.handleDiscSelect}>
 
-                            </Select>
-                        </Form.Field>
-                    </Form>
+                        </Select>
+                    </Form.Field>
+                </Form>
 
-                    <Divider/>
+                <Divider/>
 
-                    {puzzleBanner}
+                {puzzleBanner}
 
-                    {this.state.displayMoveList && <MoveList moveHistory={this.state.moveHistory}/>}
+                {this.state.displayMoveList && <MoveList key={this.state.discCount + 'MoveList'} moveHistory={this.state.moveHistory}/>}
 
+                <Segment.Group>
                     <Segment>
                         <Header as="h4">Initial Tower State</Header>
 
@@ -348,9 +376,8 @@ class TowerSorter extends Component {
                                 })}
                             </Table.Body>
                         </Table></Segment>
+                </Segment.Group>
 
-
-                </Responsive>
             </Container>
         );
     }
