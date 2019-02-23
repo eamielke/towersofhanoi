@@ -7,7 +7,15 @@ import {Container} from 'semantic-ui-react';
 
 class ThreeScene extends Component {
 
+    constructor(props) {
+        super(props);
+        this.updateDimensions  = this.updateDimensions.bind(this);
+        this.resetCamera = this.resetCamera.bind(this);
+    }
+
     componentDidMount() {
+
+        window.addEventListener("resize", this.updateDimensions);
 
         if (this.props.discCount === 0) {
             return;
@@ -88,6 +96,35 @@ class ThreeScene extends Component {
 
         this.start();
         tweenArray[0].start();
+
+        console.log('Calling ComponentDidMount');
+
+    }
+
+    resetCamera() {
+        debugger;
+
+        if (this.mount) {
+            const width = this.mount.clientWidth;
+            const height = this.mount.clientHeight;
+
+            //ADD SCENE
+            this.camera.aspect = width/height;
+            this.camera.updateProjectionMatrix();
+
+            this.renderer.setSize(width, height);
+        }
+
+
+    }
+
+    componentDidUpdate() {
+        this.resetCamera();
+    }
+
+    updateDimensions() {
+
+        this.setState({width: window.innerWidth, height: window.innerHeight});
 
     }
 
@@ -217,6 +254,7 @@ class ThreeScene extends Component {
     componentWillUnmount() {
         this.stop();
         this.mount.removeChild(this.renderer.domElement);
+        window.removeEventListener("resize", this.updateDimensions);
     }
 
     start = () => {
@@ -246,7 +284,7 @@ class ThreeScene extends Component {
     render() {
         return (
             <Container>
-                <div className="hanoi3d"
+                <div  className="hanoi3d"
 
                      ref={(mount) => {
                          this.mount = mount
