@@ -1,20 +1,15 @@
 import React, {Component} from 'react';
 import * as THREE from 'three';
 import TWEEN from '@tweenjs/tween.js';
-import OrbitControls from 'three-orbitcontrols';
+// import OrbitControls from 'three-orbitcontrols';
 import {Container} from 'semantic-ui-react';
 
 
 class ThreeScene extends Component {
 
-
-    constructor(props) {
-        super(props);
-    }
-
     componentDidMount() {
 
-        if (this.props.discCount ===0) {
+        if (this.props.discCount === 0) {
             return;
         }
 
@@ -47,8 +42,7 @@ class ThreeScene extends Component {
         this.scene.background = new THREE.Color('white');
 
         let thickness = this.calcThickness();
-        let totalHeight = thickness * (discArray.length);
-        let y = totalHeight;
+        let y = thickness * (discArray.length);
         for (let l = 0; l < discArray.length; l++) {
 
             y = y - thickness;
@@ -88,7 +82,7 @@ class ThreeScene extends Component {
         // this.controls.minAzimuthAngle = 0; // radians
         // this.controls.maxAzimuthAngle = 0; // radians
 
-        this.camera.position.x = discArray[0].position.x + (2.5*this.getMaxDiscDiameter()+0.1);
+        this.camera.position.x = discArray[0].position.x + (2.5 * this.getMaxDiscDiameter() + 0.1);
         this.camera.position.z = 3;
 
 
@@ -99,7 +93,7 @@ class ThreeScene extends Component {
 
     calcFOV() {
 
-        return (3*Math.log(this.props.discCount) + 19);
+        return (3 * Math.log(this.props.discCount) + 19);
     }
 
     getMaxDiscDiameter() {
@@ -108,7 +102,7 @@ class ThreeScene extends Component {
 
     getScaleFactor() {
 
-        return 0.15 /this.props.discCount;
+        return 0.15 / this.props.discCount;
     }
 
     calcThickness() {
@@ -116,7 +110,7 @@ class ThreeScene extends Component {
     }
 
     calcTransTime() {
-        let transTime = 19200/(this.props.discCount*this.props.discCount);
+        let transTime = 19200 / (this.props.discCount * this.props.discCount);
         if (transTime < 80) {
             transTime = 80;
         }
@@ -159,7 +153,7 @@ class ThreeScene extends Component {
         let totalThickness = this.calcThickness() * discArray.length;
 
         if (sourceTower) {
-            currentX = (sourceTower.getTowerNumber() - 1) * (2.5 * this.getMaxDiscDiameter()+ 0.1);
+            currentX = (sourceTower.getTowerNumber() - 1) * (2.5 * this.getMaxDiscDiameter() + 0.1);
             startX = currentX;
         }
 
@@ -171,7 +165,7 @@ class ThreeScene extends Component {
 
         let targetTower = move.targetTower;
 
-        if (targetTower.getDiscs().length == 0) {
+        if (targetTower.getDiscs().length === 0) {
 
             toY = 0;
 
@@ -184,13 +178,13 @@ class ThreeScene extends Component {
 
         let rotDir = 1;
         if (targetTower.getTowerNumber() > sourceTower.getTowerNumber()) {
-            rotDir =-1;
+            rotDir = -1;
         }
 
         //Tower 1 is at position -0.5
         //Tower 2 is at -0.5 + 0.2 (max disc width)
         //Tower 3 is at -0.5 + 2*0.2 (max disc width)
-        let toX = ((targetTower.getTowerNumber() - 1)  * (2.5 * this.getMaxDiscDiameter() + 0.1));
+        let toX = ((targetTower.getTowerNumber() - 1) * (2.5 * this.getMaxDiscDiameter() + 0.1));
 
         let currentDisc = {x: currentX, y: currentY, r: 0};
 
@@ -200,7 +194,11 @@ class ThreeScene extends Component {
 
 
         let tweenOver = new TWEEN.Tween(currentDisc)
-            .to({x: [startX, toX*.9, toX], y: [0.8*totalThickness,  totalThickness, toY], r: [rotDir*Math.PI*10]}, transitionTime)
+            .to({
+                x: [startX, toX * .9, toX],
+                y: [0.8 * totalThickness, totalThickness, toY],
+                r: [rotDir * Math.PI * 10]
+            }, transitionTime)
             .easing(TWEEN.Easing.Quartic.Out)
             .onUpdate(function () {
                 discObj.position.x = currentDisc.x;
@@ -248,12 +246,12 @@ class ThreeScene extends Component {
     render() {
         return (
             <Container>
-            <div className="hanoi3d"
+                <div className="hanoi3d"
 
-                ref={(mount) => {
-                    this.mount = mount
-                }}
-            />
+                     ref={(mount) => {
+                         this.mount = mount
+                     }}
+                />
             </Container>
 
         )

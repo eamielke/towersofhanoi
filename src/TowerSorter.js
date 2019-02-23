@@ -4,13 +4,12 @@ import MoveList from "./MoveList";
 import ThreeScene from "./ThreeScene";
 import Move from "./Move";
 import {Label, Form} from 'semantic-ui-react';
-import {Divider} from 'semantic-ui-react';
 import {Select} from 'semantic-ui-react';
 import {Header} from 'semantic-ui-react'
 import {Segment} from 'semantic-ui-react';
 import {Container} from 'semantic-ui-react';
 import {Table} from 'semantic-ui-react';
-import {Responsive, Message, Button} from "semantic-ui-react";
+import {Responsive, Message, Button, Grid, Divider} from "semantic-ui-react";
 
 
 class TowerSorter extends Component {
@@ -242,36 +241,87 @@ class TowerSorter extends Component {
         })
     }
 
+    getTowerStateSegment() {
+
+        return (
+            <Segment.Group>
+                <Segment>
+                    <Header as="h4">Initial Tower State</Header>
+
+                    <Table celled unstackable>
+                        <Table.Header>
+                            <Table.Row>
+                                <Table.HeaderCell>Tower #
+                                </Table.HeaderCell>
+                                <Table.HeaderCell>Disc Order</Table.HeaderCell>
+                            </Table.Row>
+                        </Table.Header>
+                        <Table.Body>
+                            {this.state.initialTowerState.map((item) => {
+                                return (
+                                    <Table.Row key={item.getTowerNumber()}>
+                                        <Table.Cell>{item.getTowerNumber()}</Table.Cell>
+                                        <Table.Cell>{item.getDiscOrder()}</Table.Cell>
+                                    </Table.Row>
+                                );
+                            })}
+
+                        </Table.Body>
+                    </Table>
+                </Segment>
+
+                <Segment>
+                    <Header as="h4">Solved Tower State</Header>
+
+
+                    <Table celled unstackable>
+                        <Table.Header>
+                            <Table.Row>
+                                <Table.HeaderCell>Tower #
+                                </Table.HeaderCell>
+                                <Table.HeaderCell>Disc Order</Table.HeaderCell>
+                            </Table.Row>
+                        </Table.Header>
+                        <Table.Body>
+                            {this.state.towerArray.map((item) => {
+                                return (
+                                    <Table.Row key={item.getTowerNumber()}>
+                                        <Table.Cell>{item.getTowerNumber()}</Table.Cell>
+                                        <Table.Cell>{item.getDiscOrder()}</Table.Cell>
+                                    </Table.Row>
+                                );
+                            })}
+                        </Table.Body>
+                    </Table></Segment>
+            </Segment.Group>);
+    }
+
+    getPuzzleBanner() {
+        return (<Grid.Column>
+            <Responsive {...Responsive.onlyComputer} >
+                <Message positive size={'small'}>
+                    <Message.Header>Success</Message.Header>
+                    <p>Puzzle Solved in {this.state.moveCount} moves.</p>
+                    <Button primary onClick={this.toggleMoveListPanel}> Display Move List</Button>
+                </Message>
+            </Responsive>
+            <Responsive {...Responsive.onlyTablet} >
+                <Message positive size={'huge'}>
+                    <Message.Header>Success</Message.Header>
+                    <p>Puzzle Solved in {this.state.moveCount} moves.</p>
+                    <Button primary onClick={this.toggleMoveListPanel}> Display Move List</Button>
+                </Message>
+            </Responsive>
+            <Responsive {...Responsive.onlyMobile} >
+                <Message positive size={'large'}>
+                    <Message.Header>Success</Message.Header>
+                    <p>Puzzle Solved in {this.state.moveCount} moves.</p>
+                    <Button primary onClick={this.toggleMoveListPanel}> Display Move List</Button>
+                </Message>
+            </Responsive></Grid.Column>);
+    }
+
     render() {
-
-        let puzzleBanner = '';
-        if (this.state.solved) {
-
-            puzzleBanner = <Container>
-                <Responsive {...Responsive.onlyComputer} >
-                    <Message positive size={'small'}>
-                        <Message.Header>Success</Message.Header>
-                        <p>Puzzle Solved in {this.state.moveCount} moves.</p>
-                        <Button primary onClick={this.toggleMoveListPanel}> Display Move List</Button>
-                    </Message>
-                </Responsive>
-                <Responsive {...Responsive.onlyTablet} >
-                    <Message positive size={'huge'}>
-                        <Message.Header>Success</Message.Header>
-                        <p>Puzzle Solved in {this.state.moveCount} moves.</p>
-                        <Button primary onClick={this.toggleMoveListPanel}> Display Move List</Button>
-                    </Message>
-                </Responsive>
-                <Responsive {...Responsive.onlyMobile} >
-                    <Message positive size={'large'}>
-                        <Message.Header>Success</Message.Header>
-                        <p>Puzzle Solved in {this.state.moveCount} moves.</p>
-                        <Button primary onClick={this.toggleMoveListPanel}> Display Move List</Button>
-                    </Message>
-                </Responsive>
-
-            </Container>;
-        }
 
         let discOptions = [
             {key: '0', value: '0'},
@@ -291,93 +341,51 @@ class TowerSorter extends Component {
 
 
             <Container>
+                <Divider hidden/>
+                <Grid columns={1}>
+                    <Grid.Column>
 
+                        <Header as='h1'>Towers of Hanoi Demo</Header>
 
-                <Header as='h1'>Towers of Hanoi Demo</Header>
+                        {this.state.solved &&
+                        <ThreeScene key={this.state.discCount} moveHistory={this.state.moveHistory}
+                                    discCount={this.state.discCount}/>}
 
-                {this.state.solved &&
-                <ThreeScene key={this.state.discCount} moveHistory={this.state.moveHistory}
-                            discCount={this.state.discCount}/>}
+                        <Form>
+                            <Form.Field inline>
+                                <Responsive {...Responsive.onlyComputer} as={Label} size='small' position='right'>
+                                    Select the number of discs to initiate the solution:
+                                </Responsive>
+                                <Responsive {...Responsive.onlyTablet} >
+                                    <Label size='large' pointing="below">
+                                        Select the number of discs to initiate the solution:
+                                    </Label>
+                                </Responsive>
+                                <Responsive {...Responsive.onlyMobile}>
+                                    <Label size='huge' pointing="below">
+                                        Select the number of discs to initiate the solution:
+                                    </Label>
+                                </Responsive>
+                                <Select id="discSelector" options={discOptions}
+                                        onChange={this.handleDiscSelect}>
 
-                <Form>
-                    <Form.Field inline>
-                        <Responsive {...Responsive.onlyComputer} as={Label} size='small' position='right'>
-                            Select the number of discs to initiate the solution:
-                        </Responsive>
-                        <Responsive {...Responsive.onlyTablet} >
-                            <Label size='large' pointing="below">
-                                Select the number of discs to initiate the solution:
-                            </Label>
-                        </Responsive>
-                        <Responsive {...Responsive.onlyMobile}>
-                            <Label size='huge' pointing="below">
-                                Select the number of discs to initiate the solution:
-                            </Label>
-                        </Responsive>
-                        <Select id="discSelector" options={discOptions}
-                                onChange={this.handleDiscSelect}>
+                                </Select>
+                            </Form.Field>
+                        </Form>
 
-                        </Select>
-                    </Form.Field>
-                </Form>
+                    </Grid.Column>
 
-                <Divider/>
+                    {this.state.solved && this.getPuzzleBanner()}
 
-                {puzzleBanner}
+                    <Grid.Column>
+                        {this.state.displayMoveList &&
+                        <MoveList key={this.state.discCount + 'MoveList'} moveHistory={this.state.moveHistory}/>}
+                    </Grid.Column>
 
-                {this.state.displayMoveList && <MoveList key={this.state.discCount + 'MoveList'} moveHistory={this.state.moveHistory}/>}
-
-                <Segment.Group>
-                    <Segment>
-                        <Header as="h4">Initial Tower State</Header>
-
-                        <Table celled unstackable>
-                            <Table.Header>
-                                <Table.Row>
-                                    <Table.HeaderCell>Tower #
-                                    </Table.HeaderCell>
-                                    <Table.HeaderCell>Disc Order</Table.HeaderCell>
-                                </Table.Row>
-                            </Table.Header>
-                            <Table.Body>
-                                {this.state.initialTowerState.map((item) => {
-                                    return (
-                                        <Table.Row key={item.getTowerNumber()}>
-                                            <Table.Cell>{item.getTowerNumber()}</Table.Cell>
-                                            <Table.Cell>{item.getDiscOrder()}</Table.Cell>
-                                        </Table.Row>
-                                    );
-                                })}
-
-                            </Table.Body>
-                        </Table>
-                    </Segment>
-
-                    <Segment>
-                        <Header as="h4">Solved Tower State</Header>
-
-
-                        <Table celled unstackable>
-                            <Table.Header>
-                                <Table.Row>
-                                    <Table.HeaderCell>Tower #
-                                    </Table.HeaderCell>
-                                    <Table.HeaderCell>Disc Order</Table.HeaderCell>
-                                </Table.Row>
-                            </Table.Header>
-                            <Table.Body>
-                                {this.state.towerArray.map((item) => {
-                                    return (
-                                        <Table.Row key={item.getTowerNumber()}>
-                                            <Table.Cell>{item.getTowerNumber()}</Table.Cell>
-                                            <Table.Cell>{item.getDiscOrder()}</Table.Cell>
-                                        </Table.Row>
-                                    );
-                                })}
-                            </Table.Body>
-                        </Table></Segment>
-                </Segment.Group>
-
+                    <Grid.Column>
+                        {this.state.solved && this.getTowerStateSegment()}
+                    </Grid.Column>
+                </Grid>
             </Container>
         );
     }
