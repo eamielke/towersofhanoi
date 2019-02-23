@@ -2,15 +2,20 @@ import React, {Component} from 'react';
 import * as THREE from 'three';
 import TWEEN from '@tweenjs/tween.js';
 // import OrbitControls from 'three-orbitcontrols';
-import {Container} from 'semantic-ui-react';
+import {Segment, Grid, Button, Responsive} from 'semantic-ui-react';
 
 
 class ThreeScene extends Component {
 
     constructor(props) {
         super(props);
-        this.updateDimensions  = this.updateDimensions.bind(this);
+        this.updateDimensions = this.updateDimensions.bind(this);
         this.resetCamera = this.resetCamera.bind(this);
+        this.fullScreen = this.fullScreen.bind(this);
+
+        this.state = {
+            canvasHeight: '400px'
+        };
     }
 
     componentDidMount() {
@@ -109,7 +114,7 @@ class ThreeScene extends Component {
             const height = this.mount.clientHeight;
 
             //ADD SCENE
-            this.camera.aspect = width/height;
+            this.camera.aspect = width / height;
             this.camera.updateProjectionMatrix();
 
             this.renderer.setSize(width, height);
@@ -281,17 +286,48 @@ class ThreeScene extends Component {
         TWEEN.update();
     };
 
+
+    fullScreen() {
+
+        if (this.state.canvasHeight === '800px') {
+            this.setState({canvasHeight: '400px', active: false});
+        } else {
+            this.setState({canvasHeight: '800px', active: true});
+        }
+
+    }
+
+
     render() {
         return (
-            <Container>
-                <div  className="hanoi3d"
+            <Grid columns={1}>
+                <Grid.Column>
+                    <Responsive {...Responsive.onlyComputer} >
+                        <Button toggle active={this.state.active} attached='top' onClick={this.fullScreen}>Enlarge</Button>
+                    </Responsive>
 
-                     ref={(mount) => {
-                         this.mount = mount
-                     }}
-                />
-            </Container>
+                    <Responsive {...Responsive.onlyMobile}>
+                        <div ref='hanoiCanvas' className='hanoi3d'
+                             style={{height: this.state.canvasHeight, width: '100%', margin: '20px auto'}}
 
+                             ref={(mount) => {
+                                 this.mount = mount
+                             }}
+                        />
+                    </Responsive>
+                    <Responsive {...Responsive.onlyComputer}>
+                        <Segment attached>
+                            <div ref='hanoiCanvas' className='hanoi3d'
+                                 style={{height: this.state.canvasHeight, width: '100%', margin: '20px auto'}}
+
+                                 ref={(mount) => {
+                                     this.mount = mount
+                                 }}
+                            />
+                        </Segment>
+                    </Responsive>
+                </Grid.Column>
+            </Grid>
         )
     }
 }

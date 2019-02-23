@@ -345,33 +345,44 @@ class TowerSorter extends Component {
                 <Grid columns={1}>
                     <Grid.Column>
 
-                        <Header as='h1'>Towers of Hanoi Demo</Header>
+                        <Grid columns={1}>
 
-                        {this.state.solved &&
-                        <ThreeScene key={this.state.discCount} moveHistory={this.state.moveHistory}
-                                    discCount={this.state.discCount}/>}
+                            <Grid.Column>
+                                <Header as='h1'>Towers of Hanoi Demo</Header>
+                            </Grid.Column>
 
-                        <Form>
-                            <Form.Field inline>
-                                <Responsive {...Responsive.onlyComputer} as={Label} size='small' position='right'>
-                                    Select the number of discs to initiate the solution:
-                                </Responsive>
-                                <Responsive {...Responsive.onlyTablet} >
-                                    <Label size='large' pointing="below">
-                                        Select the number of discs to initiate the solution:
-                                    </Label>
-                                </Responsive>
-                                <Responsive {...Responsive.onlyMobile}>
-                                    <Label size='huge' pointing="below">
-                                        Select the number of discs to initiate the solution:
-                                    </Label>
-                                </Responsive>
-                                <Select id="discSelector" options={discOptions}
-                                        onChange={this.handleDiscSelect}>
+                            <Grid.Column>
+                                {this.state.solved &&
+                                <ThreeScene key={this.state.discCount} moveHistory={this.state.moveHistory}
+                                            discCount={this.state.discCount}/>}
+                            </Grid.Column>
 
-                                </Select>
-                            </Form.Field>
-                        </Form>
+                            <Grid.Column>
+
+                                <Form>
+                                    <Form.Field inline>
+                                        <Responsive {...Responsive.onlyComputer} as={Label} size='small'
+                                                    position='right'>
+                                            Select the number of discs to initiate the solution:
+                                        </Responsive>
+                                        <Responsive {...Responsive.onlyTablet} >
+                                            <Label size='large' pointing="below">
+                                                Select the number of discs to initiate the solution:
+                                            </Label>
+                                        </Responsive>
+                                        <Responsive {...Responsive.onlyMobile}>
+                                            <Label size='huge' pointing="below">
+                                                Select the number of discs to initiate the solution:
+                                            </Label>
+                                        </Responsive>
+                                        <Select id="discSelector" options={discOptions}
+                                                onChange={this.handleDiscSelect}>
+
+                                        </Select>
+                                    </Form.Field>
+                                </Form>
+                            </Grid.Column>
+                        </Grid>
 
                     </Grid.Column>
 
