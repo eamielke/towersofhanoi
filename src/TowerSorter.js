@@ -32,10 +32,12 @@ class TowerSorter extends Component {
             towerArray: [],
             moveHistory: [],
             solved: false,
-            initialTowerState: []
+            initialTowerState: [],
+            ThreeJS: true
         };
         this.toggleMoveListPanel = this.toggleMoveListPanel.bind(this);
         this.handleDiscSelect = this.handleDiscSelect.bind(this);
+        this.reset = this.reset.bind(this);
 
     }
 
@@ -321,6 +323,12 @@ class TowerSorter extends Component {
             </Responsive></Grid.Column>);
     }
 
+
+    reset() {
+
+        this.setState ({ThreeJS: !this.state.ThreeJS});
+    }
+
     render() {
 
         let discOptions = [
@@ -353,8 +361,8 @@ class TowerSorter extends Component {
 
                             <Grid.Column>
                                 {this.state.solved &&
-                                <ThreeScene key={this.state.discCount} moveHistory={this.state.moveHistory}
-                                            discCount={this.state.discCount}/>}
+                                <ThreeScene key={this.state.discCount + this.state.ThreeJS} moveHistory={this.state.moveHistory}
+                                            discCount={this.state.discCount} resetButton = {this.reset}/>}
                             </Grid.Column>
 
                             <Grid.Column>

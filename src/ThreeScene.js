@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import * as THREE from 'three';
 import TWEEN from '@tweenjs/tween.js';
 // import OrbitControls from 'three-orbitcontrols';
-import {Segment, Grid, Button, Responsive} from 'semantic-ui-react';
+import {Segment, Grid, Header, Menu, Responsive} from 'semantic-ui-react';
 
 
 class ThreeScene extends Component {
@@ -12,9 +12,12 @@ class ThreeScene extends Component {
         this.updateDimensions = this.updateDimensions.bind(this);
         this.resetCamera = this.resetCamera.bind(this);
         this.fullScreen = this.fullScreen.bind(this);
+        this.updateCurrentTween = this.updateCurrentTween.bind(this);
+        this.toggleAnimation = this.toggleAnimation.bind(this);
 
         this.state = {
-            canvasHeight: '400px'
+            canvasHeight: '400px',
+            currentMove: this.props.moveHistory[0],
         };
     }
 
@@ -68,13 +71,13 @@ class ThreeScene extends Component {
 
         TWEEN.removeAll();
 
-        let tweenArray = [];
+        this.tweenArray = [];
 
         let prevTween;
         for (let k = 0; k < this.props.moveHistory.length; k++) {
             let tween = this.createTweenForMoveAndDisc(thickness, this.getMaxDiscDiameter(),
                 discArray, this.props.moveHistory[k], prevTween);
-            tweenArray.push(tween);
+            this.tweenArray.push(tween);
             prevTween = tween;
         }
 
@@ -100,14 +103,16 @@ class ThreeScene extends Component {
 
 
         this.start();
-        tweenArray[0].start();
+        this.tweenArray[0].start();
+        this.running = true;
+
+        this.setState({running: true});
 
         console.log('Calling ComponentDidMount');
 
     }
 
     resetCamera() {
-        debugger;
 
         if (this.mount) {
             const width = this.mount.clientWidth;
@@ -246,7 +251,7 @@ class ThreeScene extends Component {
                 discObj.position.x = currentDisc.x;
                 discObj.position.y = currentDisc.y;
                 discObj.rotation.z = currentDisc.r;
-            });
+            }).onStart(this.updateCurrentTween(move.moveCount));
 
         if (previousTween) {
             previousTween.chain(tweenOver);
@@ -255,6 +260,14 @@ class ThreeScene extends Component {
         return tweenOver;
     }
 
+    updateCurrentTween(moveCount) {
+        return () => {
+
+            this.currentTween = moveCount - 1;
+            this.setState({currentMove: this.props.moveHistory[moveCount - 1]});
+            console.log('Updating current tween to: ' + this.currentTween);
+        };
+    }
 
     componentWillUnmount() {
         this.stop();
@@ -297,16 +310,43 @@ class ThreeScene extends Component {
 
     }
 
+    toggleAnimation() {
+
+        if (this.running) {
+            console.log('Trying to stop tween: ' + this.currentTween);
+
+            this.tweenArray[this.currentTween].stop();
+
+        } else {
+            console.log('Trying to start tween: ' + this.currentTween);
+            this.tweenArray[this.currentTween].start();
+        }
+
+
+        this.running = !this.running;
+
+        this.setState({running: this.running});
+    }
+
 
     render() {
         return (
             <Grid columns={1}>
                 <Grid.Column>
                     <Responsive {...Responsive.onlyComputer} >
-                        <Button toggle active={this.state.active} attached='top' onClick={this.fullScreen}>Enlarge</Button>
+                        <Menu size={'large'} widths={3}  attached='top'>
+                            <Menu.Item toggle color='green' active={this.state.active}
+                                       onClick={this.fullScreen}>Enlarge</Menu.Item>
+                            <Menu.Item toggle color='red' active={!this.state.running}
+                                       onClick={this.toggleAnimation}>{this.state.running &&
+                            <span>Pause</span>}{!this.state.running && <span>Resume</span>}</Menu.Item>
+                            <Menu.Item onClick={this.props.resetButton}>Reset</Menu.Item>
+                        </Menu>
+
                     </Responsive>
 
                     <Responsive {...Responsive.onlyMobile}>
+
                         <div ref='hanoiCanvas' className='hanoi3d'
                              style={{height: this.state.canvasHeight, width: '100%', margin: '20px auto'}}
 
@@ -314,18 +354,31 @@ class ThreeScene extends Component {
                                  this.mount = mount
                              }}
                         />
+
                     </Responsive>
+
                     <Responsive {...Responsive.onlyComputer}>
                         <Segment attached>
-                            <div ref='hanoiCanvas' className='hanoi3d'
-                                 style={{height: this.state.canvasHeight, width: '100%', margin: '20px auto'}}
+                            <Grid columns={1}>
+                                <Grid.Column>
+                                    <div ref='hanoiCanvas' className='hanoi3d'
+                                         style={{height: this.state.canvasHeight, width: '100%', margin: '20px auto'}}
 
-                                 ref={(mount) => {
-                                     this.mount = mount
-                                 }}
-                            />
+                                         ref={(mount) => {
+                                             this.mount = mount;
+                                         }}
+                                    />
+                                </Grid.Column>
+                                <Grid.Column>
+                                    <Header as={'h3'}>{this.state.currentMove.moveCount !== this.props.moveHistory.length
+                                        ? ("Move #" + this.state.currentMove.moveCount + " of "
+                                            + this.props.moveHistory.length + " - "
+                                            + this.state.currentMove.moveDesc ): "Completed All Moves."}</Header>
+                                </Grid.Column>
+                            </Grid>
                         </Segment>
                     </Responsive>
+
                 </Grid.Column>
             </Grid>
         )
