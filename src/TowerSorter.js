@@ -3,13 +3,12 @@ import Tower from "./Tower";
 import MoveList from "./MoveList";
 import ThreeScene from "./ThreeScene";
 import Move from "./Move";
-import {Label, Form} from 'semantic-ui-react';
-import {Select} from 'semantic-ui-react';
 import {Header} from 'semantic-ui-react'
 import {Segment} from 'semantic-ui-react';
 import {Container} from 'semantic-ui-react';
 import {Table} from 'semantic-ui-react';
 import {Responsive, Message, Button, Grid, Divider} from "semantic-ui-react";
+import DiscSelect from "./DiscSelect";
 
 
 class TowerSorter extends Component {
@@ -326,69 +325,42 @@ class TowerSorter extends Component {
 
     reset() {
 
-        this.setState ({ThreeJS: !this.state.ThreeJS});
+        this.setState({ThreeJS: !this.state.ThreeJS});
     }
 
     render() {
 
-        let discOptions = [
-            {key: '0', value: '0'},
-            {key: '3', value: '3', text: '3 discs'},
-            {key: '4', value: '4', text: '4 discs'},
-            {key: '5', value: '5', text: '5 discs'},
-            {key: '6', value: '6', text: '6 discs'},
-            {key: '7', value: '7', text: '7 discs'},
-            {key: '8', value: '8', text: '8 discs'},
-            {key: '9', value: '9', text: '9 discs'},
-            {key: '10', value: '10', text: '10 discs'},
-            {key: '11', value: '11', text: '11 discs'},
-            {key: '12', value: '12', text: '12 discs'}
-        ];
 
         return (
 
 
             <Container>
-                <Divider hidden/>
+
                 <Grid columns={1}>
                     <Grid.Column>
 
                         <Grid columns={1}>
 
                             <Grid.Column>
-                                <Header as='h1'>Towers of Hanoi Demo</Header>
+                                <Responsive {...Responsive.onlyComputer} >
+                                    <Header as='h1'>Towers of Hanoi Demo</Header>
+                                </Responsive>
+                                <Responsive {...Responsive.onlyTablet} >
+                                    <Header as='h1'>Towers of Hanoi Demo</Header>
+                                </Responsive>
                             </Grid.Column>
 
                             <Grid.Column>
                                 {this.state.solved &&
-                                <ThreeScene key={this.state.discCount + this.state.ThreeJS} moveHistory={this.state.moveHistory}
-                                            discCount={this.state.discCount} resetButton = {this.reset}/>}
+                                <ThreeScene key={this.state.discCount + this.state.ThreeJS}
+                                            moveHistory={this.state.moveHistory}
+                                            discCount={this.state.discCount} resetButton={this.reset}
+                                            toggleMoveListPanel={this.toggleMoveListPanel}
+                                            handleDiscSelect={this.handleDiscSelect}/>}
                             </Grid.Column>
 
                             <Grid.Column>
-
-                                <Form>
-                                    <Form.Field inline>
-                                        <Responsive {...Responsive.onlyComputer} as={Label} size='small'
-                                                    position='right'>
-                                            Select the number of discs to initiate the solution:
-                                        </Responsive>
-                                        <Responsive {...Responsive.onlyTablet} >
-                                            <Label size='large' pointing="below">
-                                                Select the number of discs to initiate the solution:
-                                            </Label>
-                                        </Responsive>
-                                        <Responsive {...Responsive.onlyMobile}>
-                                            <Label size='huge' pointing="below">
-                                                Select the number of discs to initiate the solution:
-                                            </Label>
-                                        </Responsive>
-                                        <Select id="discSelector" options={discOptions}
-                                                onChange={this.handleDiscSelect}>
-
-                                        </Select>
-                                    </Form.Field>
-                                </Form>
+                                <DiscSelect handleDiscSelect={this.handleDiscSelect}></DiscSelect>
                             </Grid.Column>
                         </Grid>
 
