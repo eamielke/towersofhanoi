@@ -1,17 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="a48d533f-5b82-4265-bd5d-f08bc74b4e19" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/App.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/App.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/DiscSelect.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/DiscSelect.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/MoveList.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/MoveList.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/ThreeScene.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/ThreeScene.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/TowerSorter.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/TowerSorter.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/yarn.lock" beforeDir="false" afterPath="$PROJECT_DIR$/yarn.lock" afterDir="false" />
-    </list>
+    <list default="true" id="a48d533f-5b82-4265-bd5d-f08bc74b4e19" name="Default Changelist" comment="" />
     <ignored path="$PROJECT_DIR$/.tmp/" />
     <ignored path="$PROJECT_DIR$/temp/" />
     <ignored path="$PROJECT_DIR$/tmp/" />
@@ -62,14 +52,23 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/TowerSorter.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="371">
-              <caret line="449" column="53" selection-start-line="449" selection-start-column="53" selection-end-line="449" selection-end-column="53" />
+            <state relative-caret-position="767">
+              <caret line="458" column="29" lean-forward="true" selection-start-line="458" selection-start-column="29" selection-end-line="458" selection-end-column="29" />
               <folding>
                 <element signature="e#0#39#0" expanded="true" />
               </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/yarn.lock">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="489">
+              <caret line="8464" column="16" selection-start-line="8464" selection-end-line="8464" selection-end-column="16" />
             </state>
           </provider>
         </entry>
@@ -101,15 +100,6 @@
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/node_modules/three/build/three.module.js">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="619092">
-              <caret line="21348" column="9" selection-start-line="21348" selection-start-column="9" selection-end-line="21348" selection-end-column="9" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/public/index.html">
           <provider selected="true" editor-type-id="text-editor" />
         </entry>
@@ -125,7 +115,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>discOptions</find>
       <find>this.threeRef</find>
       <find>this.threeRef.current</find>
       <find>toggleAnimation</find>
@@ -155,6 +144,7 @@
       <find>key</find>
       <find>paused</find>
       <find>reset</find>
+      <find>scroll-into-view</find>
     </findStrings>
     <replaceStrings>
       <replace>321</replace>
@@ -200,9 +190,9 @@
     </option>
   </component>
   <component name="ProjectFrameBounds" extendedState="6">
-    <option name="y" value="52" />
-    <option name="width" value="3830" />
-    <option name="height" value="1582" />
+    <option name="y" value="100" />
+    <option name="width" value="3840" />
+    <option name="height" value="2060" />
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectView">
@@ -294,12 +284,12 @@
       <workItem from="1550694662099" duration="46700000" />
       <workItem from="1550783674519" duration="49086000" />
       <workItem from="1550905120782" duration="16775000" />
-      <workItem from="1550925301734" duration="66773000" />
+      <workItem from="1550925301734" duration="67667000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="232920000" />
+    <option name="totallyTimeSpent" value="233814000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="52" width="3840" height="2108" extended-state="6" />
@@ -312,7 +302,7 @@
       <window_info anchor="bottom" id="Messages" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" weight="0.22475028" />
-      <window_info active="true" anchor="bottom" id="Run" order="2" visible="true" weight="0.2081021" />
+      <window_info anchor="bottom" id="Run" order="2" weight="0.2081021" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.18836565" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
@@ -320,7 +310,7 @@
       <window_info anchor="bottom" id="Docker" order="7" show_stripe_button="false" />
       <window_info anchor="bottom" id="Version Control" order="8" />
       <window_info anchor="bottom" id="Event Log" order="9" side_tool="true" />
-      <window_info anchor="bottom" id="Terminal" order="10" weight="0.11154273" />
+      <window_info active="true" anchor="bottom" id="Terminal" order="10" visible="true" weight="0.11154273" />
       <window_info anchor="bottom" id="TypeScript" order="11" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
@@ -455,11 +445,18 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/TowerSorter.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="371">
-          <caret line="449" column="53" selection-start-line="449" selection-start-column="53" selection-end-line="449" selection-end-column="53" />
+        <state relative-caret-position="767">
+          <caret line="458" column="29" lean-forward="true" selection-start-line="458" selection-start-column="29" selection-end-line="458" selection-end-column="29" />
           <folding>
             <element signature="e#0#39#0" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/yarn.lock">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="489">
+          <caret line="8464" column="16" selection-start-line="8464" selection-end-line="8464" selection-end-column="16" />
         </state>
       </provider>
     </entry>

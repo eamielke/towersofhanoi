@@ -33,7 +33,7 @@ class TowerSorter extends Component {
             solved: false,
             initialTowerState: [],
             ThreeJS: true,
-            paused: false,
+            paused: false
         };
         this.toggleMoveListPanel = this.toggleMoveListPanel.bind(this);
         this.handleDiscSelect = this.handleDiscSelect.bind(this);
@@ -42,8 +42,11 @@ class TowerSorter extends Component {
         this.handleSidebarHide = this.handleSidebarHide.bind(this);
         this.toggleAnimation = this.toggleAnimation.bind(this);
         this.getCurrentMoveNumber = this.toggleAnimation.bind(this);
-        this.isAnimationRunning = this.isAnimationRunning.bind(this);
+        this.isPaused = this.isPaused.bind(this);
         this.scrollToMoveListRef = this.scrollToMoveListRef.bind(this);
+        this.updateCurrentMove = this.updateCurrentMove.bind(this);
+        this.isAnimationComplete = this.isAnimationComplete.bind(this);
+        this.updateDimensions = this.updateDimensions.bind(this);
 
         this.threeRef = React.createRef();
 
@@ -264,7 +267,6 @@ class TowerSorter extends Component {
             moveCount: this.moveCount,
         });
 
-        // this.outputMoveHistory();
     }
 
 
@@ -364,9 +366,9 @@ class TowerSorter extends Component {
         return this.threeRef.current.getCurrentMove().moveCount;
     }
 
-    isAnimationRunning() {
+    isPaused() {
         if (this.threeRef && this.threeRef.current) {
-            return this.threeRef.current.isRunning();
+            return this.threeRef.current.isPaused();
         } else {
             return false;
         }
@@ -415,39 +417,50 @@ class TowerSorter extends Component {
         console.log('after scrollToMoveList: ' + this.scrolltoMoveList);
     }
 
+    isAnimationComplete() {
+        if (this.threeRef && this.threeRef.current) {
+            return this.threeRef.current.isAnimationComplete();
+        } else {
+            return false;
+        }
+
+    }
+
+    updateCurrentMove(currentMove) {
+        this.setState({currentMove: currentMove});
+    }
+
+    updateDimensions() {
+        console.log('Updating state in parent component');
+        this.setState({width: window.innerWidth, height: window.innerHeight, paused: this.isPaused()});
+    }
+
     render() {
 
-        let pauseMenu;
+        let pauseMenu = <Menu.Item disabled={!this.threeRef.current
+        || this.isAnimationComplete()}
+                                   color='green' active={this.state.paused}
+                                   onClick={this.toggleAnimation}><span>{this.state.paused ?
+            'Resume' : 'Pause'}</span></Menu.Item>;
 
-        if (this.threeRef.current) {
-            pauseMenu = <Menu.Item disabled={!this.threeRef.current}
-                                   color='green' active={!this.isAnimationRunning()}
-                                   onClick={this.toggleAnimation}><span>{this.isAnimationRunning() ?
-                'Pause' : 'Resume'}</span></Menu.Item>;
-        }
-
-        let pauseMenuMobile;
-
-        if (this.threeRef.current) {
-            pauseMenuMobile =
-                <Menu.Item position='right' disabled={!this.threeRef.current}
-                           color='green' active={this.state.paused}
-                           onClick={this.toggleAnimation}><Icon size={'big'} name={this.state.paused ?
-                    'play' : 'pause'}/></Menu.Item>
-        }
+        let pauseMenuMobile = <Menu.Item position='right' disabled={!this.threeRef.current
+        || this.isAnimationComplete()}
+                                         color='green' active={this.state.paused}
+                                         onClick={this.toggleAnimation}><Icon size={'big'} name={this.state.paused ?
+            'play' : 'pause'}/></Menu.Item>;
 
 
         return (
             <div>
                 <Responsive {...Responsive.onlyMobile}>
                     <Sticky>
-                        <Menu borderless size='large' icon>
+                        <Menu borderless size='small' icon>
 
                             <Menu.Item
                                 onClick={this.handleSideBarShowClick}>
                                 <Icon size={'big'} name={'bars'}/>
                             </Menu.Item>
-                            <Menu.Item header as={'h2'}>
+                            <Menu.Item header as={'h3'}>
                                 Towers of Hanoi Demo
                             </Menu.Item>
                             <Menu.Menu position='right'>
@@ -507,7 +520,10 @@ class TowerSorter extends Component {
                                                         moveHistory={this.state.moveHistory}
                                                         discCount={this.state.discCount} resetButton={this.reset}
                                                         toggleMoveListPanel={this.toggleMoveListPanel}
-                                                        handleDiscSelect={this.handleDiscSelect}/>}
+                                                        handleDiscSelect={this.handleDiscSelect}
+                                                        updateCurrentMove={this.updateCurrentMove}
+                                                        updateDimensions={this.updateDimensions}
+                                            />}
                                         </Grid.Column>
 
                                         <Grid.Column width={16}>
@@ -519,7 +535,7 @@ class TowerSorter extends Component {
 
                                 {this.state.solved && this.getPuzzleBanner()}
 
-                                <Grid.Column >
+                                <Grid.Column>
                                     {this.state.displayMoveList &&
                                     <MoveList id='moveList' ref={this.moveListRef}
                                               scrollToMoveListRef={this.scrollToMoveListRef}

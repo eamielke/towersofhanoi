@@ -11,15 +11,14 @@ class ThreeScene extends Component {
         this.updateDimensions = this.updateDimensions.bind(this);
         this.resetCamera = this.resetCamera.bind(this);
         this.fullScreen = this.fullScreen.bind(this);
-        this.updateCurrentTween = this.updateCurrentTween.bind(this);
+        this.updateCurrentMove = this.updateCurrentMove.bind(this);
         this.toggleAnimation = this.toggleAnimation.bind(this);
-        this.isAnimationStarted = this.isAnimationStarted.bind(this);
+        this.isAnimationComplete = this.isAnimationComplete.bind(this);
 
         this.state = {
             canvasHeight: '300px',
             currentMove: this.props.moveHistory[0],
             paused: false,
-            animationStarted: false,
         };
 
     }
@@ -108,7 +107,7 @@ class ThreeScene extends Component {
         this.start();
         this.tweenArray[0].start();
 
-        this.setState({paused: false, animationStarted: true});
+        this.setState({paused: false});
 
         console.log('Calling ComponentDidMount');
 
@@ -135,8 +134,9 @@ class ThreeScene extends Component {
     }
 
     updateDimensions() {
-
+        console.log('Updating state in child component');
         this.setState({width: window.innerWidth, height: window.innerHeight});
+        this.props.updateDimensions();
 
     }
 
@@ -253,7 +253,7 @@ class ThreeScene extends Component {
                 discObj.position.x = currentDisc.x;
                 discObj.position.y = currentDisc.y;
                 discObj.rotation.z = currentDisc.r;
-            }).onStart(this.updateCurrentTween(move.moveCount));
+            }).onStart(this.updateCurrentMove(move.moveCount));
 
         if (previousTween) {
             previousTween.chain(tweenOver);
@@ -262,21 +262,26 @@ class ThreeScene extends Component {
         return tweenOver;
     }
 
-    updateCurrentTween(moveCount) {
+    updateCurrentMove(moveCount) {
         return () => {
-
+            let currentMove = this.props.moveHistory[moveCount - 1];
             this.currentTween = moveCount - 1;
-            this.setState({currentMove: this.props.moveHistory[moveCount - 1]});
-
+            this.setState({currentMove: currentMove });
+            this.props.updateCurrentMove(this.props.moveHistory[this.currentTween]);
         };
+    }
+
+
+    isAnimationComplete() {
+        return ((this.currentTween + 1) === this.props.moveHistory.length);
     }
 
     getCurrentMove() {
         return (this.state.currentMove);
     }
 
-    isRunning() {
-        return !this.state.paused;
+    isPaused() {
+        return this.state.paused;
     }
 
 
@@ -336,11 +341,6 @@ class ThreeScene extends Component {
 
         this.setState({paused: !this.state.paused});
     }
-
-    isAnimationStarted() {
-        return this.state.animationStarted;
-    }
-
 
     render() {
 
