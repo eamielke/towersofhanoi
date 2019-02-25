@@ -2,8 +2,7 @@ import React, {Component} from 'react';
 import * as THREE from 'three';
 import TWEEN from '@tweenjs/tween.js';
 // import OrbitControls from 'three-orbitcontrols';
-import {Segment, Grid, Header, Menu, Responsive, Icon, Dropdown, Sidebar} from 'semantic-ui-react';
-import DiscSelect from './DiscSelect';
+import {Segment, Grid, Header, Menu, Responsive} from 'semantic-ui-react';
 
 class ThreeScene extends Component {
 
@@ -14,29 +13,15 @@ class ThreeScene extends Component {
         this.fullScreen = this.fullScreen.bind(this);
         this.updateCurrentTween = this.updateCurrentTween.bind(this);
         this.toggleAnimation = this.toggleAnimation.bind(this);
-        this.handleSideBarShowClick = this.handleSideBarShowClick.bind(this);
-        this.handleSidebarHide = this.handleSidebarHide.bind(this);
-
-        this.discOptions = [
-            {key: '0', value: '0'},
-            {key: '3', value: '3', text: '3 discs'},
-            {key: '4', value: '4', text: '4 discs'},
-            {key: '5', value: '5', text: '5 discs'},
-            {key: '6', value: '6', text: '6 discs'},
-            {key: '7', value: '7', text: '7 discs'},
-            {key: '8', value: '8', text: '8 discs'},
-            {key: '9', value: '9', text: '9 discs'},
-            {key: '10', value: '10', text: '10 discs'},
-            {key: '11', value: '11', text: '11 discs'},
-            {key: '12', value: '12', text: '12 discs'}
-        ];
+        this.isAnimationStarted = this.isAnimationStarted.bind(this);
 
         this.state = {
             canvasHeight: '300px',
             currentMove: this.props.moveHistory[0],
-            animationStatus: 'running',
-            visible: false,
+            paused: false,
+            animationStarted: false,
         };
+
     }
 
     componentDidMount() {
@@ -122,9 +107,8 @@ class ThreeScene extends Component {
 
         this.start();
         this.tweenArray[0].start();
-        this.running = true;
 
-        this.setState({running: true, animationStatus: 'running'});
+        this.setState({paused: false, animationStarted: true});
 
         console.log('Calling ComponentDidMount');
 
@@ -283,9 +267,18 @@ class ThreeScene extends Component {
 
             this.currentTween = moveCount - 1;
             this.setState({currentMove: this.props.moveHistory[moveCount - 1]});
-            console.log('Updating current tween to: ' + this.currentTween);
+
         };
     }
+
+    getCurrentMove() {
+        return (this.state.currentMove);
+    }
+
+    isRunning() {
+        return !this.state.paused;
+    }
+
 
     componentWillUnmount() {
         this.stop();
@@ -330,122 +323,82 @@ class ThreeScene extends Component {
 
     toggleAnimation() {
 
-        if (this.running) {
+        if (this.state.paused) {
+            console.log('Trying to start tween: ' + this.currentTween);
+            this.tweenArray[this.currentTween].start();
+        } else {
             console.log('Trying to stop tween: ' + this.currentTween);
 
             this.tweenArray[this.currentTween].stop();
 
-        } else {
-            console.log('Trying to start tween: ' + this.currentTween);
-            this.tweenArray[this.currentTween].start();
         }
 
 
-        this.running = !this.running;
-
-        this.setState({running: this.running});
+        this.setState({paused: !this.state.paused});
     }
 
-
-    handleSideBarShowClick() {
-        this.setState({visible: true});
+    isAnimationStarted() {
+        return this.state.animationStarted;
     }
 
-    handleSidebarHide() {
-        console.log('Hiding sidebar: ' + this.state.visible);
-        this.setState({visible: false});
-    }
 
     render() {
 
-
         return (
-            <div>
+            <div >
 
-                <Responsive {...Responsive.onlyMobile}>
-                    <Menu compact size={'medium'} attached='top'>
-                        <Menu.Item toggle
-                                   onClick={this.handleSideBarShowClick}> <Icon name='bars'/></Menu.Item>
-                        <Menu.Item textAlign={'center'} header><Header as={'h3'} textAlign={'center'}>Towers of Hanoi Demo</Header></Menu.Item>
-                    </Menu>
-                </Responsive>
                 <Responsive {...Responsive.onlyComputer} >
-                    <Menu size={'large'} widths={3} attached='top'>
-                        <Menu.Item toggle color='green' active={this.state.active}
+                    <Menu  inverted  borderless size={'huge'} attached={'top'}  >
+                        <Menu.Item color='green' active={this.state.active}
                                    onClick={this.fullScreen}>Enlarge</Menu.Item>
-                        <Menu.Item toggle
+                        <Menu.Item
                                    disabled={this.state.currentMove.moveCount === this.props.moveHistory.length}
-                                   color='green' active={!this.state.running}
-                                   onClick={this.toggleAnimation}>{this.state.running &&
-                        <span>Pause</span>}{!this.state.running && <span>Resume</span>}</Menu.Item>
+                                   color='green' active={this.state.paused}
+                                   onClick={this.toggleAnimation}><span>{!this.state.paused ?
+                            'Pause': 'Resume' }</span></Menu.Item>
                         <Menu.Item onClick={this.props.resetButton}>Reset</Menu.Item>
                     </Menu>
 
                 </Responsive>
 
-                <Sidebar.Pushable as={Segment}>
-                    <Sidebar
-                        as={Menu}
-                        inverted
-                        animation='overlay'
-                        icon='labeled'
-                        onHide={this.handleSidebarHide}
-                        vertical
-                        visible={this.state.visible}
-                        width={'wide'}>
-                        <Menu.Item> <Dropdown id="discSelector" fluid  options={this.discOptions} selection placeholder={'Select a disc to start'}
-                                              onChange={this.props.handleDiscSelect}>
+                <Segment basic>
+                    <Grid columns={1}>
 
-                        </Dropdown></Menu.Item>
-                        <Menu.Item as={'a'} toggle
-                                   disabled={this.state.currentMove.moveCount === this.props.moveHistory.length}
-                                   color='green' active={!this.state.running}
-                                   onClick={this.toggleAnimation}>{this.state.running &&
-                        <span>Pause</span>}{!this.state.running && <span>Resume</span>}</Menu.Item>
-                        <Menu.Item as={'a'} onClick={this.props.resetButton}>Reset</Menu.Item>
-                        <Menu.Item as={'a'} onClick={this.props.toggleMoveListPanel}>Display Move List</Menu.Item>
-                    </Sidebar>
+                        <Grid.Column>
 
-                    <Sidebar.Pusher>
-                        <Segment basic>
                             <Grid columns={1}>
-
                                 <Grid.Column>
 
-                                    <Grid columns={1}>
-                                        <Grid.Column>
 
+                                    <div ref='hanoiCanvas'
+                                         style={{
+                                             height: this.state.canvasHeight,
+                                             width: '100%',
+                                             margin: '20px auto'
+                                         }}
 
-                                            <div ref='hanoiCanvas' className='hanoi3d'
-                                                 style={{
-                                                     height: this.state.canvasHeight,
-                                                     width: '100%',
-                                                     margin: '20px auto'
-                                                 }}
-
-                                                 ref={(mount) => {
-                                                     this.mount = mount
-                                                 }}
-                                            />
-
-
-                                        </Grid.Column>
-                                        <Grid.Column>
-                                            <Header
-                                                as={'h3'}>{this.state.currentMove.moveCount !== this.props.moveHistory.length
-                                                ? ("Move #" + this.state.currentMove.moveCount + " of "
-                                                    + this.props.moveHistory.length + " - "
-                                                    + this.state.currentMove.moveDesc) : "Completed All Moves."}</Header>
-                                        </Grid.Column>
-                                    </Grid>
+                                         ref={(mount) => {
+                                             this.mount = mount
+                                         }}
+                                    />
 
 
                                 </Grid.Column>
+                                <Grid.Column>
+                                    <Header
+                                        as={'h3'}>{this.state.currentMove.moveCount !== this.props.moveHistory.length
+                                        ? ("Move #" + this.state.currentMove.moveCount + " of "
+                                            + this.props.moveHistory.length + " - "
+                                            + this.state.currentMove.moveDesc) : "Completed All Moves."}</Header>
+                                </Grid.Column>
                             </Grid>
-                        </Segment>
-                    </Sidebar.Pusher>
 
-                </Sidebar.Pushable>
+
+                        </Grid.Column>
+                    </Grid>
+                </Segment>
+
+
             </div>
         )
     }

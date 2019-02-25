@@ -3,15 +3,15 @@ import Tower from "./Tower";
 import MoveList from "./MoveList";
 import ThreeScene from "./ThreeScene";
 import Move from "./Move";
-import {Header} from 'semantic-ui-react'
-import {Segment} from 'semantic-ui-react';
-import {Container} from 'semantic-ui-react';
+import {Dropdown, Header, Sticky} from 'semantic-ui-react'
+import {Segment, Icon} from 'semantic-ui-react';
 import {Table} from 'semantic-ui-react';
-import {Responsive, Message, Button, Grid, Divider} from "semantic-ui-react";
+import {Responsive, Message, Button, Grid, Menu, Sidebar} from "semantic-ui-react";
 import DiscSelect from "./DiscSelect";
-
+import scrollIntoView from 'scroll-into-view-if-needed'
 
 class TowerSorter extends Component {
+
 
     previousDisk = -1;
 
@@ -32,11 +32,38 @@ class TowerSorter extends Component {
             moveHistory: [],
             solved: false,
             initialTowerState: [],
-            ThreeJS: true
+            ThreeJS: true,
+            paused: false,
         };
         this.toggleMoveListPanel = this.toggleMoveListPanel.bind(this);
         this.handleDiscSelect = this.handleDiscSelect.bind(this);
         this.reset = this.reset.bind(this);
+        this.handleSideBarShowClick = this.handleSideBarShowClick.bind(this);
+        this.handleSidebarHide = this.handleSidebarHide.bind(this);
+        this.toggleAnimation = this.toggleAnimation.bind(this);
+        this.getCurrentMoveNumber = this.toggleAnimation.bind(this);
+        this.isAnimationRunning = this.isAnimationRunning.bind(this);
+        this.scrollToMoveListRef = this.scrollToMoveListRef.bind(this);
+
+        this.threeRef = React.createRef();
+
+        this.moveListRef = React.createRef();
+
+        this.scrolltoMoveList = false;
+        this.displayMoveList = false;
+
+        this.discOptions = [
+            {key: '3', value: '3', text: '3 discs'},
+            {key: '4', value: '4', text: '4 discs'},
+            {key: '5', value: '5', text: '5 discs'},
+            {key: '6', value: '6', text: '6 discs'},
+            {key: '7', value: '7', text: '7 discs'},
+            {key: '8', value: '8', text: '8 discs'},
+            {key: '9', value: '9', text: '9 discs'},
+            {key: '10', value: '10', text: '10 discs'},
+            {key: '11', value: '11', text: '11 discs'},
+            {key: '12', value: '12', text: '12 discs'}
+        ];
 
     }
 
@@ -69,6 +96,8 @@ class TowerSorter extends Component {
             moveHistory: this.moveHistory,
             solved: false,
             initialTowerState: TowerSorter.cloneTowerArray(this.towerArray),
+            visible: false,
+            paused: false
         });
     }
 
@@ -177,13 +206,6 @@ class TowerSorter extends Component {
         return moved;
     }
 
-    outputMoveHistory() {
-        console.log("move history length: " + this.moveHistory.length);
-        for (let i = 0; i < this.moveHistory.length; i++) {
-            console.log(this.moveHistory[i].move);
-        }
-    }
-
 
     handleDiscSelect(event, data) {
         if (data.value > 0) {
@@ -191,6 +213,15 @@ class TowerSorter extends Component {
             this.setupTowers(data.value);
             this.solvePuzzle();
         }
+    }
+
+    handleSideBarShowClick() {
+        this.setState({visible: true});
+    }
+
+    handleSidebarHide() {
+        console.log('Hiding sidebar: ' + this.state.visible);
+        this.setState({visible: false});
     }
 
     solvePuzzle() {
@@ -236,11 +267,6 @@ class TowerSorter extends Component {
         // this.outputMoveHistory();
     }
 
-    toggleMoveListPanel() {
-        this.setState({
-            displayMoveList: !this.state.displayMoveList
-        })
-    }
 
     getTowerStateSegment() {
 
@@ -298,26 +324,29 @@ class TowerSorter extends Component {
     }
 
     getPuzzleBanner() {
+
+        let buttonLabel = this.state.displayMoveList ? 'Hide Move List' : 'Display Move List';
+
         return (<Grid.Column>
             <Responsive {...Responsive.onlyComputer} >
                 <Message positive size={'small'}>
                     <Message.Header>Success</Message.Header>
                     <p>Puzzle Solved in {this.state.moveCount} moves.</p>
-                    <Button primary onClick={this.toggleMoveListPanel}> Display Move List</Button>
+                    <Button primary onClick={this.toggleMoveListPanel}>{buttonLabel}</Button>
                 </Message>
             </Responsive>
             <Responsive {...Responsive.onlyTablet} >
                 <Message positive size={'huge'}>
                     <Message.Header>Success</Message.Header>
                     <p>Puzzle Solved in {this.state.moveCount} moves.</p>
-                    <Button primary onClick={this.toggleMoveListPanel}> Display Move List</Button>
+                    <Button primary onClick={this.toggleMoveListPanel}>{buttonLabel}</Button>
                 </Message>
             </Responsive>
             <Responsive {...Responsive.onlyMobile} >
                 <Message positive size={'large'}>
                     <Message.Header>Success</Message.Header>
                     <p>Puzzle Solved in {this.state.moveCount} moves.</p>
-                    <Button primary onClick={this.toggleMoveListPanel}> Display Move List</Button>
+                    <Button primary onClick={this.toggleMoveListPanel}>{buttonLabel}</Button>
                 </Message>
             </Responsive></Grid.Column>);
     }
@@ -325,59 +354,189 @@ class TowerSorter extends Component {
 
     reset() {
 
-        this.setState({ThreeJS: !this.state.ThreeJS});
+        this.setState({ThreeJS: !this.state.ThreeJS, paused: false});
+
+        this.handleSidebarHide();
+
+    }
+
+    getCurrentMoveNumber() {
+        return this.threeRef.current.getCurrentMove().moveCount;
+    }
+
+    isAnimationRunning() {
+        if (this.threeRef && this.threeRef.current) {
+            return this.threeRef.current.isRunning();
+        } else {
+            return false;
+        }
+
+    }
+
+    toggleAnimation() {
+
+        this.threeRef.current.toggleAnimation();
+
+        this.setState({paused: !this.state.paused});
+
+        this.handleSidebarHide();
+    }
+
+
+    toggleMoveListPanel() {
+
+        this.setState({
+            displayMoveList: !this.state.displayMoveList
+        });
+
+        this.displayMoveList = !this.displayMoveList;
+        this.scrolltoMoveList = this.displayMoveList;
+
+        console.log('Setting scrollToMoveList: ' + this.scrolltoMoveList);
+
+        this.handleSidebarHide();
+    }
+
+    scrollToMoveListRef() {
+        const node = document.getElementById('moveList');
+
+        console.log('before scrollToMoveList: ' + this.scrolltoMoveList);
+
+        if (node && this.scrolltoMoveList) {
+            scrollIntoView(node, {
+                scrollMode: 'if-needed',
+                block: 'nearest',
+                inline: 'nearest',
+                behavior: 'smooth',
+            });
+        }
+
+        this.scrolltoMoveList = false;
+        console.log('after scrollToMoveList: ' + this.scrolltoMoveList);
     }
 
     render() {
 
+        let pauseMenu;
+
+        if (this.threeRef.current) {
+            pauseMenu = <Menu.Item disabled={!this.threeRef.current}
+                                   color='green' active={!this.isAnimationRunning()}
+                                   onClick={this.toggleAnimation}><span>{this.isAnimationRunning() ?
+                'Pause' : 'Resume'}</span></Menu.Item>;
+        }
+
+        let pauseMenuMobile;
+
+        if (this.threeRef.current) {
+            pauseMenuMobile =
+                <Menu.Item position='right' disabled={!this.threeRef.current}
+                           color='green' active={this.state.paused}
+                           onClick={this.toggleAnimation}><Icon size={'big'} name={this.state.paused ?
+                    'play' : 'pause'}/></Menu.Item>
+        }
+
 
         return (
+            <div>
+                <Responsive {...Responsive.onlyMobile}>
+                    <Sticky>
+                        <Menu borderless size='large' icon>
 
+                            <Menu.Item
+                                onClick={this.handleSideBarShowClick}>
+                                <Icon size={'big'} name={'bars'}/>
+                            </Menu.Item>
+                            <Menu.Item header as={'h2'}>
+                                Towers of Hanoi Demo
+                            </Menu.Item>
+                            <Menu.Menu position='right'>
+                                {pauseMenuMobile}
+                                <Menu.Item position='right' disabled={!this.threeRef.current} as={'a'}
+                                           onClick={this.reset}><Icon size='big' name={'recycle'}/></Menu.Item>
+                            </Menu.Menu>
+                        </Menu>
+                    </Sticky>
+                </Responsive>
+                <Sidebar.Pushable>
+                    <Responsive {...Responsive.onlyMobile}>
+                        <Sidebar
+                            as={Menu}
+                            inverted
+                            animation='overlay'
+                            icon='labeled'
+                            onHide={this.handleSidebarHide}
+                            vertical
+                            visible={this.state.visible}
+                            width={'wide'}>
+                            <Menu.Item> <Dropdown id="discSelector" fluid options={this.discOptions} selection
+                                                  placeholder={'Select a disc to start'}
+                                                  onChange={this.handleDiscSelect}>
 
-            <Container>
+                            </Dropdown></Menu.Item>
+                            {pauseMenu}
+                            <Menu.Item disabled={!this.threeRef.current} as={'a'} onClick={this.reset}>Reset</Menu.Item>
+                            <Menu.Item disabled={!this.threeRef.current} as={'a'} onClick={this.toggleMoveListPanel}>
+                                {this.state.displayMoveList ? 'Hide Move List' : 'Display Move List'}</Menu.Item>
+                        </Sidebar>
+                    </Responsive>
 
-                <Grid columns={1}>
-                    <Grid.Column>
+                    <Sidebar.Pusher>
 
-                        <Grid columns={1}>
+                        <Segment basic>
+                            <Grid columns={1} textAlign='center' padded>
+                                <Grid.Column>
 
-                            <Grid.Column>
-                                <Responsive {...Responsive.onlyComputer} >
-                                    <Header as='h1'>Towers of Hanoi Demo</Header>
-                                </Responsive>
-                                <Responsive {...Responsive.onlyTablet} >
-                                    <Header as='h1'>Towers of Hanoi Demo</Header>
-                                </Responsive>
-                            </Grid.Column>
+                                    <Grid columns={1} textAlign='center'>
 
-                            <Grid.Column>
-                                {this.state.solved &&
-                                <ThreeScene key={this.state.discCount + this.state.ThreeJS}
-                                            moveHistory={this.state.moveHistory}
-                                            discCount={this.state.discCount} resetButton={this.reset}
-                                            toggleMoveListPanel={this.toggleMoveListPanel}
-                                            handleDiscSelect={this.handleDiscSelect}/>}
-                            </Grid.Column>
+                                        <Responsive {...Responsive.onlyComputer} >
+                                            <Grid.Column width={16}>
+                                                <Header textAlign='center' as='h1'>Towers of Hanoi Demo</Header>
+                                            </Grid.Column>
+                                        </Responsive>
+                                        <Responsive {...Responsive.onlyTablet} >
+                                            <Grid.Column width={16}>
+                                                <Header textAlign='center' as='h1'>Towers of Hanoi Demo</Header>
+                                            </Grid.Column>
+                                        </Responsive>
 
-                            <Grid.Column>
-                                <DiscSelect handleDiscSelect={this.handleDiscSelect}></DiscSelect>
-                            </Grid.Column>
-                        </Grid>
+                                        <Grid.Column width={16}>
+                                            {this.state.solved &&
+                                            <ThreeScene ref={this.threeRef}
+                                                        key={this.state.discCount + this.state.ThreeJS}
+                                                        moveHistory={this.state.moveHistory}
+                                                        discCount={this.state.discCount} resetButton={this.reset}
+                                                        toggleMoveListPanel={this.toggleMoveListPanel}
+                                                        handleDiscSelect={this.handleDiscSelect}/>}
+                                        </Grid.Column>
 
-                    </Grid.Column>
+                                        <Grid.Column width={16}>
+                                            <DiscSelect handleDiscSelect={this.handleDiscSelect}/>
+                                        </Grid.Column>
+                                    </Grid>
 
-                    {this.state.solved && this.getPuzzleBanner()}
+                                </Grid.Column>
 
-                    <Grid.Column>
-                        {this.state.displayMoveList &&
-                        <MoveList key={this.state.discCount + 'MoveList'} moveHistory={this.state.moveHistory}/>}
-                    </Grid.Column>
+                                {this.state.solved && this.getPuzzleBanner()}
 
-                    <Grid.Column>
-                        {this.state.solved && this.getTowerStateSegment()}
-                    </Grid.Column>
-                </Grid>
-            </Container>
+                                <Grid.Column >
+                                    {this.state.displayMoveList &&
+                                    <MoveList id='moveList' ref={this.moveListRef}
+                                              scrollToMoveListRef={this.scrollToMoveListRef}
+                                              key={this.state.discCount + 'MoveList'}
+                                              moveHistory={this.state.moveHistory}/>}
+                                </Grid.Column>
+
+                                <Grid.Column>
+                                    {this.state.solved && this.getTowerStateSegment()}
+                                </Grid.Column>
+                            </Grid>
+                        </Segment>
+                    </Sidebar.Pusher>
+
+                </Sidebar.Pushable>
+            </div>
+
         );
     }
 

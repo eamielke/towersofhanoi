@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
-import {Table, Grid, Pagination, Container, Responsive} from 'semantic-ui-react';
+import {Table, Grid, Pagination, Responsive} from 'semantic-ui-react';
+
 
 class MoveList extends Component {
 
@@ -8,7 +9,7 @@ class MoveList extends Component {
     constructor(props) {
         super(props);
 
-        let pageSize = 10;
+        let pageSize = 5;
 
         let tempArray = Array.from(this.props.moveHistory);
 
@@ -30,9 +31,15 @@ class MoveList extends Component {
             currentPage: 0,
             totalPages: totalPages,
             pageSize: pageSize,
+            totalMoveCount: this.props.moveHistory.length,
         };
 
     }
+
+    componentDidMount() {
+        this.props.scrollToMoveListRef();
+    }
+
 
     handlePaginationChange(e, {activePage}) {
         //Normalize page number
@@ -52,12 +59,11 @@ class MoveList extends Component {
 
     render() {
 
-
         return (
 
-            <Grid columns={1}>
+            <Grid id={this.props.id} columns={1}>
                 <Grid.Column>
-                    <Table celled unstackable>
+                    <Table key={this.state.totalMoveCount} celled unstackable>
 
                         <Table.Header>
                             <Table.Row>
@@ -111,7 +117,6 @@ class MoveList extends Component {
                 <Grid.Column>
                     <Responsive {...Responsive.onlyComputer} >
                         <Pagination
-                            activePage={this.state.currentPage + 1}
 
                             onPageChange={this.handlePaginationChange}
                             defaultActivePage={1}
@@ -126,7 +131,7 @@ class MoveList extends Component {
                     </Responsive>
                     <Responsive {...Responsive.onlyTablet} >
                         <Pagination compact
-                                    activePage={this.state.currentPage + 1}
+
 
                                     onPageChange={this.handlePaginationChange}
                                     defaultActivePage={1}
@@ -140,7 +145,7 @@ class MoveList extends Component {
                     </Responsive>
                     <Responsive {...Responsive.onlyMobile} >
                         <Pagination compact
-                                    activePage={this.state.currentPage + 1}
+
 
                                     onPageChange={this.handlePaginationChange}
                                     defaultActivePage={1}

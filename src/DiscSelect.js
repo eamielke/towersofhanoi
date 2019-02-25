@@ -1,4 +1,4 @@
-import {Form, Label, Responsive, Dropdown, Select} from "semantic-ui-react";
+import {Form, Label, Responsive, Select} from "semantic-ui-react";
 import React, {Component} from "react";
 
 class DiscSelect extends Component {
@@ -9,7 +9,6 @@ class DiscSelect extends Component {
     constructor(props) {
         super(props);
         this.discOptions = [
-            {key: '0', value: '0'},
             {key: '3', value: '3', text: '3 discs'},
             {key: '4', value: '4', text: '4 discs'},
             {key: '5', value: '5', text: '5 discs'},

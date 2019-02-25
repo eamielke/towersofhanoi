@@ -2,34 +2,13 @@
   text-align: center;
 }
 
-.centeredTable {
-  margin: 20px auto;
-  border-collapse: collapse;
-  width: 500px;
-}
-
 
 .hanoi3d {
   margin: 20px auto;
   width: 100%;
 }
 
-.centeredLgTable {
-  margin-top: 10px;
-  margin-left: auto;
-  margin-right: auto;
-  margin-bottom: 10px;
-  border-collapse: collapse;
-  width: 1000px;
+.titleMenu {
+  box-shadow: none !important;
+  border: 0 !important;
 }
-
-.puzzleBanner {
-    font-size: 15px;
-    margin-bottom:20px;
-}
-
-.discSelector {
-  margin-top: 10px;
-  margin-bottom: 30px;
-}
-
