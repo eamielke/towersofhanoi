@@ -482,7 +482,7 @@ class TowerSorter extends Component {
                             vertical
                             visible={this.state.visible}
                             width={'wide'}>
-                            <Menu.Item> <Dropdown id="discSelector" fluid options={this.discOptions} selection
+                            <Menu.Item> <Dropdown fluid options={this.discOptions} selection
                                                   placeholder={'Select a disc to start'}
                                                   onChange={this.handleDiscSelect}>
 
@@ -527,7 +527,7 @@ class TowerSorter extends Component {
                                         </Grid.Column>
 
                                         <Grid.Column width={16}>
-                                            <DiscSelect handleDiscSelect={this.handleDiscSelect}/>
+                                            <DiscSelect discSelectKey="discSelect" handleDiscSelect={this.handleDiscSelect}/>
                                         </Grid.Column>
                                     </Grid>
 

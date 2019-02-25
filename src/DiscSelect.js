@@ -23,10 +23,6 @@ class DiscSelect extends Component {
 
     }
 
-    componentDidMount() {
-
-    }
-
     render() {
 
 
@@ -50,7 +46,7 @@ class DiscSelect extends Component {
                                 Select the number of discs to initiate the solution:
                             </Label>
                         </Responsive>}
-                        <Select id="discSelector" options={this.discOptions}
+                        <Select options={this.discOptions}
                                 onChange={this.props.handleDiscSelect}>
 
                         </Select>
@@ -60,7 +56,7 @@ class DiscSelect extends Component {
                 console.log('rendering simple discselector');
                 return (
 
-                    <Select id="discSelector"   options={this.discOptions}  placeholder={'Select a disc to start'}
+                    <Select options={this.discOptions}  placeholder={'Select a disc to start'}
                             onChange={this.props.handleDiscSelect}>
 
                     </Select>
