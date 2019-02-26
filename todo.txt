@@ -1,0 +1,22 @@
+1. Add capability to adjust speed of animation via slider - will need to recreate tween array for all moves and resume at
+current tween.  An optimization is to have only the tweens from the current tween onward recreated - this is ok since
+the refresh button will rebuild the whole thing.
+
+
+2. Update Move list to scale based on the size of the Window - for mobile phones switch to page size of 3.  For tablet
+use page size of 5 and likewise for computer.  For very large screens scale the pages up.
+
+3. add feature to simplify the tables' layout for mobile and provide a way to expand the details for an individual
+table item.
+
+4. Add links to other TOH resources - wikipedia etc.
+
+5. Add brief about
+
+6. Add license information.
+
+7. Add add segments.
+
+8. Fix sidebar to hide when clicking on empty portion of the sidebars body
+
+9. Add feature to allow user to solve the puzzle for 4 towers.
