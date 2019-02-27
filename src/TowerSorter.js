@@ -482,14 +482,15 @@ class TowerSorter extends Component {
                             vertical
                             visible={this.state.visible}
                             width={'wide'}>
-                            <Menu.Item> <Dropdown fluid options={this.discOptions} selection
-                                                  placeholder={'Select a disc to start'}
-                                                  onChange={this.handleDiscSelect}>
-
-                            </Dropdown></Menu.Item>
+                            <Menu.Item> <DiscSelect complex={false} fluid discOptions={this.discOptions}
+                                                    placeholder={'Select a disc to start'}
+                                                    onChange={this.handleDiscSelect}/>
+                            </Menu.Item>
                             {pauseMenu}
-                            <Menu.Item disabled={!this.TowerRendererRef.current} as={'a'} onClick={this.reset}>Reset</Menu.Item>
-                            <Menu.Item disabled={!this.TowerRendererRef.current} as={'a'} onClick={this.toggleMoveListPanel}>
+                            <Menu.Item disabled={!this.TowerRendererRef.current} as={'a'}
+                                       onClick={this.reset}>Reset</Menu.Item>
+                            <Menu.Item disabled={!this.TowerRendererRef.current} as={'a'}
+                                       onClick={this.toggleMoveListPanel}>
                                 {this.state.displayMoveList ? 'Hide Move List' : 'Display Move List'}</Menu.Item>
                         </Sidebar>
                     </Responsive>
@@ -530,7 +531,7 @@ class TowerSorter extends Component {
 
                                 {this.state.solved && this.getPuzzleBanner()}
 
-                                {this.state.displayMoveList &&<Grid.Column>
+                                {this.state.displayMoveList && <Grid.Column>
 
                                     <MoveList id='moveList' ref={this.moveListRef}
                                               scrollToMoveListRef={this.scrollToMoveListRef}

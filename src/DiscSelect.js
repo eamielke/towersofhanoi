@@ -26,45 +26,43 @@ class DiscSelect extends Component {
     render() {
 
 
-            if (this.props.complex ) {
+        if (this.props.complex) {
 
 
-                console.log('rendering complex discselector');
-                return( <Form>
-                    <Form.Field inline>
-                        <Responsive {...Responsive.onlyComputer} as={Label} size='large'
-                                    position='right'>
+            console.log('rendering complex discselector');
+            return (<Form>
+                <Form.Field inline>
+                    <Responsive {...Responsive.onlyComputer} as={Label} size='large'
+                                position='right'>
+                        Select the number of discs to initiate the solution:
+                    </Responsive>
+                    <Responsive {...Responsive.onlyTablet} >
+                        <Label size='large' pointing="below">
                             Select the number of discs to initiate the solution:
-                        </Responsive>
-                        <Responsive {...Responsive.onlyTablet} >
-                            <Label size='large' pointing="below">
-                                Select the number of discs to initiate the solution:
-                            </Label>
-                        </Responsive>
-                        {this.props.displayLabel && <Responsive {...Responsive.onlyMobile}>
-                            <Label size='large' pointing='below'>
-                                Select the number of discs to initiate the solution:
-                            </Label>
-                        </Responsive>}
-                        <Select options={this.discOptions}
-                                onChange={this.props.handleDiscSelect}>
-
-                        </Select>
-                    </Form.Field>
-                </Form>);
-            } else {
-                console.log('rendering simple discselector');
-                return (
-
-                    <Select options={this.discOptions}  placeholder={'Select a disc to start'}
+                        </Label>
+                    </Responsive>
+                    {this.props.displayLabel && <Responsive {...Responsive.onlyMobile}>
+                        <Label size='large' pointing='below'>
+                            Select the number of discs to initiate the solution:
+                        </Label>
+                    </Responsive>}
+                    <Select options={this.discOptions}
                             onChange={this.props.handleDiscSelect}>
 
                     </Select>
-                );
-            }
+                </Form.Field>
+            </Form>);
+        } else {
+            console.log('rendering simple discselector');
+            return (
+
+                <Select fluid={this.props.fluid} options={this.props.discOptions} placeholder={'Select a disc to start'}
+                        onChange={this.props.onChange}/>
+            );
+        }
     }
 }
 
-DiscSelect.defaultProps = { displayLabel: true , complex: true};
+DiscSelect.defaultProps = {displayLabel: true, complex: true};
 
 export default DiscSelect;

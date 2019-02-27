@@ -2,7 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="a48d533f-5b82-4265-bd5d-f08bc74b4e19" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/src/ThreeScene.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/TowerRenderer.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/DiscSelect.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/DiscSelect.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/TowerSorter.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/TowerSorter.js" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/.tmp/" />
@@ -47,8 +48,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/TowerSorter.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="543">
-              <caret line="489" column="39" lean-forward="true" selection-start-line="489" selection-start-column="39" selection-end-line="489" selection-end-column="39" />
+            <state relative-caret-position="585">
+              <caret line="487" column="28" selection-start-line="487" selection-start-column="28" selection-end-line="487" selection-end-column="28" />
               <folding>
                 <element signature="e#0#39#0" expanded="true" />
               </folding>
@@ -59,8 +60,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/DiscSelect.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="667">
-              <caret line="24" selection-start-line="24" selection-end-line="24" />
+            <state relative-caret-position="592">
+              <caret line="59" column="56" selection-start-line="59" selection-start-column="56" selection-end-line="59" selection-end-column="56" />
             </state>
           </provider>
         </entry>
@@ -132,13 +133,13 @@
       <find>paused</find>
       <find>reset</find>
       <find>DiscSelector</find>
-      <find>DiscSelect</find>
       <find>scroll-into-view</find>
       <find>TowerRenderer</find>
       <find>Three</find>
       <find>ThreeJS</find>
       <find>Select</find>
       <find>DropDown</find>
+      <find>DiscSelect</find>
     </findStrings>
     <replaceStrings>
       <replace>321</replace>
@@ -177,9 +178,9 @@
         <option value="$PROJECT_DIR$/src/index.js" />
         <option value="$PROJECT_DIR$/src/ThreeScene.js" />
         <option value="$PROJECT_DIR$/src/MoveList.js" />
-        <option value="$PROJECT_DIR$/src/DiscSelect.js" />
         <option value="$PROJECT_DIR$/src/App.css" />
         <option value="$PROJECT_DIR$/src/TowerRenderer.js" />
+        <option value="$PROJECT_DIR$/src/DiscSelect.js" />
         <option value="$PROJECT_DIR$/src/TowerSorter.js" />
       </list>
     </option>
@@ -283,12 +284,12 @@
       <workItem from="1550925301734" duration="68982000" />
       <workItem from="1551158880687" duration="1334000" />
       <workItem from="1551161143643" duration="19000" />
-      <workItem from="1551201714823" duration="7960000" />
+      <workItem from="1551201714823" duration="8699000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="244442000" />
+    <option name="totallyTimeSpent" value="245181000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="52" width="3840" height="2108" extended-state="6" />
@@ -435,15 +436,15 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/DiscSelect.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="667">
-          <caret line="24" selection-start-line="24" selection-end-line="24" />
+        <state relative-caret-position="592">
+          <caret line="59" column="56" selection-start-line="59" selection-start-column="56" selection-end-line="59" selection-end-column="56" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/TowerSorter.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="543">
-          <caret line="489" column="39" lean-forward="true" selection-start-line="489" selection-start-column="39" selection-end-line="489" selection-end-column="39" />
+        <state relative-caret-position="585">
+          <caret line="487" column="28" selection-start-line="487" selection-start-column="28" selection-end-line="487" selection-end-column="28" />
           <folding>
             <element signature="e#0#39#0" expanded="true" />
           </folding>
