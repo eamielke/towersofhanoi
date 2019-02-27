@@ -4,7 +4,7 @@ import TWEEN from '@tweenjs/tween.js';
 // import OrbitControls from 'three-orbitcontrols';
 import {Segment, Grid, Header, Menu, Responsive} from 'semantic-ui-react';
 
-class ThreeScene extends Component {
+class TowerRenderer extends Component {
 
     constructor(props) {
         super(props);
@@ -404,4 +404,4 @@ class ThreeScene extends Component {
     }
 }
 
-export default ThreeScene;
+export default TowerRenderer;

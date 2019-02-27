@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import Tower from "./Tower";
 import MoveList from "./MoveList";
-import ThreeScene from "./ThreeScene";
+import TowerRenderer from "./TowerRenderer";
 import Move from "./Move";
 import {Dropdown, Header, Sticky} from 'semantic-ui-react'
 import {Segment, Icon} from 'semantic-ui-react';
@@ -32,7 +32,7 @@ class TowerSorter extends Component {
             moveHistory: [],
             solved: false,
             initialTowerState: [],
-            ThreeJS: true,
+            TowerThreeJS: true,
             paused: false
         };
         this.toggleMoveListPanel = this.toggleMoveListPanel.bind(this);
@@ -48,7 +48,7 @@ class TowerSorter extends Component {
         this.isAnimationComplete = this.isAnimationComplete.bind(this);
         this.updateDimensions = this.updateDimensions.bind(this);
 
-        this.threeRef = React.createRef();
+        this.TowerRendererRef = React.createRef();
 
         this.moveListRef = React.createRef();
 
@@ -356,19 +356,19 @@ class TowerSorter extends Component {
 
     reset() {
 
-        this.setState({ThreeJS: !this.state.ThreeJS, paused: false});
+        this.setState({TowerThreeJS: !this.state.TowerThreeJS, paused: false});
 
         this.handleSidebarHide();
 
     }
 
     getCurrentMoveNumber() {
-        return this.threeRef.current.getCurrentMove().moveCount;
+        return this.TowerRendererRef.current.getCurrentMove().moveCount;
     }
 
     isPaused() {
-        if (this.threeRef && this.threeRef.current) {
-            return this.threeRef.current.isPaused();
+        if (this.TowerRendererRef && this.TowerRendererRef.current) {
+            return this.TowerRendererRef.current.isPaused();
         } else {
             return false;
         }
@@ -377,7 +377,7 @@ class TowerSorter extends Component {
 
     toggleAnimation() {
 
-        this.threeRef.current.toggleAnimation();
+        this.TowerRendererRef.current.toggleAnimation();
 
         this.setState({paused: !this.state.paused});
 
@@ -418,8 +418,8 @@ class TowerSorter extends Component {
     }
 
     isAnimationComplete() {
-        if (this.threeRef && this.threeRef.current) {
-            return this.threeRef.current.isAnimationComplete();
+        if (this.TowerRendererRef && this.TowerRendererRef.current) {
+            return this.TowerRendererRef.current.isAnimationComplete();
         } else {
             return false;
         }
@@ -437,13 +437,13 @@ class TowerSorter extends Component {
 
     render() {
 
-        let pauseMenu = <Menu.Item disabled={!this.threeRef.current
+        let pauseMenu = <Menu.Item disabled={!this.TowerRendererRef.current
         || this.isAnimationComplete()}
                                    color='green' active={this.state.paused}
                                    onClick={this.toggleAnimation}><span>{this.state.paused ?
             'Resume' : 'Pause'}</span></Menu.Item>;
 
-        let pauseMenuMobile = <Menu.Item position='right' disabled={!this.threeRef.current
+        let pauseMenuMobile = <Menu.Item position='right' disabled={!this.TowerRendererRef.current
         || this.isAnimationComplete()}
                                          color='green' active={this.state.paused}
                                          onClick={this.toggleAnimation}><Icon size={'big'} name={this.state.paused ?
@@ -465,7 +465,7 @@ class TowerSorter extends Component {
                             </Menu.Item>
                             <Menu.Menu position='right'>
                                 {pauseMenuMobile}
-                                <Menu.Item position='right' disabled={!this.threeRef.current} as={'a'}
+                                <Menu.Item position='right' disabled={!this.TowerRendererRef.current} as={'a'}
                                            onClick={this.reset}><Icon size='big' name={'recycle'}/></Menu.Item>
                             </Menu.Menu>
                         </Menu>
@@ -488,8 +488,8 @@ class TowerSorter extends Component {
 
                             </Dropdown></Menu.Item>
                             {pauseMenu}
-                            <Menu.Item disabled={!this.threeRef.current} as={'a'} onClick={this.reset}>Reset</Menu.Item>
-                            <Menu.Item disabled={!this.threeRef.current} as={'a'} onClick={this.toggleMoveListPanel}>
+                            <Menu.Item disabled={!this.TowerRendererRef.current} as={'a'} onClick={this.reset}>Reset</Menu.Item>
+                            <Menu.Item disabled={!this.TowerRendererRef.current} as={'a'} onClick={this.toggleMoveListPanel}>
                                 {this.state.displayMoveList ? 'Hide Move List' : 'Display Move List'}</Menu.Item>
                         </Sidebar>
                     </Responsive>
@@ -513,14 +513,14 @@ class TowerSorter extends Component {
 
                                 <Grid.Column width={16}>
                                     {this.state.solved &&
-                                    <ThreeScene ref={this.threeRef}
-                                                key={this.state.discCount + this.state.ThreeJS}
-                                                moveHistory={this.state.moveHistory}
-                                                discCount={this.state.discCount} resetButton={this.reset}
-                                                toggleMoveListPanel={this.toggleMoveListPanel}
-                                                handleDiscSelect={this.handleDiscSelect}
-                                                updateCurrentMove={this.updateCurrentMove}
-                                                updateDimensions={this.updateDimensions}
+                                    <TowerRenderer ref={this.TowerRendererRef}
+                                                   key={this.state.discCount + this.state.TowerThreeJS}
+                                                   moveHistory={this.state.moveHistory}
+                                                   discCount={this.state.discCount} resetButton={this.reset}
+                                                   toggleMoveListPanel={this.toggleMoveListPanel}
+                                                   handleDiscSelect={this.handleDiscSelect}
+                                                   updateCurrentMove={this.updateCurrentMove}
+                                                   updateDimensions={this.updateDimensions}
                                     />}
                                 </Grid.Column>
 
