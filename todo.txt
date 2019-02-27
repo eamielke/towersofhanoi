@@ -20,3 +20,12 @@ table item.
 8. Fix sidebar to hide when clicking on empty portion of the sidebars body
 
 9. Add feature to allow user to solve the puzzle for 4 towers.
+
+10. Add capability to allow user to control zoom level
+
+11. Add feature to change behaviors and appearance;
+a. disc color - custom /alternating
+b. turn on/off disc flip
+c. add flyby button that will have the camera orbit while the animation is running
+
+12. Improve animation pause to enable the tween to resume based on its current values (avoid jumping of disc after resume)
