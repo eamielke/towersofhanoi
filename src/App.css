@@ -12,3 +12,7 @@
   box-shadow: none !important;
   border: 0 !important;
 }
+
+.mainPanel {
+  min-height: 500px !important;
+}

@@ -494,54 +494,49 @@ class TowerSorter extends Component {
                         </Sidebar>
                     </Responsive>
 
-                    <Sidebar.Pusher>
+                    <Sidebar.Pusher className='mainPanel'>
 
                         <Segment basic>
+
                             <Grid columns={1} textAlign='center' padded>
-                                <Grid.Column>
 
-                                    <Grid columns={1} textAlign='center'>
+                                <Responsive {...Responsive.onlyComputer} >
+                                    <Grid.Column width={16}>
+                                        <Header textAlign='center' as='h1'>Towers of Hanoi Demo</Header>
+                                    </Grid.Column>
+                                </Responsive>
+                                <Responsive {...Responsive.onlyTablet} >
+                                    <Grid.Column width={16}>
+                                        <Header textAlign='center' as='h1'>Towers of Hanoi Demo</Header>
+                                    </Grid.Column>
+                                </Responsive>
 
-                                        <Responsive {...Responsive.onlyComputer} >
-                                            <Grid.Column width={16}>
-                                                <Header textAlign='center' as='h1'>Towers of Hanoi Demo</Header>
-                                            </Grid.Column>
-                                        </Responsive>
-                                        <Responsive {...Responsive.onlyTablet} >
-                                            <Grid.Column width={16}>
-                                                <Header textAlign='center' as='h1'>Towers of Hanoi Demo</Header>
-                                            </Grid.Column>
-                                        </Responsive>
+                                <Grid.Column width={16}>
+                                    {this.state.solved &&
+                                    <ThreeScene ref={this.threeRef}
+                                                key={this.state.discCount + this.state.ThreeJS}
+                                                moveHistory={this.state.moveHistory}
+                                                discCount={this.state.discCount} resetButton={this.reset}
+                                                toggleMoveListPanel={this.toggleMoveListPanel}
+                                                handleDiscSelect={this.handleDiscSelect}
+                                                updateCurrentMove={this.updateCurrentMove}
+                                                updateDimensions={this.updateDimensions}
+                                    />}
+                                </Grid.Column>
 
-                                        <Grid.Column width={16}>
-                                            {this.state.solved &&
-                                            <ThreeScene ref={this.threeRef}
-                                                        key={this.state.discCount + this.state.ThreeJS}
-                                                        moveHistory={this.state.moveHistory}
-                                                        discCount={this.state.discCount} resetButton={this.reset}
-                                                        toggleMoveListPanel={this.toggleMoveListPanel}
-                                                        handleDiscSelect={this.handleDiscSelect}
-                                                        updateCurrentMove={this.updateCurrentMove}
-                                                        updateDimensions={this.updateDimensions}
-                                            />}
-                                        </Grid.Column>
-
-                                        <Grid.Column width={16}>
-                                            <DiscSelect discSelectKey="discSelect" handleDiscSelect={this.handleDiscSelect}/>
-                                        </Grid.Column>
-                                    </Grid>
-
+                                <Grid.Column width={16}>
+                                    <DiscSelect discSelectKey="discSelect" handleDiscSelect={this.handleDiscSelect}/>
                                 </Grid.Column>
 
                                 {this.state.solved && this.getPuzzleBanner()}
 
-                                <Grid.Column>
-                                    {this.state.displayMoveList &&
+                                {this.state.displayMoveList &&<Grid.Column>
+
                                     <MoveList id='moveList' ref={this.moveListRef}
                                               scrollToMoveListRef={this.scrollToMoveListRef}
                                               key={this.state.discCount + 'MoveList'}
-                                              moveHistory={this.state.moveHistory}/>}
-                                </Grid.Column>
+                                              moveHistory={this.state.moveHistory}/>
+                                </Grid.Column>}
 
                                 <Grid.Column>
                                     {this.state.solved && this.getTowerStateSegment()}
