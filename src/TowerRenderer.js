@@ -73,13 +73,16 @@ class TowerRenderer extends Component {
 
         TWEEN.removeAll();
 
-        this.tweenArray = [];
-
         let prevTween;
+        let firstTween;
         for (let k = 0; k < this.props.moveHistory.length; k++) {
             let tween = this.createTweenForMoveAndDisc(thickness, this.getMaxDiscDiameter(),
                 discArray, this.props.moveHistory[k], prevTween);
-            this.tweenArray.push(tween);
+
+            if (k === 0 ) {
+                firstTween = tween;
+            }
+
             prevTween = tween;
         }
 
@@ -105,7 +108,7 @@ class TowerRenderer extends Component {
 
 
         this.start();
-        this.tweenArray[0].start();
+        firstTween.start();
 
         this.setState({paused: false});
 
@@ -250,7 +253,9 @@ class TowerRenderer extends Component {
                 discObj.position.x = currentDisc.x;
                 discObj.position.y = currentDisc.y;
                 discObj.rotation.z = currentDisc.r;
-            }).onStart(this.updateCurrentMove(move.moveCount));
+            });
+
+        tweenOver.onStart(this.updateCurrentMove(move.moveCount, tweenOver));
 
         if (previousTween) {
             previousTween.chain(tweenOver);
@@ -259,18 +264,19 @@ class TowerRenderer extends Component {
         return tweenOver;
     }
 
-    updateCurrentMove(moveCount) {
+    updateCurrentMove(moveCount, tween) {
         return () => {
             let currentMove = this.props.moveHistory[moveCount - 1];
-            this.currentTween = moveCount - 1;
+            this.currentMove = moveCount - 1;
+            this.currentTween = tween;
             this.setState({currentMove: currentMove });
-            this.props.updateCurrentMove(this.props.moveHistory[this.currentTween]);
+            this.props.updateCurrentMove(this.props.moveHistory[this.currentMove]);
         };
     }
 
 
     isAnimationComplete() {
-        return ((this.currentTween + 1) === this.props.moveHistory.length);
+        return ((this.currentMove + 1) === this.props.moveHistory.length);
     }
 
     getCurrentMove() {
@@ -284,7 +290,7 @@ class TowerRenderer extends Component {
 
     componentWillUnmount() {
         this.stop();
-        this.tweenArray = [];
+        this.currentTween = null;
         TWEEN.removeAll();
         this.mount.removeChild(this.renderer.domElement);
         window.removeEventListener("resize", this.updateDimensions);
@@ -328,12 +334,12 @@ class TowerRenderer extends Component {
     toggleAnimation() {
 
         if (this.state.paused) {
-            console.log('Trying to start tween: ' + this.currentTween);
-            this.tweenArray[this.currentTween].start();
+            console.log('Trying to start tween: ' + this.currentMove);
+            this.currentTween.start();
         } else {
-            console.log('Trying to stop tween: ' + this.currentTween);
+            console.log('Trying to stop tween: ' + this.currentMove);
 
-            this.tweenArray[this.currentTween].stop();
+            this.currentTween.stop();
 
         }
 
@@ -344,7 +350,7 @@ class TowerRenderer extends Component {
     render() {
 
         return (
-            <div key={this.props.key}>
+            <div key={this.props.subKey}>
 
                 <Responsive {...Responsive.onlyComputer} >
                     <Menu  inverted  borderless size={'huge'} attached={'top'}  >

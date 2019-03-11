@@ -490,6 +490,7 @@ class TowerSorter extends Component {
                                     this.state.moveHistory.length > 0 &&
                                     <TowerRenderer ref={this.TowerRendererRef}
                                                    key={this.state.discCount + this.state.TowerThreeJS}
+                                                   subKey={this.state.discCount + this.state.TowerThreeJS}
                                                    moveHistory={this.state.moveHistory}
                                                    discCount={this.state.discCount} resetButton={this.reset}
                                                    toggleMoveListPanel={this.toggleMoveListPanel}
