@@ -284,8 +284,9 @@ class TowerRenderer extends Component {
 
     componentWillUnmount() {
         this.stop();
-        this.mount.removeChild(this.renderer.domElement);
+        this.tweenArray = [];
         TWEEN.removeAll();
+        this.mount.removeChild(this.renderer.domElement);
         window.removeEventListener("resize", this.updateDimensions);
     }
 
@@ -343,7 +344,7 @@ class TowerRenderer extends Component {
     render() {
 
         return (
-            <div >
+            <div key={this.props.key}>
 
                 <Responsive {...Responsive.onlyComputer} >
                     <Menu  inverted  borderless size={'huge'} attached={'top'}  >

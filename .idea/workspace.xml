@@ -2,12 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="a48d533f-5b82-4265-bd5d-f08bc74b4e19" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/src/DiscSelect.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/DiscSelect.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Move.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Move.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/MoveList.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/MoveList.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/SolverWorker.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/SolverWorker.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/TowerRenderer.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/TowerRenderer.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/TowerSorter.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/TowerSorter.js" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/.tmp/" />
     <ignored path="$PROJECT_DIR$/temp/" />
@@ -20,24 +15,32 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/README.md">
-          <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
-            <state split_layout="SPLIT">
-              <first_editor />
-              <second_editor />
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/TowerRenderer.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="272">
+              <caret line="284" column="28" selection-start-line="284" selection-start-column="28" selection-end-line="284" selection-end-column="28" />
+              <folding>
+                <element signature="e#0#39#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/TowerRenderer.js">
+        <entry file="file://$APPLICATION_HOME_DIR$/plugins/JavaScriptLanguage/jsLanguageServicesImpl/external/lib.dom.d.ts">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="313">
-              <caret line="369" lean-forward="true" selection-start-line="369" selection-end-line="369" />
-              <folding>
-                <element signature="e#0#39#0" expanded="true" />
-              </folding>
+            <state relative-caret-position="351">
+              <caret line="17252" column="17" selection-start-line="17252" selection-start-column="17" selection-end-line="17252" selection-end-column="17" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/node_modules/semantic-ui-css/components/transition.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="351">
+              <caret line="812" column="8" selection-start-line="812" selection-start-column="8" selection-end-line="812" selection-end-column="8" />
             </state>
           </provider>
         </entry>
@@ -51,11 +54,11 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/TowerSorter.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="344">
-              <caret line="482" column="114" selection-start-line="482" selection-start-column="114" selection-end-line="482" selection-end-column="114" />
+            <state relative-caret-position="278">
+              <caret line="109" lean-forward="true" selection-start-line="109" selection-end-line="109" />
               <folding>
                 <element signature="e#0#39#0" expanded="true" />
               </folding>
@@ -122,7 +125,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>move</find>
       <find>Tower</find>
       <find>addDisc</find>
       <find>createFrom</find>
@@ -133,7 +135,6 @@
       <find>moveHistory</find>
       <find>moveList</find>
       <find>MoveListButton</find>
-      <find>Progress</find>
       <find>currentMove</find>
       <find>18</find>
       <find>render</find>
@@ -149,9 +150,11 @@
       <find>Move</find>
       <find>cloneTowerArray</find>
       <find>debugger</find>
-      <find>selector</find>
       <find>DiscSelect</find>
       <find>key</find>
+      <find>selector</find>
+      <find>componentWill</find>
+      <find>Progress</find>
     </findStrings>
     <replaceStrings>
       <replace>321</replace>
@@ -197,9 +200,9 @@
         <option value="$PROJECT_DIR$/src/Move.js" />
         <option value="$PROJECT_DIR$/src/MoveList.js" />
         <option value="$PROJECT_DIR$/src/SolverWorker.js" />
-        <option value="$PROJECT_DIR$/src/TowerRenderer.js" />
         <option value="$PROJECT_DIR$/src/DiscSelect.js" />
         <option value="$PROJECT_DIR$/src/TowerSorter.js" />
+        <option value="$PROJECT_DIR$/src/TowerRenderer.js" />
       </list>
     </option>
   </component>
@@ -240,7 +243,7 @@
   </component>
   <component name="PropertiesComponent">
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/../bouncingball" />
+    <property name="last_opened_file_path" value="$USER_HOME$/herokuprojects/hanoi" />
     <property name="node.js.detected.package.eslint" value="true" />
     <property name="node.js.path.for.package.eslint" value="project" />
     <property name="node.js.selected.package.eslint" value="$PROJECT_DIR$/node_modules/eslint" />
@@ -308,24 +311,24 @@
       <workItem from="1551770633273" duration="613000" />
       <workItem from="1551812953842" duration="374000" />
       <workItem from="1552044428085" duration="48357000" />
-      <workItem from="1552272165558" duration="8303000" />
+      <workItem from="1552272165558" duration="9530000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="313552000" />
+    <option name="totallyTimeSpent" value="314779000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="2560" y="0" width="2560" height="1600" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.15023659" />
+      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.15023659" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="npm" order="2" side_tool="true" />
       <window_info id="Favorites" order="3" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
-      <window_info anchor="bottom" id="Find" order="1" visible="true" weight="0.21883656" />
-      <window_info anchor="bottom" id="Run" order="2" weight="0.038781162" />
+      <window_info active="true" anchor="bottom" id="Find" order="1" visible="true" weight="0.21883656" />
+      <window_info anchor="bottom" id="Run" order="2" weight="0.24307479" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.18836565" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
@@ -361,13 +364,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="619092">
           <caret line="21348" column="9" selection-start-line="21348" selection-start-column="9" selection-end-line="21348" selection-end-column="9" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$APPLICATION_HOME_DIR$/plugins/JavaScriptLanguage/jsLanguageServicesImpl/external/lib.dom.d.ts">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="490">
-          <caret line="17272" column="17" selection-start-line="17272" selection-start-column="17" selection-end-line="17272" selection-end-column="17" />
         </state>
       </provider>
     </entry>
@@ -469,16 +465,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/TowerRenderer.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="313">
-          <caret line="369" lean-forward="true" selection-start-line="369" selection-end-line="369" />
-          <folding>
-            <element signature="e#0#39#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/DiscSelect.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="437">
@@ -486,10 +472,34 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/node_modules/semantic-ui-css/components/transition.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="351">
+          <caret line="812" column="8" selection-start-line="812" selection-start-column="8" selection-end-line="812" selection-end-column="8" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$APPLICATION_HOME_DIR$/plugins/JavaScriptLanguage/jsLanguageServicesImpl/external/lib.dom.d.ts">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="351">
+          <caret line="17252" column="17" selection-start-line="17252" selection-start-column="17" selection-end-line="17252" selection-end-column="17" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/TowerSorter.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="344">
-          <caret line="482" column="114" selection-start-line="482" selection-start-column="114" selection-end-line="482" selection-end-column="114" />
+        <state relative-caret-position="278">
+          <caret line="109" lean-forward="true" selection-start-line="109" selection-end-line="109" />
+          <folding>
+            <element signature="e#0#39#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/TowerRenderer.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="272">
+          <caret line="284" column="28" selection-start-line="284" selection-start-column="28" selection-end-line="284" selection-end-column="28" />
           <folding>
             <element signature="e#0#39#0" expanded="true" />
           </folding>
