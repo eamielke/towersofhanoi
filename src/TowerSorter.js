@@ -3,12 +3,26 @@ import Tower from "./Tower";
 import MoveList from "./MoveList";
 import TowerRenderer from "./TowerRenderer";
 import Move from "./Move";
-import {Dropdown, Header, Sticky} from 'semantic-ui-react'
+import {Header, Progress, Sticky} from 'semantic-ui-react'
 import {Segment, Icon} from 'semantic-ui-react';
 import {Table} from 'semantic-ui-react';
 import {Responsive, Message, Button, Grid, Menu, Sidebar} from "semantic-ui-react";
 import DiscSelect from "./DiscSelect";
-import scrollIntoView from 'scroll-into-view-if-needed'
+import scrollIntoView from 'scroll-into-view-if-needed';
+import worker_script from './SolverWorker';
+
+
+const MoveListButton = ({moveHistory, displayMoveList, toggleMoveListPanel}) => {
+
+    let buttonLabel = displayMoveList ? 'Hide Move List' : 'Display Move List';
+
+    if (moveHistory && moveHistory.length > 0) {
+        return <Button primary onClick={toggleMoveListPanel}>{buttonLabel}</Button>;
+
+    } else {
+        return null;
+    }
+};
 
 class TowerSorter extends Component {
 
@@ -33,8 +47,12 @@ class TowerSorter extends Component {
             solved: false,
             initialTowerState: [],
             TowerThreeJS: true,
-            paused: false
+            paused: false,
+            progress: 0,
         };
+
+        this.discCount = 0;
+
         this.toggleMoveListPanel = this.toggleMoveListPanel.bind(this);
         this.handleDiscSelect = this.handleDiscSelect.bind(this);
         this.reset = this.reset.bind(this);
@@ -47,6 +65,7 @@ class TowerSorter extends Component {
         this.updateCurrentMove = this.updateCurrentMove.bind(this);
         this.isAnimationComplete = this.isAnimationComplete.bind(this);
         this.updateDimensions = this.updateDimensions.bind(this);
+        this.handleSolverWorkerMessage = this.handleSolverWorkerMessage.bind(this);
 
         this.TowerRendererRef = React.createRef();
 
@@ -55,18 +74,67 @@ class TowerSorter extends Component {
         this.scrolltoMoveList = false;
         this.displayMoveList = false;
 
-        this.discOptions = [
-            {key: '3', value: '3', text: '3 discs'},
-            {key: '4', value: '4', text: '4 discs'},
-            {key: '5', value: '5', text: '5 discs'},
-            {key: '6', value: '6', text: '6 discs'},
-            {key: '7', value: '7', text: '7 discs'},
-            {key: '8', value: '8', text: '8 discs'},
-            {key: '9', value: '9', text: '9 discs'},
-            {key: '10', value: '10', text: '10 discs'},
-            {key: '11', value: '11', text: '11 discs'},
-            {key: '12', value: '12', text: '12 discs'}
-        ];
+        this.solverWorker = new Worker(worker_script);
+
+        this.solverWorker.onmessage = this.handleSolverWorkerMessage;
+
+    }
+
+    convertToTowerArray(towerDataArray) {
+        let towerArray = [];
+
+        for (let i = 0; i < towerDataArray.length; i++) {
+            towerArray.push(this.convertToTower(towerDataArray[i]));
+        }
+        return towerArray;
+    }
+
+    convertToTower(towerData) {
+        return new Tower(towerData.initial, towerData.solution,
+            towerData.towerNumber, towerData.discs);
+    }
+
+    convertToMoveHistory(mv) {
+        let moveHistory = [];
+
+        for (let i = 0; i < mv.length; i++) {
+            //moveCount, disc, sourceTowerNumber, sourceTowerDiscs, targetTowerNumber, targetTowerDiscs, endingTowerStates
+            moveHistory.push(new Move(mv[i]._moveCount, mv[i]._disc, mv[i]._sourceTowerNumber, mv[i]._sourceTowerDiscs,
+                mv[i]._targetTowerNumber, mv[i]._targetTowerDiscs,
+                this.convertToTowerArray(mv[i]._endingTowerStates)));
+        }
+
+        return moveHistory;
+    }
+
+    handleSolverWorkerMessage(e) {
+
+        let data = e.data.data;
+
+        if (data.solved) {
+
+            debugger;
+
+            let towerArray = this.convertToTowerArray(data.towerArray);
+
+            this.setState({
+                towerArray: towerArray,
+                solved: data.solved,
+                moveCount: data.moveCount,
+                moveHistory: this.moveHistory,
+            });
+
+            this.towerArray = towerArray;
+
+            console.log('Ending tower state');
+            console.log('--------------------');
+            console.log(this.outputTowerStates());
+            console.log('--------------------');
+        } else {
+
+            this.moveHistory = [...this.moveHistory, ...this.convertToMoveHistory(data.moveHistory)];
+            this.setState({progress: data.progress, solved: false});
+        }
 
     }
 
@@ -92,39 +160,30 @@ class TowerSorter extends Component {
         this.towerArray.push(new Tower(true, solution, 1, discArray));
         this.towerArray.push(new Tower(false, solution, 2));
         this.towerArray.push(new Tower(false, solution, 3));
+        this.discCount = discCount;
 
         this.setState({
             discCount: discCount,
             towerArray: [],
-            moveHistory: this.moveHistory,
+            moveHistory: [],
             solved: false,
-            initialTowerState: TowerSorter.cloneTowerArray(this.towerArray),
+            initialTowerState: this.towerArray,
             visible: false,
-            paused: false
+            paused: false,
+            progress: 0
         });
-    }
-
-    static cloneTowerArray(towerArray) {
-        let clonedTowerArray = [];
-        for (let i = 0; i < towerArray.length; i++) {
-            clonedTowerArray.push(Tower.createFrom(towerArray[i]));
-        }
-
-        return clonedTowerArray;
     }
 
 
     outputTowerStates() {
 
-        let towerArray = Array.from(this.towerArray);
-
         let towerStates = [];
 
-        for (let i = 0; i < towerArray.length; i++) {
+        for (let i = 0; i < this.towerArray.length; i++) {
 
-            if (towerArray[i]) {
-                console.log(towerArray[i].getDesc());
-                towerStates.push(towerArray[i].getDesc());
+            if (this.towerArray[i]) {
+                console.log(this.towerArray[i].getDesc());
+                towerStates.push(this.towerArray[i].getDesc());
             }
 
         }
@@ -134,85 +193,10 @@ class TowerSorter extends Component {
     }
 
 
-    static testSolved(towerArray) {
-
-        let solved = false;
-        for (let i = 0; i < towerArray.length; i++) {
-
-            if (towerArray[i].getIsSolved()) {
-                solved = true;
-                break;
-            }
-        }
-
-        return solved;
-    }
-
-    performMove(towerArray) {
-
-        let moved = false;
-
-        for (let i = 0; i < towerArray.length; i++) {
-            let tower = towerArray[i];
-
-            let disc = tower.getTopDisc();
-
-            if (disc && (disc !== this.previousDisk)) {
-
-                moved = this.findTargetTower(i + 1, towerArray, disc, tower, moved);
-
-                if (moved) {
-                    return moved;
-                } else {
-                    //Wrap around
-                    moved = this.findTargetTower(0, towerArray, disc, tower, moved);
-                }
-            }
-        }
-        return moved;
-    }
-
-    findTargetTower(i, towerArray, disc, sourceTower) {
-
-        let moved = false;
-
-        for (let k = i; k < towerArray.length; k++) {
-
-            let targetTower = towerArray[k];
-
-            let unchangedSourceTower = Tower.createFrom(sourceTower);
-
-            let unchangedTargetTower = Tower.createFrom(targetTower);
-
-            let success = targetTower.addDisc(disc);
-
-            if (success) {
-
-                //Key logic
-                this.moveCount++;
-                this.previousDisk = disc;
-                sourceTower.removeTopDisc();
-                moved = true;
-
-                //Logging and tracking logic.
-
-                let move = new Move(this.moveCount, disc, unchangedSourceTower, unchangedTargetTower,
-                    targetTower.getTowerNumber(),
-                    TowerSorter.cloneTowerArray(this.towerArray));
-
-                this.moveHistory.push(move);
-
-                break;
-            }
-
-        }
-        return moved;
-    }
-
-
     handleDiscSelect(event, data) {
         if (data.value > 0) {
-
+            this.setState({progress: 0});
+            this.discCount = data.value;
             this.setupTowers(data.value);
             this.solvePuzzle();
         }
@@ -228,44 +212,15 @@ class TowerSorter extends Component {
     }
 
     solvePuzzle() {
-        let towerArray = this.towerArray;
-
-        console.log('Starting tower state');
-        console.log('--------------------');
-        console.log(this.outputTowerStates());
-        console.log('--------------------');
 
         let solved = false;
         let iterationCount = 1;
 
-        console.log('Prior to loop start - Solved: ' + solved + " iterationCount: " + iterationCount + " max moves: " + this.maxMoves);
+        console.log('Prior to loop start - Solved: ' + solved + " iterationCount: "
+            + iterationCount + " max moves: " + this.maxMoves);
 
-        while (!solved && iterationCount <= this.maxMoves) {
-
-            this.performMove(this.towerArray);
-
-            solved = TowerSorter.testSolved(towerArray);
-
-            iterationCount++;
-
-            if (solved) {
-                console.log("Puzzle solved in " + iterationCount + " iterations");
-                console.log("Puzzle solved in moves: " + this.moveCount);
-            }
-
-        }
-
-        console.log('Ending tower state');
-        console.log('--------------------');
-        console.log(this.outputTowerStates());
-        console.log('--------------------');
-
-        this.setState({
-            towerArray: this.towerArray,
-            moveHistory: this.moveHistory,
-            solved: solved,
-            moveCount: this.moveCount,
-        });
+        console.log('Starting web worker');
+        this.solverWorker.postMessage({event: 'Solve', data: this.discCount});
 
     }
 
@@ -325,30 +280,35 @@ class TowerSorter extends Component {
             </Segment.Group>);
     }
 
-    getPuzzleBanner() {
 
-        let buttonLabel = this.state.displayMoveList ? 'Hide Move List' : 'Display Move List';
+    getPuzzleBanner() {
 
         return (<Grid.Column>
             <Responsive {...Responsive.onlyComputer} >
                 <Message positive size={'small'}>
                     <Message.Header>Success</Message.Header>
                     <p>Puzzle Solved in {this.state.moveCount} moves.</p>
-                    <Button primary onClick={this.toggleMoveListPanel}>{buttonLabel}</Button>
+                    <MoveListButton
+                        moveHistory={this.state.moveHistory} displayMoveList={this.state.displayMoveList}
+                        toggleMoveListPanel={this.toggleMoveListPanel}/>
                 </Message>
             </Responsive>
             <Responsive {...Responsive.onlyTablet} >
                 <Message positive size={'huge'}>
                     <Message.Header>Success</Message.Header>
                     <p>Puzzle Solved in {this.state.moveCount} moves.</p>
-                    <Button primary onClick={this.toggleMoveListPanel}>{buttonLabel}</Button>
+                    <MoveListButton
+                        moveHistory={this.state.moveHistory} displayMoveList={this.state.displayMoveList}
+                        toggleMoveListPanel={this.toggleMoveListPanel}/>
                 </Message>
             </Responsive>
             <Responsive {...Responsive.onlyMobile} >
                 <Message positive size={'large'}>
                     <Message.Header>Success</Message.Header>
                     <p>Puzzle Solved in {this.state.moveCount} moves.</p>
-                    <Button primary onClick={this.toggleMoveListPanel}>{buttonLabel}</Button>
+                    <MoveListButton
+                        moveHistory={this.state.moveHistory} displayMoveList={this.state.displayMoveList}
+                        toggleMoveListPanel={this.toggleMoveListPanel}/>
                 </Message>
             </Responsive></Grid.Column>);
     }
@@ -482,7 +442,7 @@ class TowerSorter extends Component {
                             vertical
                             visible={this.state.visible}
                             width={'wide'}>
-                            <Menu.Item> <DiscSelect complex={false} fluid discOptions={this.discOptions}
+                            <Menu.Item> <DiscSelect complex={false} fluid
                                                     placeholder={'Select a disc to start'}
                                                     onChange={this.handleDiscSelect}/>
                             </Menu.Item>
@@ -512,8 +472,16 @@ class TowerSorter extends Component {
                                     </Grid.Column>
                                 </Responsive>
 
+                                {this.state.solved == false && this.state.discCount > 0 &&
                                 <Grid.Column width={16}>
-                                    {this.state.solved &&
+                                    <Progress key={this.state.discCount} percent={this.state.progress}>
+                                        Solving Towers of Hanoi Puzzle for {this.state.discCount} discs
+                                    </Progress>
+                                </Grid.Column>}
+
+                                <Grid.Column width={16}>
+                                    {this.state.solved && this.state.moveHistory &&
+                                    this.state.moveHistory.length > 0 &&
                                     <TowerRenderer ref={this.TowerRendererRef}
                                                    key={this.state.discCount + this.state.TowerThreeJS}
                                                    moveHistory={this.state.moveHistory}
@@ -531,7 +499,9 @@ class TowerSorter extends Component {
 
                                 {this.state.solved && this.getPuzzleBanner()}
 
-                                {this.state.displayMoveList && <Grid.Column>
+                                {this.state.displayMoveList && this.state.moveHistory
+                                && this.state.moveHistory.length > 0
+                                && <Grid.Column>
 
                                     <MoveList id='moveList' ref={this.moveListRef}
                                               scrollToMoveListRef={this.scrollToMoveListRef}

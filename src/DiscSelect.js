@@ -18,7 +18,16 @@ class DiscSelect extends Component {
             {key: '9', value: '9', text: '9 discs'},
             {key: '10', value: '10', text: '10 discs'},
             {key: '11', value: '11', text: '11 discs'},
-            {key: '12', value: '12', text: '12 discs'}
+            {key: '12', value: '12', text: '12 discs'},
+            {key: '13', value: '13', text: '13 discs'},
+            {key: '14', value: '14', text: '14 discs'},
+            {key: '15', value: '15', text: '15 discs'},
+            {key: '16', value: '16', text: '16 discs'},
+            {key: '17', value: '17', text: '17 discs'},
+            {key: '18', value: '18', text: '18 discs'},
+            {key: '19', value: '19', text: '19 discs'},
+            {key: '20', value: '20', text: '20 discs'},
+            {key: '32', value: '32', text: '32 discs'},
         ];
 
     }

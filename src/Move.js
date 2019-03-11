@@ -1,11 +1,12 @@
 class Move {
 
-    constructor(moveCount, disc, sourceTower, targetTower, targetTowerNumber, endingTowerStates) {
+    constructor(moveCount, disc, sourceTowerNumber, sourceTowerDiscs, targetTowerNumber, targetTowerDiscs, endingTowerStates) {
         this._moveCount = moveCount;
         this._disc = disc;
-        this._sourceTower = sourceTower;
-        this._targetTower = targetTower;
+        this._sourceTowerNumber = sourceTowerNumber;
+        this._sourceTowerDiscs = sourceTowerDiscs;
         this._targetTowerNumber = targetTowerNumber;
+        this._targetTowerDiscs = targetTowerDiscs;
         this._endingTowerStates = endingTowerStates;
     }
 
@@ -17,16 +18,24 @@ class Move {
         return this._disc;
     }
 
-    get sourceTower() {
-        return this._sourceTower;
+    get sourceTowerNumber() {
+        return this._sourceTowerNumber;
     }
 
-    get targetTower() {
-        return this._targetTower;
+    get sourceTowerDiscs() {
+        return this._sourceTowerDiscs;
+    }
+
+    get targetTowerNumber() {
+        return this._targetTowerNumber;
+    }
+
+    get targetTowerDiscs() {
+        return this._targetTowerDiscs;
     }
 
     get moveDesc() {
-        return "Moved disc " + this._disc + " from tower " + this._sourceTower.getTowerNumber() + " to tower "
+        return "Moved disc " + this._disc + " from tower " + this._sourceTowerNumber + " to tower "
             + this._targetTowerNumber;
     }
 

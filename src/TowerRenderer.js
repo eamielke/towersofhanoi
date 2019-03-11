@@ -161,7 +161,7 @@ class TowerRenderer extends Component {
     calcTransTime() {
         let transTime = 19200 / (this.props.discCount * this.props.discCount);
         if (transTime < 80) {
-            transTime = 80;
+            transTime = 500;
         }
         return transTime;
     }
@@ -195,45 +195,42 @@ class TowerRenderer extends Component {
     createTweenForMoveAndDisc(discThickness, discDiameter, discArray, move, previousTween) {
 
         //Calculate source X
-        let sourceTower = move.sourceTower;
         let currentX = 0;
         let startX = 0;
 
         let totalThickness = this.calcThickness() * discArray.length;
 
-        if (sourceTower) {
-            currentX = (sourceTower.getTowerNumber() - 1) * (2.5 * this.getMaxDiscDiameter() + 0.1);
+        if (move.sourceTowerNumber) {
+            currentX = (move.sourceTowerNumber - 1) * (2.5 * this.getMaxDiscDiameter() + 0.1);
             startX = currentX;
         }
 
         //Calculate source Y
-        let currentY = (sourceTower.getDiscs().length) * discThickness;
+        let currentY = (move.sourceTowerDiscs) * discThickness;
 
         //Calculate target Y
         let toY = 0;
 
-        let targetTower = move.targetTower;
-
-        if (targetTower.getDiscs().length === 0) {
+        if (move.targetTowerDiscs === 0) {
 
             toY = 0;
 
         } else {
 
-            toY = targetTower.getDiscs().length * discThickness;
+            toY = move.targetTowerDiscs * discThickness;
         }
 
         // Calculate target X
 
         let rotDir = 1;
-        if (targetTower.getTowerNumber() > sourceTower.getTowerNumber()) {
+        if (move.targetTowerNumber > move.sourceTowerNumber) {
             rotDir = -1;
         }
 
         //Tower 1 is at position -0.5
         //Tower 2 is at -0.5 + 0.2 (max disc width)
         //Tower 3 is at -0.5 + 2*0.2 (max disc width)
-        let toX = ((targetTower.getTowerNumber() - 1) * (2.5 * this.getMaxDiscDiameter() + 0.1));
+        let toX = ((move.targetTowerNumber - 1) * (2.5 * this.getMaxDiscDiameter() + 0.1));
 
         let currentDisc = {x: currentX, y: currentY, r: 0};
 

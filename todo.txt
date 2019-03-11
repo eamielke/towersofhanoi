@@ -28,3 +28,7 @@ b. turn on/off disc flip
 c. add flyby button that will have the camera orbit while the animation is running
 
 12. Improve animation pause to enable the tween to resume based on its current values (avoid jumping of disc after resume)
+
+13. Add print view
+
+14. Add floor to animation
