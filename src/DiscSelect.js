@@ -27,19 +27,15 @@ class DiscSelect extends Component {
             {key: '18', value: '18', text: '18 discs'},
             {key: '19', value: '19', text: '19 discs'},
             {key: '20', value: '20', text: '20 discs'},
-            {key: '32', value: '32', text: '32 discs'},
         ];
 
     }
 
     render() {
 
-
         if (this.props.complex) {
 
-
-            console.log('rendering complex discselector');
-            return (<Form>
+            return (<Form key={this.props.subKey}>
                 <Form.Field inline>
                     <Responsive {...Responsive.onlyComputer} as={Label} size='large'
                                 position='right'>
@@ -55,17 +51,17 @@ class DiscSelect extends Component {
                             Select the number of discs to initiate the solution:
                         </Label>
                     </Responsive>}
-                    <Select options={this.discOptions}
+                    <Select key={this.props.subKey} options={this.discOptions}
                             onChange={this.props.handleDiscSelect}>
 
                     </Select>
                 </Form.Field>
             </Form>);
         } else {
-            console.log('rendering simple discselector');
+
             return (
 
-                <Select fluid={this.props.fluid} options={this.props.discOptions} placeholder={'Select a disc to start'}
+                <Select key={this.props.subKey} fluid={this.props.fluid} options={this.props.discOptions} placeholder={'Select a disc to start'}
                         onChange={this.props.onChange}/>
             );
         }

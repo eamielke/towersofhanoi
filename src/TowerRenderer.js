@@ -285,6 +285,7 @@ class TowerRenderer extends Component {
     componentWillUnmount() {
         this.stop();
         this.mount.removeChild(this.renderer.domElement);
+        TWEEN.removeAll();
         window.removeEventListener("resize", this.updateDimensions);
     }
 
@@ -367,7 +368,7 @@ class TowerRenderer extends Component {
                                 <Grid.Column>
 
 
-                                    <div ref='hanoiCanvas'
+                                    <div
                                          style={{
                                              height: this.state.canvasHeight,
                                              width: '100%',
@@ -386,7 +387,8 @@ class TowerRenderer extends Component {
                                         as={'h3'}>{this.state.currentMove.moveCount !== this.props.moveHistory.length
                                         ? ("Move #" + this.state.currentMove.moveCount + " of "
                                             + this.props.moveHistory.length + " - "
-                                            + this.state.currentMove.moveDesc) : "Completed All Moves."}</Header>
+                                            + "Moved disc " + this.state.currentMove.disc + " from tower " + this.state.currentMove.sourceTowerNumber + " to tower "
+                                                    + this.state.currentMove.targetTowerNumber) : "Completed All Moves."}</Header>
                                 </Grid.Column>
                             </Grid>
 

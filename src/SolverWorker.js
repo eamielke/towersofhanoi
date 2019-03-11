@@ -10,39 +10,6 @@ const workercode = () => {
         this._endingTowerStates = endingTowerStates;
     }
 
-    Move.prototype.getMoveCount = function () {
-        return this._moveCount;
-    };
-
-    Move.prototype.getDisc = function () {
-        return this._disc;
-    };
-
-    Move.prototype.getSourceTowerNumber = function () {
-        return this._sourceTowerNumber;
-    };
-
-    Move.prototype.getSourceTowerDiscs = function () {
-        return this._sourceTowerDiscs;
-    };
-
-    Move.prototype.getTargetTowerNumber = function () {
-        return this._targetTowerNumber;
-    };
-
-    Move.prototype.getTargetTowerDiscs = function () {
-        return this._targetTowerDiscs;
-    };
-
-    Move.prototype.getMoveDesc = function () {
-        return "Moved disc " + this._disc + " from tower " + this._sourceTowerNumber.getTowerNumber() + " to tower "
-            + this._targetTowerNumber;
-    };
-
-    Move.prototype.getEndingTowerStates = function () {
-        return this._endingTowerStates;
-    };
-
     function Tower(initialTower, solutionString, towerNo, discsArray) {
 
         this.initial = initialTower;
@@ -59,16 +26,9 @@ const workercode = () => {
 
         this.previousDiscs = [];
 
-
     }
 
-    Tower.createFrom = function (tower) {
-
-        let discArray = Array.from(tower.getDiscs());
-
-        return new Tower(tower.getInitial(), tower.getSolution(), tower.getTowerNumber(), discArray);
-    };
-
+    //Static function
     Tower.copyArray = function (arrayToCopy) {
         return (Array.from(arrayToCopy));
     };
@@ -110,17 +70,11 @@ const workercode = () => {
         return this.discs.join('');
     };
 
-    Tower.prototype.getDesc = function () {
-        return "Tower number: " + this.towerNumber + " Disc order: " + this.getDiscOrder();
-    };
 
     Tower.prototype.getDiscs = function () {
         return this.discs;
     };
 
-    Tower.prototype.getSolution = function () {
-        return this.solution;
-    };
 
     Tower.prototype.getTopDisc = function () {
         if (this.discs && this.discs.length > 0) {
@@ -174,7 +128,7 @@ const workercode = () => {
             maxMoves = Math.pow(2, (discArray.length));
 
             progressInterval = Math.floor(maxMoves/100);
-            if (Math.floor(progressInterval) == 0) {
+            if (Math.floor(progressInterval) === 0) {
                 progressInterval = 1;
             }
 
@@ -269,11 +223,10 @@ const workercode = () => {
                     sourceTower.removeTopDisc();
 
                     //Logging and tracking logic.
-
                     let move = new Move(moveCount, disc, sourceTowerNumber,
                         sourceDiscs, targetTowerNumber,
                         targetDiscs,
-                        cloneTowerArray(towerArray));
+                        compactTowerArray(towerArray));
 
                     moved = true;
 
@@ -298,13 +251,14 @@ const workercode = () => {
             return moved;
         }
 
-        function cloneTowerArray(towerArray) {
-            let clonedTowerArray = [];
+        function compactTowerArray(towerArray) {
+            let compactTowerArray = [];
             for (let i = 0; i < towerArray.length; i++) {
-                clonedTowerArray.push(Tower.createFrom(towerArray[i]));
+                let discOrder = towerArray[i].getDiscs().join('');
+                compactTowerArray.push(discOrder);
             }
 
-            return clonedTowerArray;
+            return compactTowerArray;
         }
 
         function testSolved(towerArray) {

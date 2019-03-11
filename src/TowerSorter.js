@@ -49,6 +49,7 @@ class TowerSorter extends Component {
             TowerThreeJS: true,
             paused: false,
             progress: 0,
+            solveInProgress: false,
         };
 
         this.discCount = 0;
@@ -101,7 +102,7 @@ class TowerSorter extends Component {
             //moveCount, disc, sourceTowerNumber, sourceTowerDiscs, targetTowerNumber, targetTowerDiscs, endingTowerStates
             moveHistory.push(new Move(mv[i]._moveCount, mv[i]._disc, mv[i]._sourceTowerNumber, mv[i]._sourceTowerDiscs,
                 mv[i]._targetTowerNumber, mv[i]._targetTowerDiscs,
-                this.convertToTowerArray(mv[i]._endingTowerStates)));
+                mv[i]._endingTowerStates));
         }
 
         return moveHistory;
@@ -113,8 +114,6 @@ class TowerSorter extends Component {
 
         if (data.solved) {
 
-            debugger;
-
             let towerArray = this.convertToTowerArray(data.towerArray);
 
             this.setState({
@@ -125,6 +124,14 @@ class TowerSorter extends Component {
             });
 
             this.towerArray = towerArray;
+
+            this.solverWorker.terminate();
+
+            this.solverWorker = new Worker(worker_script);
+
+            this.solverWorker.onmessage = this.handleSolverWorkerMessage;
+
+            this.setState({solveInProgress: false});
 
             console.log('Ending tower state');
             console.log('--------------------');
@@ -213,13 +220,8 @@ class TowerSorter extends Component {
 
     solvePuzzle() {
 
-        let solved = false;
-        let iterationCount = 1;
-
-        console.log('Prior to loop start - Solved: ' + solved + " iterationCount: "
-            + iterationCount + " max moves: " + this.maxMoves);
-
         console.log('Starting web worker');
+        this.setState({solveInProgress: true});
         this.solverWorker.postMessage({event: 'Solve', data: this.discCount});
 
     }
@@ -442,9 +444,13 @@ class TowerSorter extends Component {
                             vertical
                             visible={this.state.visible}
                             width={'wide'}>
-                            <Menu.Item> <DiscSelect complex={false} fluid
-                                                    placeholder={'Select a disc to start'}
-                                                    onChange={this.handleDiscSelect}/>
+                            <Menu.Item>
+                                {this.state.solveInProgress === false &&
+                                <DiscSelect key={this.state.discCount}
+                                            subKey={this.state.discCount}
+                                            complex={false} fluid
+                                            placeholder={'Select a disc to start'}
+                                            onChange={this.handleDiscSelect}/>}
                             </Menu.Item>
                             {pauseMenu}
                             <Menu.Item disabled={!this.TowerRendererRef.current} as={'a'}
@@ -472,9 +478,9 @@ class TowerSorter extends Component {
                                     </Grid.Column>
                                 </Responsive>
 
-                                {this.state.solved == false && this.state.discCount > 0 &&
+                                {this.state.solved === false && this.state.discCount > 0 &&
                                 <Grid.Column width={16}>
-                                    <Progress key={this.state.discCount} percent={this.state.progress}>
+                                    <Progress key={this.state.discCount} percent={this.state.progress} color='blue'>
                                         Solving Towers of Hanoi Puzzle for {this.state.discCount} discs
                                     </Progress>
                                 </Grid.Column>}
@@ -493,8 +499,10 @@ class TowerSorter extends Component {
                                     />}
                                 </Grid.Column>
 
+
                                 <Grid.Column width={16}>
-                                    <DiscSelect discSelectKey="discSelect" handleDiscSelect={this.handleDiscSelect}/>
+                                    {this.state.solveInProgress === false &&
+                                    <DiscSelect discSelectKey="discSelect" handleDiscSelect={this.handleDiscSelect}/>}
                                 </Grid.Column>
 
                                 {this.state.solved && this.getPuzzleBanner()}

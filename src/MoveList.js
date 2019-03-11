@@ -79,7 +79,8 @@ class MoveList extends Component {
                                     return (
                                         <Table.Row key={item.moveCount}>
                                             <Table.Cell> {item.moveCount} </Table.Cell>
-                                            <Table.Cell> {item.moveDesc} </Table.Cell>
+                                            <Table.Cell> {"Moved disc " + item.disc + " from tower " + item.sourceTowerNumber + " to tower "
+                                            + item.targetTowerNumber} </Table.Cell>
                                             <Table.Cell>
 
                                                 <Table unstackable>
@@ -92,10 +93,10 @@ class MoveList extends Component {
                                                     <Table.Body>
 
                                                         {
-                                                            item.endingTowerStates.map((towerState) => {
-                                                                    return (<Table.Row key={towerState.getTowerNumber()}>
-                                                                        <Table.Cell>{towerState.getTowerNumber()}</Table.Cell>
-                                                                        <Table.Cell>{towerState.getDiscOrder()}</Table.Cell>
+                                                            item.endingTowerStates.map((towerState, index) => {
+                                                                    return (<Table.Row key={index+1}>
+                                                                        <Table.Cell>{index+1}</Table.Cell>
+                                                                        <Table.Cell>{towerState}</Table.Cell>
                                                                     </Table.Row>);
                                                                 }
                                                             )

@@ -34,11 +34,6 @@ class Move {
         return this._targetTowerDiscs;
     }
 
-    get moveDesc() {
-        return "Moved disc " + this._disc + " from tower " + this._sourceTowerNumber + " to tower "
-            + this._targetTowerNumber;
-    }
-
     get endingTowerStates() {
         return this._endingTowerStates;
     }
