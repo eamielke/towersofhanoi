@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {Table, Grid, Pagination, Responsive, Popup, Button, Container} from 'semantic-ui-react';
+import {Table, Grid, Pagination, Responsive, Popup, Button} from 'semantic-ui-react';
 
 
 class MoveList extends Component {
