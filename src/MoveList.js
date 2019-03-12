@@ -107,14 +107,18 @@ class MoveList extends Component {
                                                         trigger={<Button icon='add'/>}
                                                         on={'click'}
                                                         basic
-                                                        position={'left center'}
+                                                        position={'top right'}
+                                                        flowing
                                                     >
                                                         <Grid celled padded style={{overflow: 'auto'}}>
 
                                                             {
                                                                 item.endingTowerStates.map((towerState, index) => {
-                                                                        return (<Grid.Row columns={1} divided key={index + 1}>
-                                                                            <Grid.Column width={16}>
+                                                                        return (<Grid.Row columns={2} divided key={index + 1}>
+                                                                            <Grid.Column width={2}>
+                                                                                {index +1}
+                                                                            </Grid.Column>
+                                                                            <Grid.Column width={14}>
                                                                                 {towerState}
                                                                             </Grid.Column>
                                                                         </Grid.Row>);
