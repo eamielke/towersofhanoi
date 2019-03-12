@@ -94,19 +94,6 @@ class TowerSorter extends Component {
             towerData.towerNumber, towerData.discs);
     }
 
-    convertToMoveHistory(mv) {
-        let moveHistory = [];
-
-        for (let i = 0; i < mv.length; i++) {
-            //moveCount, disc, sourceTowerNumber, sourceTowerDiscs, targetTowerNumber, targetTowerDiscs, endingTowerStates
-            moveHistory.push({moveCount: mv[i]._moveCount, disc: mv[i]._disc, sourceTowerNumber: mv[i]._sourceTowerNumber,
-                sourceTowerDiscs: mv[i]._sourceTowerDiscs, targetTowerNumber:
-                mv[i]._targetTowerNumber, targetTowerDiscs: mv[i]._targetTowerDiscs,
-                endingTowerStates: mv[i]._endingTowerStates});
-        }
-
-        return moveHistory;
-    }
 
     handleSolverWorkerMessage(e) {
 
@@ -139,7 +126,7 @@ class TowerSorter extends Component {
             console.log('--------------------');
         } else {
 
-            this.moveHistory = [...this.moveHistory, ...this.convertToMoveHistory(data.moveHistory)];
+            this.moveHistory = [...this.moveHistory, ...data.moveHistory];
             this.setState({progress: data.progress, solved: false});
         }
 

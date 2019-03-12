@@ -223,10 +223,10 @@ const workercode = () => {
                     sourceTower.removeTopDisc();
 
                     //Logging and tracking logic.
-                    let move = new Move(moveCount, disc, sourceTowerNumber,
-                        sourceDiscs, targetTowerNumber,
-                        targetDiscs,
-                        compactTowerArray(towerArray));
+                    let move = {moveCount: moveCount, disc: disc, sourceTowerNumber: sourceTowerNumber,
+                        sourceTowerDiscs: sourceDiscs, targetTowerNumber: targetTowerNumber,
+                        targetTowerDiscs: targetDiscs,
+                        endingTowerStates: compactTowerArray(towerArray)};
 
                     moved = true;
 
