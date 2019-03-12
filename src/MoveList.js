@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {Table, Grid, Pagination, Responsive} from 'semantic-ui-react';
+import {Table, Grid, Pagination, Responsive, Popup, Button, Container} from 'semantic-ui-react';
 
 
 class MoveList extends Component {
@@ -25,7 +25,7 @@ class MoveList extends Component {
     }
 
     composePage(pageNo) {
-        return (this.props.moveHistory.slice(pageNo*this.pageSize, pageNo*this.pageSize + this.pageSize));
+        return (this.props.moveHistory.slice(pageNo * this.pageSize, pageNo * this.pageSize + this.pageSize));
     }
 
     componentDidMount() {
@@ -78,28 +78,54 @@ class MoveList extends Component {
                                             <Table.Cell> {"Moved disc " + item.disc + " from tower " + item.sourceTowerNumber + " to tower "
                                             + item.targetTowerNumber} </Table.Cell>
                                             <Table.Cell>
+                                                <Responsive {...Responsive.onlyComputer} >
+                                                    <Table unstackable>
+                                                        <Table.Header>
+                                                            <Table.Row>
+                                                                <Table.HeaderCell>Tower #</Table.HeaderCell>
+                                                                <Table.HeaderCell>Disc Order</Table.HeaderCell>
+                                                            </Table.Row>
+                                                        </Table.Header>
+                                                        <Table.Body>
 
-                                                <Table unstackable>
-                                                    <Table.Header>
-                                                        <Table.Row>
-                                                            <Table.HeaderCell>Tower #</Table.HeaderCell>
-                                                            <Table.HeaderCell>Disc Order</Table.HeaderCell>
-                                                        </Table.Row>
-                                                    </Table.Header>
-                                                    <Table.Body>
+                                                            {
+                                                                item.endingTowerStates.map((towerState, index) => {
+                                                                        return (<Table.Row key={index + 1}>
+                                                                            <Table.Cell>{index + 1}</Table.Cell>
+                                                                            <Table.Cell>{towerState}</Table.Cell>
+                                                                        </Table.Row>);
+                                                                    }
+                                                                )
+                                                            }
 
-                                                        {
-                                                            item.endingTowerStates.map((towerState, index) => {
-                                                                    return (<Table.Row key={index+1}>
-                                                                        <Table.Cell>{index+1}</Table.Cell>
-                                                                        <Table.Cell>{towerState}</Table.Cell>
-                                                                    </Table.Row>);
-                                                                }
-                                                            )
-                                                        }
 
-                                                    </Table.Body>
-                                                </Table>
+                                                        </Table.Body>
+                                                    </Table>
+                                                </Responsive>
+                                                <Responsive {...Responsive.onlyMobile} >
+                                                    <Popup
+                                                        trigger={<Button icon='add'/>}
+                                                        on={'click'}
+                                                        basic
+                                                        position={'left center'}
+                                                    >
+                                                        <Grid celled padded style={{overflow: 'auto'}}>
+
+                                                            {
+                                                                item.endingTowerStates.map((towerState, index) => {
+                                                                        return (<Grid.Row columns={1} divided key={index + 1}>
+                                                                            <Grid.Column width={16}>
+                                                                                {towerState}
+                                                                            </Grid.Column>
+                                                                        </Grid.Row>);
+                                                                    }
+                                                                )
+                                                            }
+
+
+                                                        </Grid>
+                                                    </Popup>
+                                                </Responsive>
                                             </Table.Cell>
                                         </Table.Row>
                                     );
