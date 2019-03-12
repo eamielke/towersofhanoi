@@ -79,7 +79,7 @@ class TowerRenderer extends Component {
             let tween = this.createTweenForMoveAndDisc(thickness, this.getMaxDiscDiameter(),
                 discArray, this.props.moveHistory[k], prevTween);
 
-            if (k === 0 ) {
+            if (k === 0) {
                 firstTween = tween;
             }
 
@@ -269,7 +269,7 @@ class TowerRenderer extends Component {
             let currentMove = this.props.moveHistory[moveCount - 1];
             this.currentMove = moveCount - 1;
             this.currentTween = tween;
-            this.setState({currentMove: currentMove });
+            this.setState({currentMove: currentMove});
             this.props.updateCurrentMove(this.props.moveHistory[this.currentMove]);
         };
     }
@@ -350,57 +350,51 @@ class TowerRenderer extends Component {
     render() {
 
         return (
-            <div key={this.props.subKey}>
+            <div key={this.props.subKey + 'TowerRenderer'}>
 
-                <Responsive {...Responsive.onlyComputer} >
-                    <Menu  inverted  borderless size={'huge'} attached={'top'}  >
-                        <Menu.Item color='green' active={this.state.active}
+                <Responsive key={this.props.subKey + 'TowerRendererResponsive'} {...Responsive.onlyComputer} >
+                    <Menu inverted borderless size={'huge'} attached={'top'}>
+                        <Menu.Item key={this.props.subKey + 'EnlargeMenu'} color='green' active={this.state.active}
                                    onClick={this.fullScreen}>Enlarge</Menu.Item>
-                        <Menu.Item
+                        <Menu.Item key={this.props.subKey + 'Pause'}
                                    disabled={this.state.currentMove.moveCount === this.props.moveHistory.length}
                                    color='green' active={this.state.paused}
                                    onClick={this.toggleAnimation}><span>{!this.state.paused ?
-                            'Pause': 'Resume' }</span></Menu.Item>
-                        <Menu.Item onClick={this.props.resetButton}>Reset</Menu.Item>
+                            'Pause' : 'Resume'}</span></Menu.Item>
+                        <Menu.Item key={this.props.subKey + 'Reset'} onClick={this.props.resetButton}>Reset</Menu.Item>
                     </Menu>
 
                 </Responsive>
 
-                <Segment basic>
+                <Segment key={this.props.subKey + 'TowerRendererSegment'} basic>
                     <Grid columns={1}>
 
-                        <Grid.Column>
-
-                            <Grid columns={1}>
-                                <Grid.Column>
+                        <Grid.Column key={this.props.subKey + 'ColumnHanoi'} >
 
 
-                                    <div
-                                         style={{
-                                             height: this.state.canvasHeight,
-                                             width: '100%',
-                                             margin: '20px auto'
-                                         }}
+                            <div key={this.props.subKey + 'HanoiRenderer'}
+                                style={{
+                                    height: this.state.canvasHeight,
+                                    width: '100%',
+                                    margin: '20px auto'
+                                }}
 
-                                         ref={(mount) => {
-                                             this.mount = mount
-                                         }}
-                                    />
-
-
-                                </Grid.Column>
-                                <Grid.Column>
-                                    <Header
-                                        as={'h3'}>{this.state.currentMove.moveCount !== this.props.moveHistory.length
-                                        ? ("Move #" + this.state.currentMove.moveCount + " of "
-                                            + this.props.moveHistory.length + " - "
-                                            + "Moved disc " + this.state.currentMove.disc + " from tower " + this.state.currentMove.sourceTowerNumber + " to tower "
-                                                    + this.state.currentMove.targetTowerNumber) : "Completed All Moves."}</Header>
-                                </Grid.Column>
-                            </Grid>
+                                ref={(mount) => {
+                                    this.mount = mount
+                                }}
+                            />
 
 
                         </Grid.Column>
+                        <Grid.Column key={this.props.subKey + 'MoveStatus'} >
+                            <Header
+                                as={'h3'}>{this.state.currentMove.moveCount !== this.props.moveHistory.length
+                                ? ("Move #" + this.state.currentMove.moveCount + " of "
+                                    + this.props.moveHistory.length + " - "
+                                    + "Moved disc " + this.state.currentMove.disc + " from tower " + this.state.currentMove.sourceTowerNumber + " to tower "
+                                    + this.state.currentMove.targetTowerNumber) : "Completed All Moves."}</Header>
+                        </Grid.Column>
+
                     </Grid>
                 </Segment>
 

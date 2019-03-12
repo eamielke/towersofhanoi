@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="a48d533f-5b82-4265-bd5d-f08bc74b4e19" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/src/MoveList.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/MoveList.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/TowerRenderer.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/TowerRenderer.js" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/.tmp/" />
     <ignored path="$PROJECT_DIR$/temp/" />
@@ -45,26 +45,26 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/TowerSorter.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="551">
-              <caret line="514" column="42" selection-start-line="514" selection-start-column="42" selection-end-line="514" selection-end-column="42" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/src/MoveList.js">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1320">
-              <caret line="41" column="9" lean-forward="true" selection-start-line="41" selection-start-column="9" selection-end-line="41" selection-end-column="9" />
+            <state relative-caret-position="114">
+              <caret line="3" column="42" selection-start-line="3" selection-start-column="29" selection-end-line="3" selection-end-column="42" />
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/MoveList.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="231">
+              <caret line="8" column="24" lean-forward="true" selection-start-line="8" selection-start-column="24" selection-end-line="8" selection-end-column="24" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/TowerRenderer.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="425">
-              <caret line="308" column="21" lean-forward="true" selection-start-line="308" selection-start-column="21" selection-end-line="308" selection-end-column="21" />
+            <state relative-caret-position="621">
+              <caret line="388" column="77" lean-forward="true" selection-start-line="388" selection-start-column="77" selection-end-line="388" selection-end-column="77" />
             </state>
           </provider>
         </entry>
@@ -107,7 +107,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>prototoype</find>
       <find>moveHistory</find>
       <find>moveList</find>
       <find>MoveListButton</find>
@@ -130,13 +129,14 @@
       <find>selector</find>
       <find>componentWill</find>
       <find>Progress</find>
-      <find>render</find>
       <find>shouldComponentUpdate</find>
       <find>this.scrollToMoveList</find>
       <find>this.scrolltoMoveList</find>
       <find>toggleMoveListPanel</find>
       <find>displayMoveList</find>
       <find>totalMoveCount</find>
+      <find>render</find>
+      <find>TowerRenderer</find>
     </findStrings>
     <replaceStrings>
       <replace>321</replace>
@@ -180,11 +180,11 @@
         <option value="$PROJECT_DIR$/src/Tower.js" />
         <option value="$PROJECT_DIR$/src/Move.js" />
         <option value="$PROJECT_DIR$/src/SolverWorker.js" />
-        <option value="$PROJECT_DIR$/src/TowerRenderer.js" />
         <option value="$PROJECT_DIR$/src/index.js" />
         <option value="$PROJECT_DIR$/src/TowerSorter.js" />
         <option value="$PROJECT_DIR$/src/DiscSelect.js" />
         <option value="$PROJECT_DIR$/src/MoveList.js" />
+        <option value="$PROJECT_DIR$/src/TowerRenderer.js" />
       </list>
     </option>
   </component>
@@ -295,12 +295,12 @@
       <workItem from="1552044428085" duration="48357000" />
       <workItem from="1552272165558" duration="10282000" />
       <workItem from="1552285262679" duration="2018000" />
-      <workItem from="1552362510660" duration="6401000" />
+      <workItem from="1552362510660" duration="8129000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="323950000" />
+    <option name="totallyTimeSpent" value="325678000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="52" width="3840" height="2108" extended-state="6" />
@@ -311,7 +311,7 @@
       <window_info id="npm" order="2" side_tool="true" />
       <window_info id="Favorites" order="3" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
-      <window_info anchor="bottom" id="Find" order="1" visible="true" weight="0.23473918" />
+      <window_info anchor="bottom" id="Find" order="1" weight="0.23473918" />
       <window_info anchor="bottom" id="Run" order="2" weight="0.32352942" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.18836565" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
@@ -320,7 +320,7 @@
       <window_info anchor="bottom" id="Docker" order="7" show_stripe_button="false" />
       <window_info anchor="bottom" id="Version Control" order="8" />
       <window_info anchor="bottom" id="Event Log" order="9" side_tool="true" />
-      <window_info anchor="bottom" id="Terminal" order="10" weight="0.21698113" />
+      <window_info anchor="bottom" id="Terminal" order="10" visible="true" weight="0.21698113" />
       <window_info anchor="bottom" id="TypeScript" order="11" />
       <window_info anchor="bottom" id="Messages" order="12" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
@@ -479,24 +479,24 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/src/MoveList.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="231">
+          <caret line="8" column="24" lean-forward="true" selection-start-line="8" selection-start-column="24" selection-end-line="8" selection-end-column="24" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/TowerSorter.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="551">
-          <caret line="514" column="42" selection-start-line="514" selection-start-column="42" selection-end-line="514" selection-end-column="42" />
+        <state relative-caret-position="114">
+          <caret line="3" column="42" selection-start-line="3" selection-start-column="29" selection-end-line="3" selection-end-column="42" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/TowerRenderer.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="425">
-          <caret line="308" column="21" lean-forward="true" selection-start-line="308" selection-start-column="21" selection-end-line="308" selection-end-column="21" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/MoveList.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1320">
-          <caret line="41" column="9" lean-forward="true" selection-start-line="41" selection-start-column="9" selection-end-line="41" selection-end-column="9" />
+        <state relative-caret-position="621">
+          <caret line="388" column="77" lean-forward="true" selection-start-line="388" selection-start-column="77" selection-end-line="388" selection-end-column="77" />
         </state>
       </provider>
     </entry>
