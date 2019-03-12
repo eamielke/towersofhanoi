@@ -4,56 +4,52 @@ import {Table, Grid, Pagination, Responsive} from 'semantic-ui-react';
 
 class MoveList extends Component {
 
-    moveHistoryPages = [];
+    pageSize = 5;
 
     constructor(props) {
         super(props);
 
-        let pageSize = 5;
+        let tempArray = this.props.moveHistory;
 
-        let tempArray = Array.from(this.props.moveHistory);
-
-        let totalPages = Math.ceil(tempArray.length / pageSize);
-
-        if (totalPages > 0) {
-            for (let i = 0, t = tempArray.length; i < t; i += pageSize) {
-                this.moveHistoryPages.push(tempArray.slice(i, i + pageSize));
-            }
-
-        } else {
-            this.moveHistoryPages.push(tempArray);
-        }
+        let totalPages = Math.ceil(tempArray.length / this.pageSize);
 
         this.handlePaginationChange = this.handlePaginationChange.bind(this);
 
         this.state = {
-            currentPageData: this.moveHistoryPages[0],
+            currentPageData: this.composePage(0),
             currentPage: 0,
             totalPages: totalPages,
-            pageSize: pageSize,
-            totalMoveCount: this.props.moveHistory.length,
+            pageSize: this.pageSize
         };
 
     }
 
+    composePage(pageNo) {
+        return (this.props.moveHistory.slice(pageNo*this.pageSize, pageNo*this.pageSize + this.pageSize));
+    }
+
     componentDidMount() {
+        console.log('Mounting movelist component');
         this.props.scrollToMoveListRef();
     }
 
 
     handlePaginationChange(e, {activePage}) {
-        //Normalize page number
 
         let normalizedPage = activePage - 1;
-        if (normalizedPage < 1) {
+        if (normalizedPage < 0) {
             normalizedPage = 0;
         }
 
         this.setState({
-            currentPageData: this.moveHistoryPages[normalizedPage],
+            currentPageData: this.composePage(normalizedPage),
             currentPage: normalizedPage
         });
 
+    }
+
+    componentWillUnmount() {
+        console.log('Unmounting movelist component');
     }
 
 
@@ -63,7 +59,7 @@ class MoveList extends Component {
 
             <Grid id={this.props.id} columns={1}>
                 <Grid.Column>
-                    <Table key={this.state.totalMoveCount} celled unstackable>
+                    <Table key={this.state.totalPages} celled unstackable>
 
                         <Table.Header>
                             <Table.Row>
