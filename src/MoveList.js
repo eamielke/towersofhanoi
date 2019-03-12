@@ -110,15 +110,12 @@ class MoveList extends Component {
                                                         position={'top right'}
                                                         flowing
                                                     >
-                                                        <Grid celled padded style={{overflow: 'auto'}}>
+                                                        <Grid stackable={false} celled container padded>
 
                                                             {
                                                                 item.endingTowerStates.map((towerState, index) => {
-                                                                        return (<Grid.Row columns={2} divided key={index + 1}>
-                                                                            <Grid.Column width={2}>
-                                                                                {index +1}
-                                                                            </Grid.Column>
-                                                                            <Grid.Column width={14}>
+                                                                        return (<Grid.Row columns={1} divided key={index + 1}>
+                                                                            <Grid.Column width={16}>
                                                                                 {towerState}
                                                                             </Grid.Column>
                                                                         </Grid.Row>);
