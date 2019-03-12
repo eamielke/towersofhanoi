@@ -450,7 +450,7 @@ class TowerSorter extends Component {
                                             subKey={this.state.discCount}
                                             complex={false} fluid
                                             placeholder={'Select a disc to start'}
-                                            onChange={this.handleDiscSelect}/>}
+                                            handleDiscSelect={this.handleDiscSelect}/>}
                             </Menu.Item>
                             {pauseMenu}
                             <Menu.Item disabled={!this.TowerRendererRef.current} as={'a'}

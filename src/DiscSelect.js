@@ -61,8 +61,8 @@ class DiscSelect extends Component {
 
             return (
 
-                <Select key={this.props.subKey} fluid={this.props.fluid} options={this.props.discOptions} placeholder={'Select a disc to start'}
-                        onChange={this.props.onChange}/>
+                <Select key={this.props.subKey} fluid={this.props.fluid} options={this.discOptions} placeholder={'Select a disc to start'}
+                        onChange={this.props.handleDiscSelect}/>
             );
         }
     }
