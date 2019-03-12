@@ -2,7 +2,6 @@ import React, {Component} from 'react';
 import Tower from "./Tower";
 import MoveList from "./MoveList";
 import TowerRenderer from "./TowerRenderer";
-import Move from "./Move";
 import {Header, Progress, Sticky} from 'semantic-ui-react'
 import {Segment, Icon} from 'semantic-ui-react';
 import {Table} from 'semantic-ui-react';
@@ -100,9 +99,10 @@ class TowerSorter extends Component {
 
         for (let i = 0; i < mv.length; i++) {
             //moveCount, disc, sourceTowerNumber, sourceTowerDiscs, targetTowerNumber, targetTowerDiscs, endingTowerStates
-            moveHistory.push(new Move(mv[i]._moveCount, mv[i]._disc, mv[i]._sourceTowerNumber, mv[i]._sourceTowerDiscs,
-                mv[i]._targetTowerNumber, mv[i]._targetTowerDiscs,
-                mv[i]._endingTowerStates));
+            moveHistory.push({moveCount: mv[i]._moveCount, disc: mv[i]._disc, sourceTowerNumber: mv[i]._sourceTowerNumber,
+                sourceTowerDiscs: mv[i]._sourceTowerDiscs, targetTowerNumber:
+                mv[i]._targetTowerNumber, targetTowerDiscs: mv[i]._targetTowerDiscs,
+                endingTowerStates: mv[i]._endingTowerStates});
         }
 
         return moveHistory;
