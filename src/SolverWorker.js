@@ -1,15 +1,5 @@
 const workercode = () => {
 
-    function Move(moveCount, disc, sourceTowerNumber, sourceTowerDiscs, targetTowerNumber, targetTowerDiscs, endingTowerStates) {
-        this._moveCount = moveCount;
-        this._disc = disc;
-        this._sourceTowerNumber = sourceTowerNumber;
-        this._sourceTowerDiscs = sourceTowerDiscs;
-        this._targetTowerNumber = targetTowerNumber;
-        this._targetTowerDiscs = targetTowerDiscs;
-        this._endingTowerStates = endingTowerStates;
-    }
-
     function Tower(initialTower, solutionString, towerNo, discsArray) {
 
         this.initial = initialTower;
@@ -117,7 +107,7 @@ const workercode = () => {
 
         function setupTowers(discCount) {
 
-            console.log('Worker Setting up tower array');
+            //console.log('Worker Setting up tower array');
 
             let discArray = [];
 
@@ -146,7 +136,7 @@ const workercode = () => {
             towerArray.push(new Tower(false, solution, 2));
             towerArray.push(new Tower(false, solution, 3));
 
-            console.log('worker tower array initial: ' + JSON.stringify(towerArray));
+            //console.log('worker tower array initial: ' + JSON.stringify(towerArray));
 
         }
 
@@ -155,13 +145,12 @@ const workercode = () => {
             let solved = false;
             let iterationCount = 1;
 
-            console.log('Worker Prior to loop start - Solved: ' + solved + " iterationCount: "
-                + iterationCount + " max moves: " + maxMoves);
+            //console.log('Worker Prior to loop start - Solved: ' + solved + " iterationCount: "
+                //+ iterationCount + " max moves: " + maxMoves);
 
-            console.log('Worker solve puzzle - initial tower state: ' + JSON.stringify(towerArray));
+            //console.log('Worker solve puzzle - initial tower state: ' + JSON.stringify(towerArray));
 
             while (!solved && iterationCount <= maxMoves) {
-
 
                 performMove(towerArray);
 
@@ -276,12 +265,12 @@ const workercode = () => {
         }
 
         let discCount = e.data.data;
-        console.log('Solving puzzle in worker thread for discs: ' + discCount);
+        //console.log('Solving puzzle in worker thread for discs: ' + discCount);
         setupTowers(discCount);
 
         let solveResult = solvePuzzle();
 
-        console.log('Final tower state: ' + JSON.stringify(towerArray));
+        //console.log('Final tower state: ' + JSON.stringify(towerArray));
 
         postMessage({event: 'Success', data: {moveCount: moveCount,
                 solved: solveResult, towerArray: towerArray}});

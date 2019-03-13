@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import {Table, Grid, Pagination, Responsive, Popup, Button} from 'semantic-ui-react';
-
+import {composePage, calcTotalPages} from "./PagingUtil";
 
 class MoveList extends Component {
 
@@ -9,14 +9,12 @@ class MoveList extends Component {
     constructor(props) {
         super(props);
 
-        let tempArray = this.props.moveHistory;
-
-        let totalPages = Math.ceil(tempArray.length / this.pageSize);
+        let totalPages = calcTotalPages(this.props.moveHistory, this.pageSize);
 
         this.handlePaginationChange = this.handlePaginationChange.bind(this);
 
         this.state = {
-            currentPageData: this.composePage(0),
+            currentPageData: composePage(this.props.moveHistory, this.pageSize, 0),
             currentPage: 0,
             totalPages: totalPages,
             pageSize: this.pageSize
@@ -24,12 +22,9 @@ class MoveList extends Component {
 
     }
 
-    composePage(pageNo) {
-        return (this.props.moveHistory.slice(pageNo * this.pageSize, pageNo * this.pageSize + this.pageSize));
-    }
 
     componentDidMount() {
-        console.log('Mounting movelist component');
+        //console.log('Mounting movelist component');
         this.props.scrollToMoveListRef();
     }
 
@@ -42,14 +37,14 @@ class MoveList extends Component {
         }
 
         this.setState({
-            currentPageData: this.composePage(normalizedPage),
+            currentPageData: composePage(this.props.moveHistory, this.pageSize, normalizedPage),
             currentPage: normalizedPage
         });
 
     }
 
     componentWillUnmount() {
-        console.log('Unmounting movelist component');
+        //console.log('Unmounting movelist component');
     }
 
 

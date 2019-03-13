@@ -3,8 +3,14 @@ import * as THREE from 'three';
 import TWEEN from '@tweenjs/tween.js';
 // import OrbitControls from 'three-orbitcontrols';
 import {Segment, Grid, Header, Menu, Responsive} from 'semantic-ui-react';
+import {composePage, calcTotalPages} from "./PagingUtil";
+
 
 class TowerRenderer extends Component {
+
+    pageSize = 50;
+    currentPageNo = 0;
+    discs = [];
 
     constructor(props) {
         super(props);
@@ -73,11 +79,16 @@ class TowerRenderer extends Component {
 
         TWEEN.removeAll();
 
+        this.totalPages = calcTotalPages(this.props.moveHistory, this.pageSize);
+
+        //Get the moves to create the first 1000 tweens.
+        this.currentMovePage = composePage(this.props.moveHistory, this.pageSize, this.currentPageNo);
+
         let prevTween;
         let firstTween;
-        for (let k = 0; k < this.props.moveHistory.length; k++) {
+        for (let k = 0; k < this.currentMovePage.length; k++) {
             let tween = this.createTweenForMoveAndDisc(thickness, this.getMaxDiscDiameter(),
-                discArray, this.props.moveHistory[k], prevTween);
+                discArray, this.currentMovePage[k], prevTween);
 
             if (k === 0) {
                 firstTween = tween;
@@ -112,7 +123,7 @@ class TowerRenderer extends Component {
 
         this.setState({paused: false});
 
-        console.log('Calling ComponentDidMount');
+        //console.log('Calling ComponentDidMount');
 
     }
 
@@ -137,7 +148,7 @@ class TowerRenderer extends Component {
     }
 
     updateDimensions() {
-        console.log('Updating state in child component');
+        //console.log('Updating state in child component');
         this.setState({width: window.innerWidth, height: window.innerHeight});
         this.props.updateDimensions();
 
@@ -185,11 +196,13 @@ class TowerRenderer extends Component {
                 side: THREE.DoubleSide
             }));
 
+            this.discs.push(disc);
+
             discArray.push(disc);
-            console.log(i + ' Creating disc with diameter: ' + (i + 1) * this.getScaleFactor() + ' and thickness ' + thickness);
+            //console.log(i + ' Creating disc with diameter: ' + (i + 1) * this.getScaleFactor() + ' and thickness ' + thickness);
         }
 
-        console.log("Disc array size: " + discArray.length);
+        //console.log("Disc array size: " + discArray.length);
 
         return discArray;
 
@@ -255,7 +268,7 @@ class TowerRenderer extends Component {
                 discObj.rotation.z = currentDisc.r;
             });
 
-        tweenOver.onStart(this.updateCurrentMove(move.moveCount, tweenOver));
+        tweenOver.onStart(this.updateCurrentMove(move.moveCount, tweenOver, discArray));
 
         if (previousTween) {
             previousTween.chain(tweenOver);
@@ -264,13 +277,40 @@ class TowerRenderer extends Component {
         return tweenOver;
     }
 
-    updateCurrentMove(moveCount, tween) {
+    updateCurrentMove(moveCount, tween, discArray) {
         return () => {
             let currentMove = this.props.moveHistory[moveCount - 1];
             this.currentMove = moveCount - 1;
             this.currentTween = tween;
             this.setState({currentMove: currentMove});
             this.props.updateCurrentMove(this.props.moveHistory[this.currentMove]);
+
+            if (this.currentMovePage[this.currentMovePage.length -1].moveCount === moveCount) {
+                //If this is the last tween in the page, then create a new page and chain it up
+
+                if (this.currentPageNo < (this.totalPages -1)) {
+
+                    this.currentPageNo++;
+
+                    this.currentMovePage = composePage(this.props.moveHistory, this.pageSize, this.currentPageNo);
+
+                    let prevTween;
+                    let firstTween;
+                    for (let k = 0; k < this.currentMovePage.length; k++) {
+                        let newTween = this.createTweenForMoveAndDisc(this.calcThickness(), this.getMaxDiscDiameter(),
+                            discArray, this.currentMovePage[k], prevTween);
+
+                        if (k === 0) {
+                            firstTween = newTween;
+                        }
+
+                        prevTween = newTween;
+                    }
+
+                    tween.chain(firstTween)
+                }
+            }
+
         };
     }
 
@@ -287,12 +327,36 @@ class TowerRenderer extends Component {
         return this.state.paused;
     }
 
+    resetThreeJS() {
+
+            if( this.discs.length > 0 ) {
+                this.discs.forEach(function(item) {
+                    item.parent.remove(item);
+                    item.material.dispose();
+                    item.geometry.dispose();
+                });
+                this.discs = null;
+                this.discs = [];
+            }
+
+    }
 
     componentWillUnmount() {
         this.stop();
-        this.currentTween = null;
+
         TWEEN.removeAll();
         this.mount.removeChild(this.renderer.domElement);
+        this.resetThreeJS();
+
+        this.currentTween = null;
+        this.currentMovePage = null;
+        this.currentPageNo = 0;
+
+        this.renderer = null;
+        this.scene = null;
+
+        this.camera = null;
+
         window.removeEventListener("resize", this.updateDimensions);
     }
 
@@ -334,10 +398,10 @@ class TowerRenderer extends Component {
     toggleAnimation() {
 
         if (this.state.paused) {
-            console.log('Trying to start tween: ' + this.currentMove);
+            //console.log('Trying to start tween: ' + this.currentMove);
             this.currentTween.start();
         } else {
-            console.log('Trying to stop tween: ' + this.currentMove);
+            //console.log('Trying to stop tween: ' + this.currentMove);
 
             this.currentTween.stop();
 

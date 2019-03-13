@@ -120,10 +120,10 @@ class TowerSorter extends Component {
 
             this.setState({solveInProgress: false});
 
-            console.log('Ending tower state');
-            console.log('--------------------');
-            console.log(this.outputTowerStates());
-            console.log('--------------------');
+            //console.log('Ending tower state');
+            //console.log('--------------------');
+            //console.log(this.outputTowerStates());
+            //console.log('--------------------');
         } else {
 
             this.moveHistory = [...this.moveHistory, ...data.moveHistory];
@@ -176,7 +176,7 @@ class TowerSorter extends Component {
         for (let i = 0; i < this.towerArray.length; i++) {
 
             if (this.towerArray[i]) {
-                console.log(this.towerArray[i].getDesc());
+                //console.log(this.towerArray[i].getDesc());
                 towerStates.push(this.towerArray[i].getDesc());
             }
 
@@ -201,13 +201,13 @@ class TowerSorter extends Component {
     }
 
     handleSidebarHide() {
-        console.log('Hiding sidebar: ' + this.state.visible);
+        //console.log('Hiding sidebar: ' + this.state.visible);
         this.setState({visible: false});
     }
 
     solvePuzzle() {
 
-        console.log('Starting web worker');
+        //console.log('Starting web worker');
         this.setState({solveInProgress: true});
         this.solverWorker.postMessage({event: 'Solve', data: this.discCount});
 
@@ -343,7 +343,7 @@ class TowerSorter extends Component {
         this.displayMoveList = !this.displayMoveList;
         this.scrolltoMoveList = this.displayMoveList;
 
-        console.log('Setting scrollToMoveList: ' + this.scrolltoMoveList);
+        //console.log('Setting scrollToMoveList: ' + this.scrolltoMoveList);
 
         this.handleSidebarHide();
     }
@@ -351,7 +351,7 @@ class TowerSorter extends Component {
     scrollToMoveListRef() {
         const node = document.getElementById('moveList');
 
-        console.log('before scrollToMoveList: ' + this.scrolltoMoveList);
+        //console.log('before scrollToMoveList: ' + this.scrolltoMoveList);
 
         if (node && this.scrolltoMoveList) {
             scrollIntoView(node, {
@@ -363,7 +363,7 @@ class TowerSorter extends Component {
         }
 
         this.scrolltoMoveList = false;
-        console.log('after scrollToMoveList: ' + this.scrolltoMoveList);
+        //console.log('after scrollToMoveList: ' + this.scrolltoMoveList);
     }
 
     isAnimationComplete() {
@@ -380,7 +380,7 @@ class TowerSorter extends Component {
     }
 
     updateDimensions() {
-        console.log('Updating state in parent component');
+        //console.log('Updating state in parent component');
         this.setState({width: window.innerWidth, height: window.innerHeight, paused: this.isPaused()});
     }
 
