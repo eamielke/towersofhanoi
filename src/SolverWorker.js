@@ -18,28 +18,23 @@ const workercode = () => {
 
     }
 
-    //Static function
-    Tower.copyArray = function (arrayToCopy) {
-        return (Array.from(arrayToCopy));
-    };
-
     Tower.prototype.addDisc = function (disc) {
         if (this.discs.length === 0) {
-            this.previousDiscs = Tower.copyArray(this.discs);
+            this.previousDiscs = Array.from(this.discs);
             this.discs.push(disc);
             return true;
         } else if (this.discs[this.discs.length - 1] <= disc) {
             return false;
         } else {
 
-            let testDiscs = Tower.copyArray(this.discs);
+            let testDiscs = Array.from(this.discs);
 
             testDiscs.push(disc);
 
             if (testDiscs.join('') === this.solution && this.initial) {
                 return false;
             } else if (testDiscs.join('') !== this.previousDiscs.join('')) {
-                this.previousDiscs = Tower.copyArray(this.discs);
+                this.previousDiscs = Array.from(this.discs);
                 this.discs.push(disc);
                 return true;
             } else {
@@ -51,7 +46,7 @@ const workercode = () => {
 
     Tower.prototype.removeTopDisc = function () {
         if (this.discs && this.discs.length > 0) {
-            this.previousDiscs = Tower.copyArray(this.discs);
+            this.previousDiscs = Array.from(this.discs);
             return this.discs.pop();
         }
     };
