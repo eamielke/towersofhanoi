@@ -137,8 +137,8 @@ class TowerSorter extends Component {
     setupTowers(discCount) {
         let discArray = [];
 
-        for (let j = discCount; j > 0; j--) {
-            discArray.push(j);
+        for (let i = discCount; i > 0; i--) {
+            discArray.push(i);
         }
 
         this.maxMoves = Math.pow(2, (discArray.length));
@@ -259,7 +259,7 @@ class TowerSorter extends Component {
             <Responsive {...Responsive.onlyComputer} >
                 <Message positive size={'small'}>
                     <Message.Header>Success</Message.Header>
-                    <p>Puzzle Solved in {this.state.moveCount} moves.</p>
+                    <p>Puzzle with {this.state.discCount} discs was solved in {this.state.moveCount} moves.</p>
                     <MoveListButton
                         moveHistory={this.state.moveHistory} displayMoveList={this.state.displayMoveList}
                         toggleMoveListPanel={this.toggleMoveListPanel}/>
@@ -268,7 +268,7 @@ class TowerSorter extends Component {
             <Responsive {...Responsive.onlyTablet} >
                 <Message positive size={'huge'}>
                     <Message.Header>Success</Message.Header>
-                    <p>Puzzle Solved in {this.state.moveCount} moves.</p>
+                    <p>Puzzle with {this.state.discCount} discs was solved in {this.state.moveCount} moves.</p>
                     <MoveListButton
                         moveHistory={this.state.moveHistory} displayMoveList={this.state.displayMoveList}
                         toggleMoveListPanel={this.toggleMoveListPanel}/>
@@ -277,7 +277,7 @@ class TowerSorter extends Component {
             <Responsive {...Responsive.onlyMobile} >
                 <Message positive size={'large'}>
                     <Message.Header>Success</Message.Header>
-                    <p>Puzzle Solved in {this.state.moveCount} moves.</p>
+                    <p>Puzzle with {this.state.discCount} discs was solved in {this.state.moveCount} moves.</p>
                     <MoveListButton
                         moveHistory={this.state.moveHistory} displayMoveList={this.state.displayMoveList}
                         toggleMoveListPanel={this.toggleMoveListPanel}/>

@@ -45,7 +45,6 @@ class TowerRenderer extends Component {
         //ADD SCENE
         this.camera = new THREE.PerspectiveCamera(this.calcFOV(), width / height, 0.2, 20);
 
-
         this.scene = new THREE.Scene();
 
         let discArray = this.createDiscs();
@@ -60,8 +59,8 @@ class TowerRenderer extends Component {
         // add to the scene
         this.scene.add(pointLight);
 
-        for (let j = 0; j < discArray.length; j++) {
-            this.scene.add(discArray[j]);
+        for (let i = 0; i < discArray.length; i++) {
+            this.scene.add(discArray[i]);
         }
 
         this.scene.updateMatrixWorld(true);
@@ -69,11 +68,11 @@ class TowerRenderer extends Component {
 
         let thickness = this.calcThickness();
         let y = thickness * (discArray.length);
-        for (let l = 0; l < discArray.length; l++) {
+        for (let i = 0; i < discArray.length; i++) {
 
             y = y - thickness;
 
-            discArray[l].position.set(0, y, 0);
+            discArray[i].position.set(0, y, 0);
 
         }
 
@@ -90,16 +89,16 @@ class TowerRenderer extends Component {
 
         let prevTween;
         let firstTween;
-        for (let k = 0; k < this.currentMovePage.length; k++) {
+        this.currentMovePage.forEach((move, i) => {
             let tween = this.createTweenForMoveAndDisc(thickness, this.getMaxDiscDiameter(),
-                discArray, this.currentMovePage[k], prevTween);
+                discArray, this.currentMovePage[i], prevTween);
 
-            if (k === 0) {
+            if (i === 0) {
                 firstTween = tween;
             }
 
             prevTween = tween;
-        }
+        });
 
 
         //ADD RENDERER
@@ -123,7 +122,9 @@ class TowerRenderer extends Component {
 
 
         this.start();
-        firstTween.start();
+        if (firstTween) {
+            firstTween.start();
+        }
 
         this.setState({paused: false});
 
@@ -301,10 +302,9 @@ class TowerRenderer extends Component {
                 //First remove the previous n-1 tweens
                 let tweenRemoval = this.tweenTracker.slice(0, this.tweenTracker.length - 1);
 
-                for (let j = 0; j < tweenRemoval; j++) {
-
-                    TWEEN.remove(tweenRemoval[j]);
-                }
+                tweenRemoval.forEach((tweenToRemove) => {
+                    TWEEN.remove(tweenToRemove);
+                });
 
                 tweenRemoval.splice(0, tweenRemoval.length);
 
@@ -317,18 +317,18 @@ class TowerRenderer extends Component {
                     this.currentMovePage = composePage(this.props.moveHistory, this.pageSize, this.currentPageNo);
 
                     let prevTween = null;
-                    let firstTween;
-                    for (let k = 0; k < this.currentMovePage.length; k++) {
-                        let nextTween = this.createTweenForMoveAndDisc(this.calcThickness(), this.getMaxDiscDiameter(),
-                            discArray, this.currentMovePage[k], prevTween);
+                    let firstTween = null;
 
-                        if (k === 0) {
+                    this.currentMovePage.forEach((move, j) => {
+                        let nextTween = this.createTweenForMoveAndDisc(this.calcThickness(), this.getMaxDiscDiameter(),
+                            discArray, move, prevTween);
+
+                        if (j === 0) {
                             firstTween = nextTween;
                         }
 
-
                         prevTween = nextTween;
-                    }
+                    });
 
                     tween.chain(firstTween);
                 }
