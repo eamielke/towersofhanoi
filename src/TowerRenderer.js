@@ -11,15 +11,17 @@ class TowerRenderer extends Component {
     pageSize = 50;
     currentPageNo = 0;
     discs = [];
+    camera = null;
 
     constructor(props) {
         super(props);
         this.updateDimensions = this.updateDimensions.bind(this);
         this.resetCamera = this.resetCamera.bind(this);
         this.fullScreen = this.fullScreen.bind(this);
-        this.updateCurrentMove = this.updateCurrentMove.bind(this);
         this.toggleAnimation = this.toggleAnimation.bind(this);
         this.isAnimationComplete = this.isAnimationComplete.bind(this);
+        this.disposeThreeJS = this.disposeThreeJS.bind(this);
+        this.updateCurrentMove = this.updateCurrentMove.bind(this);
 
         this.state = {
             canvasHeight: '300px',
@@ -78,6 +80,8 @@ class TowerRenderer extends Component {
         //Setup tween
 
         TWEEN.removeAll();
+
+        this.tweenTracker = [];
 
         this.totalPages = calcTotalPages(this.props.moveHistory, this.pageSize);
 
@@ -174,7 +178,7 @@ class TowerRenderer extends Component {
 
     calcTransTime() {
         let transTime = 19200 / (this.props.discCount * this.props.discCount);
-        if (transTime < 80) {
+        if (transTime < 500) {
             transTime = 500;
         }
         return transTime;
@@ -254,8 +258,7 @@ class TowerRenderer extends Component {
 
         let transitionTime = this.calcTransTime();
 
-
-        let tweenOver = new TWEEN.Tween(currentDisc)
+        let newTween = new TWEEN.Tween(currentDisc)
             .to({
                 x: [startX, toX * .9, toX],
                 y: [0.8 * totalThickness, totalThickness, toY],
@@ -268,50 +271,70 @@ class TowerRenderer extends Component {
                 discObj.rotation.z = currentDisc.r;
             });
 
-        tweenOver.onStart(this.updateCurrentMove(move.moveCount, tweenOver, discArray));
+
+        newTween.onStart(this.updateCurrentMove(move.moveCount, newTween, discArray));
+
 
         if (previousTween) {
-            previousTween.chain(tweenOver);
+            previousTween.chain(newTween);
         }
 
-        return tweenOver;
+        return newTween;
     }
 
     updateCurrentMove(moveCount, tween, discArray) {
+
         return () => {
+
             let currentMove = this.props.moveHistory[moveCount - 1];
+
             this.currentMove = moveCount - 1;
             this.currentTween = tween;
             this.setState({currentMove: currentMove});
             this.props.updateCurrentMove(this.props.moveHistory[this.currentMove]);
 
-            if (this.currentMovePage[this.currentMovePage.length -1].moveCount === moveCount) {
+            this.tweenTracker.push(tween);
+
+            if (this.currentMovePage[this.currentMovePage.length - 1].moveCount === moveCount) {
                 //If this is the last tween in the page, then create a new page and chain it up
 
-                if (this.currentPageNo < (this.totalPages -1)) {
+                //First remove the previous n-1 tweens
+                let tweenRemoval = this.tweenTracker.slice(0, this.tweenTracker.length - 1);
+
+                for (let j = 0; j < tweenRemoval; j++) {
+
+                    TWEEN.remove(tweenRemoval[j]);
+                }
+
+                tweenRemoval.splice(0, tweenRemoval.length);
+
+                this.tweenTracker.splice(0, this.tweenTracker.length - 1);
+
+                if (this.currentPageNo < (this.totalPages - 1)) {
 
                     this.currentPageNo++;
 
                     this.currentMovePage = composePage(this.props.moveHistory, this.pageSize, this.currentPageNo);
 
-                    let prevTween;
+                    let prevTween = null;
                     let firstTween;
                     for (let k = 0; k < this.currentMovePage.length; k++) {
-                        let newTween = this.createTweenForMoveAndDisc(this.calcThickness(), this.getMaxDiscDiameter(),
+                        let nextTween = this.createTweenForMoveAndDisc(this.calcThickness(), this.getMaxDiscDiameter(),
                             discArray, this.currentMovePage[k], prevTween);
 
                         if (k === 0) {
-                            firstTween = newTween;
+                            firstTween = nextTween;
                         }
 
-                        prevTween = newTween;
+
+                        prevTween = nextTween;
                     }
 
-                    tween.chain(firstTween)
+                    tween.chain(firstTween);
                 }
             }
+        }
 
-        };
     }
 
 
@@ -327,17 +350,17 @@ class TowerRenderer extends Component {
         return this.state.paused;
     }
 
-    resetThreeJS() {
+    disposeThreeJS() {
 
-            if( this.discs.length > 0 ) {
-                this.discs.forEach(function(item) {
-                    item.parent.remove(item);
-                    item.material.dispose();
-                    item.geometry.dispose();
-                });
-                this.discs = null;
-                this.discs = [];
-            }
+        if (this.discs.length > 0) {
+            this.discs.forEach(function (item) {
+                item.parent.remove(item);
+                item.material.dispose();
+                item.geometry.dispose();
+            });
+            this.discs = null;
+            this.discs = [];
+        }
 
     }
 
@@ -346,7 +369,7 @@ class TowerRenderer extends Component {
 
         TWEEN.removeAll();
         this.mount.removeChild(this.renderer.domElement);
-        this.resetThreeJS();
+        this.disposeThreeJS();
 
         this.currentTween = null;
         this.currentMovePage = null;
@@ -356,6 +379,10 @@ class TowerRenderer extends Component {
         this.scene = null;
 
         this.camera = null;
+
+        this.tweenTracker = [];
+
+        this.mount = null;
 
         window.removeEventListener("resize", this.updateDimensions);
     }
@@ -379,9 +406,9 @@ class TowerRenderer extends Component {
         // console.log("Cylinder position: " + position.x);
         // this.controls.update();
 
-        this.frameId = window.requestAnimationFrame(this.animate);
-
         TWEEN.update();
+
+        this.frameId = window.requestAnimationFrame(this.animate);
     };
 
 
@@ -433,24 +460,24 @@ class TowerRenderer extends Component {
                 <Segment key={this.props.subKey + 'TowerRendererSegment'} basic>
                     <Grid columns={1}>
 
-                        <Grid.Column key={this.props.subKey + 'ColumnHanoi'} >
+                        <Grid.Column key={this.props.subKey + 'ColumnHanoi'}>
 
 
                             <div key={this.props.subKey + 'HanoiRenderer'}
-                                style={{
-                                    height: this.state.canvasHeight,
-                                    width: '100%',
-                                    margin: '20px auto'
-                                }}
+                                 style={{
+                                     height: this.state.canvasHeight,
+                                     width: '100%',
+                                     margin: '20px auto'
+                                 }}
 
-                                ref={(mount) => {
-                                    this.mount = mount
-                                }}
+                                 ref={(mount) => {
+                                     this.mount = mount
+                                 }}
                             />
 
 
                         </Grid.Column>
-                        <Grid.Column key={this.props.subKey + 'MoveStatus'} >
+                        <Grid.Column key={this.props.subKey + 'MoveStatus'}>
                             <Header
                                 as={'h3'}>{this.state.currentMove.moveCount !== this.props.moveHistory.length
                                 ? ("Move #" + this.state.currentMove.moveCount + " of "

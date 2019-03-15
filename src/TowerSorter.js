@@ -36,6 +36,8 @@ class TowerSorter extends Component {
 
     maxMoves = 0;
 
+    discCount = 0;
+
 
     constructor(props) {
         super(props);
@@ -167,25 +169,6 @@ class TowerSorter extends Component {
             progress: 0
         });
     }
-
-
-    outputTowerStates() {
-
-        let towerStates = [];
-
-        for (let i = 0; i < this.towerArray.length; i++) {
-
-            if (this.towerArray[i]) {
-                //console.log(this.towerArray[i].getDesc());
-                towerStates.push(this.towerArray[i].getDesc());
-            }
-
-        }
-
-        return towerStates;
-
-    }
-
 
     handleDiscSelect(event, data) {
         if (data.value > 0) {
