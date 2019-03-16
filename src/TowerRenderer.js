@@ -8,7 +8,7 @@ import {composePage, calcTotalPages} from "./PagingUtil";
 
 class TowerRenderer extends Component {
 
-    pageSize = 50;
+    pageSize = 5;
     currentPageNo = 0;
     discs = [];
     camera = null;
@@ -21,7 +21,6 @@ class TowerRenderer extends Component {
         this.toggleAnimation = this.toggleAnimation.bind(this);
         this.isAnimationComplete = this.isAnimationComplete.bind(this);
         this.disposeThreeJS = this.disposeThreeJS.bind(this);
-        this.updateCurrentMove = this.updateCurrentMove.bind(this);
 
         this.state = {
             canvasHeight: '300px',
@@ -77,10 +76,7 @@ class TowerRenderer extends Component {
         }
 
         //Setup tween
-
         TWEEN.removeAll();
-
-        this.tweenTracker = [];
 
         this.totalPages = calcTotalPages(this.props.moveHistory, this.pageSize);
 
@@ -273,7 +269,50 @@ class TowerRenderer extends Component {
             });
 
 
-        newTween.onStart(this.updateCurrentMove(move.moveCount, newTween, discArray));
+        function updateCurrentMove(towerRenderer, moveCount, tween, discArray) {
+
+            return () => {
+
+                let currentMove = towerRenderer.props.moveHistory[moveCount - 1];
+
+                towerRenderer.currentMove = moveCount - 1;
+                towerRenderer.setState(
+                    {currentMove: currentMove});
+
+                if (towerRenderer.currentMovePage[towerRenderer.currentMovePage.length - 1].moveCount === moveCount) {
+                    //If this is the last tween in the page, then create a new page and chain it up
+
+                    if (towerRenderer.currentPageNo < (towerRenderer.totalPages - 1)) {
+
+                        towerRenderer.currentPageNo++;
+
+                        towerRenderer.currentMovePage = composePage(towerRenderer.props.moveHistory, towerRenderer.pageSize, towerRenderer.currentPageNo);
+
+                        let prevTween = null;
+                        let firstTween = null;
+
+                        towerRenderer.currentMovePage.forEach((move, j) => {
+                            let nextTween = towerRenderer.createTweenForMoveAndDisc(towerRenderer.calcThickness(), towerRenderer.getMaxDiscDiameter(),
+                                discArray, move, prevTween);
+
+                            if (j === 0) {
+                                firstTween = nextTween;
+                            }
+
+                            prevTween = nextTween;
+                        });
+
+                        tween.chain(firstTween);
+                    }
+                }
+
+                towerRenderer = {};
+
+            }
+
+        }
+
+        newTween.onStart(updateCurrentMove(this, move.moveCount, newTween, discArray));
 
 
         if (previousTween) {
@@ -281,60 +320,6 @@ class TowerRenderer extends Component {
         }
 
         return newTween;
-    }
-
-    updateCurrentMove(moveCount, tween, discArray) {
-
-        return () => {
-
-            let currentMove = this.props.moveHistory[moveCount - 1];
-
-            this.currentMove = moveCount - 1;
-            this.currentTween = tween;
-            this.setState({currentMove: currentMove});
-            this.props.updateCurrentMove(this.props.moveHistory[this.currentMove]);
-
-            this.tweenTracker.push(tween);
-
-            if (this.currentMovePage[this.currentMovePage.length - 1].moveCount === moveCount) {
-                //If this is the last tween in the page, then create a new page and chain it up
-
-                //First remove the previous n-1 tweens
-                let tweenRemoval = this.tweenTracker.slice(0, this.tweenTracker.length - 1);
-
-                tweenRemoval.forEach((tweenToRemove) => {
-                    TWEEN.remove(tweenToRemove);
-                });
-
-                tweenRemoval.splice(0, tweenRemoval.length);
-
-                this.tweenTracker.splice(0, this.tweenTracker.length - 1);
-
-                if (this.currentPageNo < (this.totalPages - 1)) {
-
-                    this.currentPageNo++;
-
-                    this.currentMovePage = composePage(this.props.moveHistory, this.pageSize, this.currentPageNo);
-
-                    let prevTween = null;
-                    let firstTween = null;
-
-                    this.currentMovePage.forEach((move, j) => {
-                        let nextTween = this.createTweenForMoveAndDisc(this.calcThickness(), this.getMaxDiscDiameter(),
-                            discArray, move, prevTween);
-
-                        if (j === 0) {
-                            firstTween = nextTween;
-                        }
-
-                        prevTween = nextTween;
-                    });
-
-                    tween.chain(firstTween);
-                }
-            }
-        }
-
     }
 
 
@@ -379,8 +364,6 @@ class TowerRenderer extends Component {
         this.scene = null;
 
         this.camera = null;
-
-        this.tweenTracker = [];
 
         this.mount = null;
 

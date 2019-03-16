@@ -2,6 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="a48d533f-5b82-4265-bd5d-f08bc74b4e19" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/TowerRenderer.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/TowerRenderer.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/TowerSorter.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/TowerSorter.js" afterDir="false" />
     </list>
@@ -16,25 +17,30 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/Tower.js">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="180">
-              <caret line="12" column="31" selection-start-line="12" selection-start-column="31" selection-end-line="12" selection-end-column="31" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
+      <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/TowerRenderer.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="589">
-              <caret line="424" column="23" lean-forward="true" selection-start-line="424" selection-start-column="23" selection-end-line="424" selection-end-column="23" />
+            <state relative-caret-position="240">
+              <caret line="12" column="15" lean-forward="true" selection-start-line="12" selection-start-column="15" selection-end-line="12" selection-end-column="15" />
               <folding>
                 <element signature="e#163#237#0" expanded="true" />
               </folding>
             </state>
           </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/node_modules/@tweenjs/tween.js/src/Tween.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="270">
+              <caret line="64" lean-forward="true" selection-start-line="64" selection-end-line="64" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/node_modules/@tweenjs/tween.js/src/TweenThree.js">
+          <provider selected="true" editor-type-id="text-editor" />
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
@@ -46,11 +52,11 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/TowerSorter.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="700">
-              <caret line="278" column="60" lean-forward="true" selection-start-line="278" selection-start-column="60" selection-end-line="278" selection-end-column="60" />
+            <state relative-caret-position="534">
+              <caret line="65" column="71" selection-start-line="65" selection-start-column="71" selection-end-line="65" selection-end-column="71" />
             </state>
           </provider>
         </entry>
@@ -110,9 +116,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>Array.from</find>
-      <find>targetTower</find>
-      <find>cloneTowerArray</find>
       <find>debugger</find>
       <find>DiscSelect</find>
       <find>key</find>
@@ -140,6 +143,9 @@
       <find>window</find>
       <find>window.</find>
       <find>towerR</find>
+      <find>tweenTracker</find>
+      <find>st</find>
+      <find>currentMove</find>
     </findStrings>
     <replaceStrings>
       <replace>321</replace>
@@ -163,6 +169,7 @@
       <replace>Tower.prototype.</replace>
       <replace>prototype</replace>
       <replace>this</replace>
+      <replace>towerRenderer.</replace>
     </replaceStrings>
   </component>
   <component name="Git.Settings">
@@ -188,8 +195,9 @@
         <option value="$PROJECT_DIR$/src/MoveList.js" />
         <option value="$PROJECT_DIR$/src/SolverWorker.js" />
         <option value="$PROJECT_DIR$/src/PagingUtil.js" />
-        <option value="$PROJECT_DIR$/src/TowerRenderer.js" />
         <option value="$PROJECT_DIR$/src/TowerSorter.js" />
+        <option value="$PROJECT_DIR$/node_modules/@tweenjs/tween.js/src/Tween.js" />
+        <option value="$PROJECT_DIR$/src/TowerRenderer.js" />
       </list>
     </option>
   </component>
@@ -239,7 +247,7 @@
     <property name="JavaScriptWeakerCompletionTypeGuess" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="js.last.introduce.type" value="CONST" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../tween.js" />
     <property name="node.js.detected.package.eslint" value="true" />
     <property name="node.js.detected.package.standard" value="true" />
     <property name="node.js.path.for.package.eslint" value="project" />
@@ -313,24 +321,24 @@
       <workItem from="1552272165558" duration="10282000" />
       <workItem from="1552285262679" duration="2018000" />
       <workItem from="1552362510660" duration="40545000" />
-      <workItem from="1552623955591" duration="5174000" />
+      <workItem from="1552623955591" duration="14317000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="363268000" />
+    <option name="totallyTimeSpent" value="372411000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="2560" y="0" width="2560" height="1600" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.12539431" />
+      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.09976341" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="npm" order="2" side_tool="true" />
       <window_info id="Favorites" order="3" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" weight="0.27430293" />
-      <window_info anchor="bottom" id="Run" order="2" visible="true" weight="0.18559557" />
+      <window_info active="true" anchor="bottom" id="Run" order="2" visible="true" weight="0.083102494" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.18836565" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
@@ -338,7 +346,7 @@
       <window_info anchor="bottom" id="Docker" order="7" show_stripe_button="false" />
       <window_info anchor="bottom" id="Version Control" order="8" />
       <window_info anchor="bottom" id="Event Log" order="9" side_tool="true" />
-      <window_info anchor="bottom" id="Terminal" order="10" weight="0.21952909" />
+      <window_info anchor="bottom" id="Terminal" order="10" weight="0.056094185" />
       <window_info anchor="bottom" id="TypeScript" order="11" />
       <window_info anchor="bottom" id="Messages" order="12" />
       <window_info anchor="bottom" id="Flow" order="13" />
@@ -354,13 +362,6 @@
     <entry file="file://$PROJECT_DIR$/src/ThreeContainer.js" />
     <entry file="file://$PROJECT_DIR$/package.json">
       <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/node_modules/three/examples/js/libs/tween.min.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="58">
-          <caret line="2" column="142" selection-start-line="2" selection-start-column="142" selection-end-line="2" selection-end-column="142" />
-        </state>
-      </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/MoveListPaginator.js" />
     <entry file="file://$PROJECT_DIR$/node_modules/three/build/three.module.js">
@@ -516,20 +517,37 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/TowerRenderer.js">
+    <entry file="file://$PROJECT_DIR$/node_modules/three/examples/js/libs/tween.min.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="589">
-          <caret line="424" column="23" lean-forward="true" selection-start-line="424" selection-start-column="23" selection-end-line="424" selection-end-column="23" />
-          <folding>
-            <element signature="e#163#237#0" expanded="true" />
-          </folding>
+        <state relative-caret-position="30">
+          <caret line="2" selection-start-line="2" selection-end-line="2" />
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/node_modules/@tweenjs/tween.js/src/TweenThree.js">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/TowerSorter.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="700">
-          <caret line="278" column="60" lean-forward="true" selection-start-line="278" selection-start-column="60" selection-end-line="278" selection-end-column="60" />
+        <state relative-caret-position="534">
+          <caret line="65" column="71" selection-start-line="65" selection-start-column="71" selection-end-line="65" selection-end-column="71" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/node_modules/@tweenjs/tween.js/src/Tween.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="270">
+          <caret line="64" lean-forward="true" selection-start-line="64" selection-end-line="64" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/TowerRenderer.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="240">
+          <caret line="12" column="15" lean-forward="true" selection-start-line="12" selection-start-column="15" selection-end-line="12" selection-end-column="15" />
+          <folding>
+            <element signature="e#163#237#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>

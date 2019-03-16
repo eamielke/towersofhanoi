@@ -64,7 +64,6 @@ class TowerSorter extends Component {
         this.getCurrentMoveNumber = this.toggleAnimation.bind(this);
         this.isPaused = this.isPaused.bind(this);
         this.scrollToMoveListRef = this.scrollToMoveListRef.bind(this);
-        this.updateCurrentMove = this.updateCurrentMove.bind(this);
         this.isAnimationComplete = this.isAnimationComplete.bind(this);
         this.updateDimensions = this.updateDimensions.bind(this);
         this.handleSolverWorkerMessage = this.handleSolverWorkerMessage.bind(this);
@@ -358,10 +357,6 @@ class TowerSorter extends Component {
 
     }
 
-    updateCurrentMove(currentMove) {
-        this.setState({currentMove: currentMove});
-    }
-
     updateDimensions() {
         //console.log('Updating state in parent component');
         this.setState({width: window.innerWidth, height: window.innerHeight, paused: this.isPaused()});
@@ -465,7 +460,6 @@ class TowerSorter extends Component {
                                                    discCount={this.state.discCount} resetButton={this.reset}
                                                    toggleMoveListPanel={this.toggleMoveListPanel}
                                                    handleDiscSelect={this.handleDiscSelect}
-                                                   updateCurrentMove={this.updateCurrentMove}
                                                    updateDimensions={this.updateDimensions}
                                     />}
                                 </Grid.Column>
