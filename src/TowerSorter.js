@@ -1,3 +1,4 @@
+// @flow
 import React, {Component} from 'react';
 import Tower from "./Tower";
 import MoveList from "./MoveList";
@@ -23,50 +24,68 @@ const MoveListButton = ({moveHistory, displayMoveList, toggleMoveListPanel}) => 
     }
 };
 
-class TowerSorter extends Component {
+type State = {
+    discCount: number,
+    towerArray: Tower[],
+    moveHistory: any[],
+    solved: boolean,
+    initialTowerState: Tower[],
+    TowerThreeJS: boolean,
+    paused: boolean,
+    progress: number,
+    solveInProgress: boolean,
+    displayMoveList: boolean,
+    visible: boolean,
+    height: number,
+    width: number,
+    moveCount: number,
+}
 
 
-    previousDisk = -1;
-
-    towerArray = [];
-
-    moveHistory = [];
-
-    moveCount = 0;
-
-    maxMoves = 0;
-
-    discCount = 0;
+class TowerSorter extends Component<any, State> {
 
 
-    constructor(props) {
+    _previousDisk: number = -1;
+
+    _towerArray: Tower[] = [];
+
+    _moveHistory: any[] = [];
+
+    _moveCount: number = 0;
+
+    _maxMoves: number = 0;
+
+    _discCount: number = 0;
+
+    solverWorker: Worker;
+
+    TowerRendererRef: any;
+
+    moveListRef: any;
+
+    scrolltoMoveList: boolean;
+
+    displayMoveList: boolean;
+
+
+    constructor(props: any) {
+
         super(props);
-        this.state = {
-            discCount: 0,
-            towerArray: [],
-            moveHistory: [],
-            solved: false,
-            initialTowerState: [],
-            TowerThreeJS: true,
-            paused: false,
-            progress: 0,
-            solveInProgress: false,
-        };
 
-        this.discCount = 0;
+        this._discCount = 0;
 
-        this.toggleMoveListPanel = this.toggleMoveListPanel.bind(this);
-        this.handleDiscSelect = this.handleDiscSelect.bind(this);
-        this.reset = this.reset.bind(this);
-        this.handleSideBarShowClick = this.handleSideBarShowClick.bind(this);
-        this.handleSidebarHide = this.handleSidebarHide.bind(this);
-        this.toggleAnimation = this.toggleAnimation.bind(this);
-        this.getCurrentMoveNumber = this.toggleAnimation.bind(this);
-        this.isPaused = this.isPaused.bind(this);
-        this.scrollToMoveListRef = this.scrollToMoveListRef.bind(this);
-        this.isAnimationComplete = this.isAnimationComplete.bind(this);
-        this.updateDimensions = this.updateDimensions.bind(this);
-        this.handleSolverWorkerMessage = this.handleSolverWorkerMessage.bind(this);
+        (this: any).toggleMoveListPanel = this.toggleMoveListPanel.bind(this);
+        (this: any).handleDiscSelect = this.handleDiscSelect.bind(this);
+        (this: any).reset = this.reset.bind(this);
+        (this: any).handleSideBarShowClick = this.handleSideBarShowClick.bind(this);
+        (this: any).handleSidebarHide = this.handleSidebarHide.bind(this);
+        (this: any).toggleAnimation = this.toggleAnimation.bind(this);
+        (this: any).getCurrentMoveNumber = this.toggleAnimation.bind(this);
+        (this: any).isPaused = this.isPaused.bind(this);
+        (this: any).scrollToMoveListRef = this.scrollToMoveListRef.bind(this);
+        (this: any).isAnimationComplete = this.isAnimationComplete.bind(this);
+        (this: any).updateDimensions = this.updateDimensions.bind(this);
+        (this: any).handleSolverWorkerMessage = this.handleSolverWorkerMessage.bind(this);
 
         this.TowerRendererRef = React.createRef();
 
@@ -79,9 +98,28 @@ class TowerSorter extends Component {
 
         this.solverWorker.onmessage = this.handleSolverWorkerMessage;
 
+        this.state = {
+            discCount: 0,
+            towerArray: [],
+            moveHistory: [],
+            solved: false,
+            initialTowerState: [],
+            TowerThreeJS: true,
+            paused: false,
+            progress: 0,
+            solveInProgress: false,
+            displayMoveList: false,
+            height: 0,
+            width: 0,
+            moveCount: 0,
+            visible: false,
+
+        };
+
+
     }
 
-    convertToTowerArray(towerDataArray) {
+    convertToTowerArray(towerDataArray: any[]) {
         let towerArray = [];
 
         for (let i = 0; i < towerDataArray.length; i++) {
@@ -90,14 +128,15 @@ class TowerSorter extends Component {
         return towerArray;
     }
 
-    convertToTower(towerData) {
+    convertToTower(towerData: any) {
         return new Tower(towerData.initial, towerData.solution,
             towerData.towerNumber, towerData.discs);
     }
 
 
-    handleSolverWorkerMessage(e) {
+    handleSolverWorkerMessage(e: any) {
 
+        // $FlowFixMe
         let data = e.data.data;
 
         if (data.solved) {
@@ -108,10 +147,10 @@ class TowerSorter extends Component {
                 towerArray: towerArray,
                 solved: data.solved,
                 moveCount: data.moveCount,
-                moveHistory: this.moveHistory,
+                moveHistory: this._moveHistory,
             });
 
-            this.towerArray = towerArray;
+            this._towerArray = towerArray;
 
             this.solverWorker.terminate();
 
@@ -127,52 +166,52 @@ class TowerSorter extends Component {
             //console.log('--------------------');
         } else {
 
-            this.moveHistory = [...this.moveHistory, ...data.moveHistory];
+            this._moveHistory = [...this._moveHistory, ...data.moveHistory];
             this.setState({progress: data.progress, solved: false});
         }
 
     }
 
-    setupTowers(discCount) {
+    setupTowers(discCount: number) {
         let discArray = [];
 
         for (let i = discCount; i > 0; i--) {
             discArray.push(i);
         }
 
-        this.maxMoves = Math.pow(2, (discArray.length));
+        this._maxMoves = Math.pow(2, (discArray.length));
 
-        this.previousDisk = -1;
-        this.moveCount = 0;
+        this._previousDisk = -1;
+        this._moveCount = 0;
 
         let solution = discArray.join('');
 
-        this.towerArray.splice(0, this.towerArray.length);
-        this.towerArray = [];
-        this.moveHistory.splice(0, this.towerArray.length);
-        this.moveHistory = [];
+        this._towerArray.splice(0, this._towerArray.length);
+        this._towerArray = [];
+        this._moveHistory.splice(0, this._towerArray.length);
+        this._moveHistory = [];
 
-        this.towerArray.push(new Tower(true, solution, 1, discArray));
-        this.towerArray.push(new Tower(false, solution, 2));
-        this.towerArray.push(new Tower(false, solution, 3));
-        this.discCount = discCount;
+        this._towerArray.push(new Tower(true, solution, 1, discArray));
+        this._towerArray.push(new Tower(false, solution, 2));
+        this._towerArray.push(new Tower(false, solution, 3));
+        this._discCount = discCount;
 
         this.setState({
             discCount: discCount,
             towerArray: [],
             moveHistory: [],
             solved: false,
-            initialTowerState: this.towerArray,
+            initialTowerState: this._towerArray,
             visible: false,
             paused: false,
             progress: 0
         });
     }
 
-    handleDiscSelect(event, data) {
+    handleDiscSelect(event: any, data: any) {
         if (data.value > 0) {
             this.setState({progress: 0});
-            this.discCount = data.value;
+            this._discCount = data.value;
             this.setupTowers(data.value);
             this.solvePuzzle();
         }
@@ -191,7 +230,7 @@ class TowerSorter extends Component {
 
         //console.log('Starting web worker');
         this.setState({solveInProgress: true});
-        this.solverWorker.postMessage({event: 'Solve', data: this.discCount});
+        this.solverWorker.postMessage({event: 'Solve', data: this._discCount});
 
     }
 
@@ -455,7 +494,7 @@ class TowerSorter extends Component {
                                     this.state.moveHistory.length > 0 &&
                                     <TowerRenderer ref={this.TowerRendererRef}
                                                    key={this.state.discCount + this.state.TowerThreeJS}
-                                                   subKey={this.state.discCount + this.state.TowerThreeJS}
+                                                   subKey={this.state.discCount + this.state.TowerThreeJS + ''}
                                                    moveHistory={this.state.moveHistory}
                                                    discCount={this.state.discCount} resetButton={this.reset}
                                                    toggleMoveListPanel={this.toggleMoveListPanel}

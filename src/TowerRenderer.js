@@ -1,3 +1,4 @@
+// @flow
 import React, {Component} from 'react';
 import * as THREE from 'three';
 import TWEEN from '@tweenjs/tween.js';
@@ -5,34 +6,68 @@ import TWEEN from '@tweenjs/tween.js';
 import {Segment, Grid, Header, Menu, Responsive} from 'semantic-ui-react';
 import {composePage, calcTotalPages} from "./PagingUtil";
 
+type Props = {
+    discCount: number,
+    moveHistory: any[],
+    subKey: string,
+    updateDimensions: any,
+    resetButton: any,
+};
 
-class TowerRenderer extends Component {
+type State = {
+    canvasHeight: string,
+    currentMove: any,
+    paused: boolean,
+    active: boolean,
+    height: number,
+    width: number,
+}
 
-    constructor(props) {
+class TowerRenderer extends Component<Props, State> {
+
+    _pageSize: number;
+    _currentPageNo: number;
+    _discs: any[];
+    _camera: any;
+    _scene: any;
+    _totalPages: number;
+    _currentMovePage: any;
+    _currentMoveIndex: number;
+    _currentTween: any;
+    _renderer: any;
+    _mount: any;
+    _frameId: any;
+
+    constructor(props: Props) {
         super(props);
-        this.updateDimensions = this.updateDimensions.bind(this);
-        this.resetCamera = this.resetCamera.bind(this);
-        this.fullScreen = this.fullScreen.bind(this);
-        this.toggleAnimation = this.toggleAnimation.bind(this);
-        this.isAnimationComplete = this.isAnimationComplete.bind(this);
-        this.disposeThreeJS = this.disposeThreeJS.bind(this);
+        (this: any).updateDimensions = this.updateDimensions.bind(this);
+        (this: any).resetCamera = this.resetCamera.bind(this);
+        (this: any).fullScreen = this.fullScreen.bind(this);
+        (this: any).toggleAnimation = this.toggleAnimation.bind(this);
+        (this: any).isAnimationComplete = this.isAnimationComplete.bind(this);
+        (this: any).disposeThreeJS = this.disposeThreeJS.bind(this);
 
-        this._pageSize = 5;
+        this._pageSize = 5; //Default tween page size.
         this._currentPageNo = 0;
         this._discs = [];
-        this._camera = {};
-        this._scene = {};
+        this._camera = null;
+        this._scene = null;
         this._totalPages = 0;
-        this._currentMovePage = {};
+        this._currentMovePage = null;
         this._currentPageNo = 0;
         this._currentMoveIndex = 0;
-        this._renderer = {};
-        this._mount = {};
+        this._currentTween = null;
+        this._renderer = null;
+        this._mount = null;
+        this._frameId = null;
 
         this.state = {
             canvasHeight: '300px',
             currentMove: this.props.moveHistory[0],
             paused: false,
+            active: false,
+            height: 0,
+            width: 0,
         };
 
     }
@@ -69,7 +104,10 @@ class TowerRenderer extends Component {
             this._scene.add(discArray[i]);
         }
 
+
         this._scene.updateMatrixWorld(true);
+
+
         this._scene.background = new THREE.Color('white');
 
         let thickness = this.calcThickness();
@@ -216,7 +254,7 @@ class TowerRenderer extends Component {
 
     }
 
-    createTweenForMoveAndDisc(discThickness, discDiameter, discArray, move, previousTween) {
+    createTweenForMoveAndDisc(discThickness: number, discDiameter: number, discArray: any[], move: any, previousTween: any) {
 
         //Calculate source X
         let currentX = 0;
@@ -345,12 +383,12 @@ class TowerRenderer extends Component {
     disposeThreeJS() {
 
         if (this._discs.length > 0) {
-            this._discs.forEach(function (item) {
-                item.parent.remove(item);
-                item.material.dispose();
-                item.geometry.dispose();
+            this._discs.forEach(function (disc) {
+                disc.parent.remove(disc);
+                disc.material.dispose();
+                disc.geometry.dispose();
             });
-            this._discs = null;
+
             this._discs = [];
         }
 
@@ -378,13 +416,13 @@ class TowerRenderer extends Component {
     }
 
     start = () => {
-        if (!this.frameId) {
-            this.frameId = requestAnimationFrame(this.animate)
+        if (!this._frameId) {
+            this._frameId = requestAnimationFrame(this.animate)
         }
     };
 
     stop = () => {
-        cancelAnimationFrame(this.frameId)
+        cancelAnimationFrame(this._frameId)
     };
 
     animate = () => {
@@ -398,7 +436,7 @@ class TowerRenderer extends Component {
 
         TWEEN.update();
 
-        this.frameId = window.requestAnimationFrame(this.animate);
+        this._frameId = window.requestAnimationFrame(this.animate);
     };
 
 
