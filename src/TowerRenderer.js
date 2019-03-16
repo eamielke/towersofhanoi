@@ -8,11 +8,6 @@ import {composePage, calcTotalPages} from "./PagingUtil";
 
 class TowerRenderer extends Component {
 
-    pageSize = 5;
-    currentPageNo = 0;
-    discs = [];
-    camera = null;
-
     constructor(props) {
         super(props);
         this.updateDimensions = this.updateDimensions.bind(this);
@@ -21,6 +16,18 @@ class TowerRenderer extends Component {
         this.toggleAnimation = this.toggleAnimation.bind(this);
         this.isAnimationComplete = this.isAnimationComplete.bind(this);
         this.disposeThreeJS = this.disposeThreeJS.bind(this);
+
+        this._pageSize = 5;
+        this._currentPageNo = 0;
+        this._discs = [];
+        this._camera = {};
+        this._scene = {};
+        this._totalPages = 0;
+        this._currentMovePage = {};
+        this._currentPageNo = 0;
+        this._currentMoveIndex = 0;
+        this._renderer = {};
+        this._mount = {};
 
         this.state = {
             canvasHeight: '300px',
@@ -38,13 +45,13 @@ class TowerRenderer extends Component {
             return;
         }
 
-        const width = this.mount.clientWidth;
-        const height = this.mount.clientHeight;
+        const width = this._mount.clientWidth;
+        const height = this._mount.clientHeight;
 
         //ADD SCENE
-        this.camera = new THREE.PerspectiveCamera(this.calcFOV(), width / height, 0.2, 20);
+        this._camera = new THREE.PerspectiveCamera(this.calcFOV(), width / height, 0.2, 20);
 
-        this.scene = new THREE.Scene();
+        this._scene = new THREE.Scene();
 
         let discArray = this.createDiscs();
 
@@ -56,14 +63,14 @@ class TowerRenderer extends Component {
         pointLight.position.z = 130;
 
         // add to the scene
-        this.scene.add(pointLight);
+        this._scene.add(pointLight);
 
         for (let i = 0; i < discArray.length; i++) {
-            this.scene.add(discArray[i]);
+            this._scene.add(discArray[i]);
         }
 
-        this.scene.updateMatrixWorld(true);
-        this.scene.background = new THREE.Color('white');
+        this._scene.updateMatrixWorld(true);
+        this._scene.background = new THREE.Color('white');
 
         let thickness = this.calcThickness();
         let y = thickness * (discArray.length);
@@ -78,16 +85,16 @@ class TowerRenderer extends Component {
         //Setup tween
         TWEEN.removeAll();
 
-        this.totalPages = calcTotalPages(this.props.moveHistory, this.pageSize);
+        this._totalPages = calcTotalPages(this.props.moveHistory, this._pageSize);
 
         //Get the moves to create the first 1000 tweens.
-        this.currentMovePage = composePage(this.props.moveHistory, this.pageSize, this.currentPageNo);
+        this._currentMovePage = composePage(this.props.moveHistory, this._pageSize, this._currentPageNo);
 
         let prevTween;
         let firstTween;
-        this.currentMovePage.forEach((move, i) => {
+        this._currentMovePage.forEach((move, i) => {
             let tween = this.createTweenForMoveAndDisc(thickness, this.getMaxDiscDiameter(),
-                discArray, this.currentMovePage[i], prevTween);
+                discArray, this._currentMovePage[i], prevTween);
 
             if (i === 0) {
                 firstTween = tween;
@@ -98,10 +105,10 @@ class TowerRenderer extends Component {
 
 
         //ADD RENDERER
-        this.renderer = new THREE.WebGLRenderer({antialias: true});
-        this.renderer.setClearColor('#000000');
-        this.renderer.setSize(width, height);
-        this.mount.appendChild(this.renderer.domElement);
+        this._renderer = new THREE.WebGLRenderer({antialias: true});
+        this._renderer.setClearColor('#000000');
+        this._renderer.setSize(width, height);
+        this._mount.appendChild(this._renderer.domElement);
 
         // this.controls = new OrbitControls( this.camera );
         //
@@ -113,8 +120,8 @@ class TowerRenderer extends Component {
         // this.controls.minAzimuthAngle = 0; // radians
         // this.controls.maxAzimuthAngle = 0; // radians
 
-        this.camera.position.x = discArray[0].position.x + (2.5 * this.getMaxDiscDiameter() + 0.1);
-        this.camera.position.z = 3;
+        this._camera.position.x = discArray[0].position.x + (2.5 * this.getMaxDiscDiameter() + 0.1);
+        this._camera.position.z = 3;
 
 
         this.start();
@@ -130,15 +137,15 @@ class TowerRenderer extends Component {
 
     resetCamera() {
 
-        if (this.mount) {
-            const width = this.mount.clientWidth;
-            const height = this.mount.clientHeight;
+        if (this._mount) {
+            const width = this._mount.clientWidth;
+            const height = this._mount.clientHeight;
 
             //ADD SCENE
-            this.camera.aspect = width / height;
-            this.camera.updateProjectionMatrix();
+            this._camera.aspect = width / height;
+            this._camera.updateProjectionMatrix();
 
-            this.renderer.setSize(width, height);
+            this._renderer.setSize(width, height);
         }
 
 
@@ -197,7 +204,7 @@ class TowerRenderer extends Component {
                 side: THREE.DoubleSide
             }));
 
-            this.discs.push(disc);
+            this._discs.push(disc);
 
             discArray.push(disc);
             //console.log(i + ' Creating disc with diameter: ' + (i + 1) * this.getScaleFactor() + ' and thickness ' + thickness);
@@ -275,23 +282,25 @@ class TowerRenderer extends Component {
 
                 let currentMove = towerRenderer.props.moveHistory[moveCount - 1];
 
-                towerRenderer.currentMove = moveCount - 1;
+                towerRenderer._currentMoveIndex = moveCount - 1;
                 towerRenderer.setState(
                     {currentMove: currentMove});
 
-                if (towerRenderer.currentMovePage[towerRenderer.currentMovePage.length - 1].moveCount === moveCount) {
+                towerRenderer._currentTween = tween;
+
+                if (towerRenderer._currentMovePage[towerRenderer._currentMovePage.length - 1].moveCount === moveCount) {
                     //If this is the last tween in the page, then create a new page and chain it up
 
-                    if (towerRenderer.currentPageNo < (towerRenderer.totalPages - 1)) {
+                    if (towerRenderer._currentPageNo < (towerRenderer._totalPages - 1)) {
 
-                        towerRenderer.currentPageNo++;
+                        towerRenderer._currentPageNo++;
 
-                        towerRenderer.currentMovePage = composePage(towerRenderer.props.moveHistory, towerRenderer.pageSize, towerRenderer.currentPageNo);
+                        towerRenderer._currentMovePage = composePage(towerRenderer.props.moveHistory, towerRenderer._pageSize, towerRenderer._currentPageNo);
 
                         let prevTween = null;
                         let firstTween = null;
 
-                        towerRenderer.currentMovePage.forEach((move, j) => {
+                        towerRenderer._currentMovePage.forEach((move, j) => {
                             let nextTween = towerRenderer.createTweenForMoveAndDisc(towerRenderer.calcThickness(), towerRenderer.getMaxDiscDiameter(),
                                 discArray, move, prevTween);
 
@@ -305,8 +314,6 @@ class TowerRenderer extends Component {
                         tween.chain(firstTween);
                     }
                 }
-
-                towerRenderer = {};
 
             }
 
@@ -324,7 +331,7 @@ class TowerRenderer extends Component {
 
 
     isAnimationComplete() {
-        return ((this.currentMove + 1) === this.props.moveHistory.length);
+        return ((this._currentMoveIndex + 1) === this.props.moveHistory.length);
     }
 
     getCurrentMove() {
@@ -337,14 +344,14 @@ class TowerRenderer extends Component {
 
     disposeThreeJS() {
 
-        if (this.discs.length > 0) {
-            this.discs.forEach(function (item) {
+        if (this._discs.length > 0) {
+            this._discs.forEach(function (item) {
                 item.parent.remove(item);
                 item.material.dispose();
                 item.geometry.dispose();
             });
-            this.discs = null;
-            this.discs = [];
+            this._discs = null;
+            this._discs = [];
         }
 
     }
@@ -353,19 +360,19 @@ class TowerRenderer extends Component {
         this.stop();
 
         TWEEN.removeAll();
-        this.mount.removeChild(this.renderer.domElement);
+        this._mount.removeChild(this._renderer.domElement);
         this.disposeThreeJS();
 
-        this.currentTween = null;
-        this.currentMovePage = null;
-        this.currentPageNo = 0;
+        this._currentTween = null;
+        this._currentMovePage = null;
+        this._currentPageNo = 0;
 
-        this.renderer = null;
-        this.scene = null;
+        this._renderer = null;
+        this._scene = null;
 
-        this.camera = null;
+        this._camera = null;
 
-        this.mount = null;
+        this._mount = null;
 
         window.removeEventListener("resize", this.updateDimensions);
     }
@@ -382,7 +389,7 @@ class TowerRenderer extends Component {
 
     animate = () => {
 
-        this.renderer.render(this.scene, this.camera);
+        this._renderer.render(this._scene, this._camera);
         // let position = new THREE.Vector3();
         // position.setFromMatrixPosition(this.disc3.matrixWorld);
 
@@ -408,12 +415,12 @@ class TowerRenderer extends Component {
     toggleAnimation() {
 
         if (this.state.paused) {
-            //console.log('Trying to start tween: ' + this.currentMove);
-            this.currentTween.start();
+            //console.log('Trying to start tween: ' + this._currentMoveIndex);
+            this._currentTween.start();
         } else {
-            //console.log('Trying to stop tween: ' + this.currentMove);
+            //console.log('Trying to stop tween: ' + this._currentMoveIndex);
 
-            this.currentTween.stop();
+            this._currentTween.stop();
 
         }
 
@@ -454,7 +461,7 @@ class TowerRenderer extends Component {
                                  }}
 
                                  ref={(mount) => {
-                                     this.mount = mount
+                                     this._mount = mount
                                  }}
                             />
 
