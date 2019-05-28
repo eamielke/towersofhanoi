@@ -5,24 +5,11 @@ import MoveList from "./MoveList";
 import TowerRenderer from "./TowerRenderer";
 import {Header, Progress, Sticky} from 'semantic-ui-react'
 import {Segment, Icon} from 'semantic-ui-react';
-import {Table} from 'semantic-ui-react';
-import {Responsive, Message, Button, Grid, Menu, Sidebar} from "semantic-ui-react";
+import {Responsive, Grid, Menu, Sidebar} from "semantic-ui-react";
 import DiscSelect from "./DiscSelect";
 import scrollIntoView from 'scroll-into-view-if-needed';
 import worker_script from './SolverWorker';
-
-
-const MoveListButton = ({moveHistory, displayMoveList, toggleMoveListPanel}) => {
-
-    let buttonLabel = displayMoveList ? 'Hide Move List' : 'Display Move List';
-
-    if (moveHistory && moveHistory.length > 0) {
-        return <Button primary onClick={toggleMoveListPanel}>{buttonLabel}</Button>;
-
-    } else {
-        return null;
-    }
-};
+import {PuzzleBanner, TowerStateSegment, PauseMenu, PauseMenuMobile} from './TowerComponents';
 
 type State = {
     discCount: number,
@@ -234,96 +221,6 @@ class TowerSorter extends Component<any, State> {
 
     }
 
-
-    getTowerStateSegment() {
-
-        return (
-            <Segment.Group>
-                <Segment>
-                    <Header as="h4">Initial Tower State</Header>
-
-                    <Table celled unstackable>
-                        <Table.Header>
-                            <Table.Row>
-                                <Table.HeaderCell>Tower #
-                                </Table.HeaderCell>
-                                <Table.HeaderCell>Disc Order</Table.HeaderCell>
-                            </Table.Row>
-                        </Table.Header>
-                        <Table.Body>
-                            {this.state.initialTowerState.map((item) => {
-                                return (
-                                    <Table.Row key={item.getTowerNumber()}>
-                                        <Table.Cell>{item.getTowerNumber()}</Table.Cell>
-                                        <Table.Cell>{item.getDiscOrder()}</Table.Cell>
-                                    </Table.Row>
-                                );
-                            })}
-
-                        </Table.Body>
-                    </Table>
-                </Segment>
-
-                <Segment>
-                    <Header as="h4">Solved Tower State</Header>
-
-
-                    <Table celled unstackable>
-                        <Table.Header>
-                            <Table.Row>
-                                <Table.HeaderCell>Tower #
-                                </Table.HeaderCell>
-                                <Table.HeaderCell>Disc Order</Table.HeaderCell>
-                            </Table.Row>
-                        </Table.Header>
-                        <Table.Body>
-                            {this.state.towerArray.map((item) => {
-                                return (
-                                    <Table.Row key={item.getTowerNumber()}>
-                                        <Table.Cell>{item.getTowerNumber()}</Table.Cell>
-                                        <Table.Cell>{item.getDiscOrder()}</Table.Cell>
-                                    </Table.Row>
-                                );
-                            })}
-                        </Table.Body>
-                    </Table></Segment>
-            </Segment.Group>);
-    }
-
-
-    getPuzzleBanner() {
-
-        return (<Grid.Column>
-            <Responsive {...Responsive.onlyComputer} >
-                <Message positive size={'small'}>
-                    <Message.Header>Success</Message.Header>
-                    <p>Puzzle with {this.state.discCount} discs was solved in {this.state.moveCount} moves.</p>
-                    <MoveListButton
-                        moveHistory={this.state.moveHistory} displayMoveList={this.state.displayMoveList}
-                        toggleMoveListPanel={this.toggleMoveListPanel}/>
-                </Message>
-            </Responsive>
-            <Responsive {...Responsive.onlyTablet} >
-                <Message positive size={'huge'}>
-                    <Message.Header>Success</Message.Header>
-                    <p>Puzzle with {this.state.discCount} discs was solved in {this.state.moveCount} moves.</p>
-                    <MoveListButton
-                        moveHistory={this.state.moveHistory} displayMoveList={this.state.displayMoveList}
-                        toggleMoveListPanel={this.toggleMoveListPanel}/>
-                </Message>
-            </Responsive>
-            <Responsive {...Responsive.onlyMobile} >
-                <Message positive size={'large'}>
-                    <Message.Header>Success</Message.Header>
-                    <p>Puzzle with {this.state.discCount} discs was solved in {this.state.moveCount} moves.</p>
-                    <MoveListButton
-                        moveHistory={this.state.moveHistory} displayMoveList={this.state.displayMoveList}
-                        toggleMoveListPanel={this.toggleMoveListPanel}/>
-                </Message>
-            </Responsive></Grid.Column>);
-    }
-
-
     reset() {
 
         this.setState({TowerThreeJS: !this.state.TowerThreeJS, paused: false});
@@ -403,19 +300,6 @@ class TowerSorter extends Component<any, State> {
 
     render() {
 
-        let pauseMenu = <Menu.Item disabled={!this.TowerRendererRef.current
-        || this.isAnimationComplete()}
-                                   color='green' active={this.state.paused}
-                                   onClick={this.toggleAnimation}><span>{this.state.paused ?
-            'Resume' : 'Pause'}</span></Menu.Item>;
-
-        let pauseMenuMobile = <Menu.Item position='right' disabled={!this.TowerRendererRef.current
-        || this.isAnimationComplete()}
-                                         color='green' active={this.state.paused}
-                                         onClick={this.toggleAnimation}><Icon size={'big'} name={this.state.paused ?
-            'play' : 'pause'}/></Menu.Item>;
-
-
         return (
             <div>
                 <Responsive {...Responsive.onlyMobile}>
@@ -430,7 +314,7 @@ class TowerSorter extends Component<any, State> {
                                 Towers of Hanoi Demo
                             </Menu.Item>
                             <Menu.Menu position='right'>
-                                {pauseMenuMobile}
+                                <PauseMenuMobile/>
                                 <Menu.Item position='right' disabled={!this.TowerRendererRef.current} as={'a'}
                                            onClick={this.reset}><Icon size='big' name={'recycle'}/></Menu.Item>
                             </Menu.Menu>
@@ -456,7 +340,10 @@ class TowerSorter extends Component<any, State> {
                                             placeholder={'Select a disc to start'}
                                             handleDiscSelect={this.handleDiscSelect}/>}
                             </Menu.Item>
-                            {pauseMenu}
+
+                            <PauseMenu towerRenderRef={this.TowerRendererRef.current}  paused={this.state.paused}
+                                       isAnimationComplete={this.isAnimationComplete} toggleAnimation={this.toggleAnimation} />
+
                             <Menu.Item disabled={!this.TowerRendererRef.current} as={'a'}
                                        onClick={this.reset}>Reset</Menu.Item>
                             <Menu.Item disabled={!this.TowerRendererRef.current} as={'a'}
@@ -509,21 +396,26 @@ class TowerSorter extends Component<any, State> {
                                     <DiscSelect discSelectKey="discSelect" handleDiscSelect={this.handleDiscSelect}/>}
                                 </Grid.Column>
 
-                                {this.state.solved && this.getPuzzleBanner()}
+
+                                <PuzzleBanner solved={this.state.solved}
+                                              discCount={this.state.discCount} moveCount={this.state.moveCount}
+                                              displayMoveList={this.state.displayMoveList}
+                                              moveHistory={this.state.moveHistory}
+                                              toggleMoveListPanel={this.toggleMoveListPanel}/>
 
                                 {this.state.displayMoveList && this.state.moveHistory
                                 && this.state.moveHistory.length > 0
-                                && <Grid.Column>
-
-                                    <MoveList id='moveList' ref={this.moveListRef}
+                                &&
+                                    <MoveList as={Grid.Column} id='moveList'
+                                              displayMoveList={this.state.displayMoveList} ref={this.moveListRef}
                                               scrollToMoveListRef={this.scrollToMoveListRef}
                                               key={this.state.discCount + 'MoveList'}
                                               moveHistory={this.state.moveHistory}/>
-                                </Grid.Column>}
+                                }
 
-                                <Grid.Column>
-                                    {this.state.solved && this.getTowerStateSegment()}
-                                </Grid.Column>
+                                <TowerStateSegment as={Grid.Column} solved={this.state.solved}
+                                                   initialTowerState={this.state.initialTowerState}
+                                                   towerArray={this.state.towerArray}/>
                             </Grid>
                         </Segment>
                     </Sidebar.Pusher>
